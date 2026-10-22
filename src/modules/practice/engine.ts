@@ -63,7 +63,9 @@ export function selectQuestions(
   history: PriorAttempt[],
   random: () => number = Math.random,
 ): Question[] {
-  const eligible = pool.filter(
+  // A revision is not another question. Pick the latest eligible revision for
+  // each identity before filtering so an obsolete topic cannot remain eligible.
+  const eligible = currentQuestionVersions(pool).filter(
     (q) =>
       (config.domain === "all" || q.domain === config.domain) &&
       (!config.topic || config.topic === "all" || q.topic === config.topic),
@@ -87,6 +89,38 @@ export function selectQuestions(
   });
   return randomized.slice(0, config.count).map((x) => x.q);
 }
+/** Shared by availability summaries and selection, so revisions cannot inflate counts. */
+export function currentQuestionVersions<
+  T extends { id: string; version: number },
+>(pool: T[]): T[] {
+  const current = new Map<string, T>();
+  for (const question of pool) {
+    const existing = current.get(question.id);
+    if (!existing || existing.version < question.version)
+      current.set(question.id, question);
+  }
+  return [...current.values()];
+}
+export function findPinnedQuestion<T extends { id: string; version: number }>(
+  session: Pick<Session, "questionVersions">,
+  pool: T[],
+  id: string,
+): T | undefined {
+  // v0.3/v0.4 only shipped version 1. Never substitute a newer revision into
+  // those historical attempts when a bank revision is added later.
+  const version =
+    session.questionVersions === undefined ? 1 : session.questionVersions[id];
+  return pool.find((q) => q.id === id && q.version === version);
+}
+export function pinnedQuestion(
+  session: Pick<Session, "questionVersions">,
+  pool: Question[],
+  id: string,
+) {
+  const question = findPinnedQuestion(session, pool, id);
+  if (!question) throw new Error("Pinned question version unavailable.");
+  return question;
+}
 export function grade(question: Question, choiceId: string) {
   if (!question.choices.some((c) => c.id === choiceId))
     throw new Error("Choose an available answer.");
@@ -96,19 +130,21 @@ export function sessionView(session: Session, pool: Question[]): SessionView {
   const { ownerId: _owner, ...safe } = session;
   void _owner;
   const questions = session.questionIds.map((id) => {
-    const q = pool.find((q) => q.id === id);
-    if (!q) throw new Error("Pinned question version unavailable");
-    const {
-      correctChoice: _key,
-      explanation: _explanation,
-      reference: _ref,
-      choices,
-      ...rest
-    } = q;
-    void _key;
-    void _explanation;
-    void _ref;
-    return { ...rest, choices: choices.map(({ id, text }) => ({ id, text })) };
+    const q = pinnedQuestion(session, pool, id);
+    // Use an explicit allowlist. New editorial fields must not silently enter
+    // the public payload when the Question model expands.
+    return {
+      id: q.id,
+      version: q.version,
+      domain: q.domain,
+      topic: q.topic,
+      difficulty: q.difficulty,
+      stem: q.stem,
+      contentKind: q.contentKind,
+      origin: q.origin,
+      reviewStatus: q.reviewStatus,
+      choices: q.choices.map(({ id, text }) => ({ id, text })),
+    };
   });
   const feedback: SessionView["feedback"] = {};
   for (const id of session.questionIds) {
@@ -116,7 +152,7 @@ export function sessionView(session: Session, pool: Question[]): SessionView {
       (session.mode !== "exam" && session.answers[id]) ||
       session.status === "submitted"
     ) {
-      const q = pool.find((q) => q.id === id)!;
+      const q = pinnedQuestion(session, pool, id);
       feedback[id] = {
         correctChoice: q.correctChoice,
         explanation: q.explanation,

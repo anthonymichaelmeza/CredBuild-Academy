@@ -59,6 +59,9 @@ export async function startSession(who: Actor, config: Config) {
     id: randomUUID(),
     ownerId: who.id,
     questionIds: selected.map((q) => q.id),
+    questionVersions: Object.fromEntries(
+      selected.map((q) => [q.id, q.version]),
+    ),
     answers: {},
     flags: [],
     mode: config.mode,

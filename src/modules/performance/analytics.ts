@@ -1,8 +1,9 @@
-import type { Question, Session } from "@/modules/practice/types";
 import { lessons } from "@/modules/learning/catalog";
+import { findPinnedQuestion } from "@/modules/practice/engine";
+import type { PerformanceQuestion, PerformanceSession } from "./dto";
 export function analyzeSessions(
-  sessions: Session[],
-  questions: Question[],
+  sessions: PerformanceSession[],
+  questions: PerformanceQuestion[],
   filter: { domain?: string; topic?: string; since?: number } = {},
 ) {
   const eligible = sessions.filter(
@@ -10,8 +11,9 @@ export function analyzeSessions(
   );
   const attempts = eligible.flatMap((s) =>
     Object.entries(s.answers).flatMap(([id, a]) => {
-      const q = questions.find((q) => q.id === id);
+      const q = findPinnedQuestion(s, questions, id);
       if (
+        typeof a.correct !== "boolean" ||
         !q ||
         (filter.domain &&
           filter.domain !== "all" &&
@@ -38,9 +40,14 @@ export function analyzeSessions(
       })
       .sort((a, b) => a.accuracy - b.accuracy || b.answered - a.answered);
   }
-  const repeated = questions
+  const distinctQuestions = [
+    ...new Map(questions.map((q) => [`${q.id}:v${q.version}`, q])).values(),
+  ];
+  const repeated = distinctQuestions
     .map((q) => {
-      const items = attempts.filter((a) => a.question.id === q.id);
+      const items = attempts.filter(
+        (a) => a.question.id === q.id && a.question.version === q.version,
+      );
       return {
         question: q,
         misses: items.filter((a) => !a.correct).length,
@@ -74,8 +81,8 @@ export function analyzeSessions(
   };
 }
 export function recommendedLessons(
-  sessions: Session[],
-  questions: Question[],
+  sessions: PerformanceSession[],
+  questions: PerformanceQuestion[],
   completed: string[],
 ) {
   const analysis = analyzeSessions(sessions, questions);

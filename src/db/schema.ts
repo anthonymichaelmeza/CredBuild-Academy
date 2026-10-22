@@ -7,6 +7,9 @@ import {
   primaryKey,
 } from "drizzle-orm/pg-core";
 import type { Question, Session } from "@/modules/practice/types";
+import type { Lesson } from "@/modules/learning/catalog";
+import type { LessonProgress } from "@/modules/learning/progress";
+import type { PlannerState } from "@/modules/planner/model";
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
   identityMode: text("identity_mode").notNull(),
@@ -64,3 +67,50 @@ export const bookmarks = pgTable(
   },
   (t) => [primaryKey({ columns: [t.ownerId, t.questionId] })],
 );
+
+export const lessonVersions = pgTable("lesson_versions", {
+  id: text("id").primaryKey(),
+  lessonId: text("lesson_id").notNull(),
+  version: integer("version").notNull(),
+  certificationId: text("certification_id")
+    .notNull()
+    .references(() => certifications.id),
+  blueprintRevisionId: text("blueprint_revision_id").notNull(),
+  domain: text("domain").notNull(),
+  topic: text("topic").notNull(),
+  subtopics: jsonb("subtopics").$type<string[]>().notNull(),
+  objectiveCodes: jsonb("objective_codes").$type<string[]>().notNull(),
+  contentKind: text("content_kind").notNull(),
+  reviewStatus: text("review_status").notNull(),
+  data: jsonb("data").$type<Lesson>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+export const lessonProgress = pgTable(
+  "lesson_progress",
+  {
+    ownerId: text("owner_id")
+      .notNull()
+      .references(() => users.id),
+    lessonVersionId: text("lesson_version_id")
+      .notNull()
+      .references(() => lessonVersions.id),
+    revision: integer("revision").notNull().default(0),
+    data: jsonb("data").$type<LessonProgress>().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.ownerId, t.lessonVersionId] })],
+);
+export const learnerProfiles = pgTable("learner_profiles", {
+  ownerId: text("owner_id")
+    .primaryKey()
+    .references(() => users.id),
+  revision: integer("revision").notNull().default(0),
+  data: jsonb("data").$type<PlannerState>().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

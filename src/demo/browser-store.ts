@@ -33,6 +33,9 @@ const storedSession = z
     id: z.uuid(),
     ownerId: z.literal("browser-demo"),
     questionIds: z.array(questionId).min(1).max(200),
+    questionVersions: z
+      .partialRecord(questionId, z.number().int().positive())
+      .optional(),
     answers: z.partialRecord(questionId, answer),
     flags: z.array(questionId).max(200),
     mode: z.enum(["learning", "adaptive", "timed", "exam"]),
@@ -47,6 +50,11 @@ const storedSession = z
   .superRefine((s, ctx) => {
     if (
       new Set(s.questionIds).size !== s.questionIds.length ||
+      (s.questionVersions !== undefined &&
+        (Object.keys(s.questionVersions).length !== s.questionIds.length ||
+          s.questionIds.some(
+            (id) => s.questionVersions?.[id] === undefined,
+          ))) ||
       s.flags.some((id) => !s.questionIds.includes(id)) ||
       Object.keys(s.answers).some((id) => !s.questionIds.includes(id))
     )
@@ -139,6 +147,9 @@ export function createBrowserSession(input: unknown): string {
     id: crypto.randomUUID(),
     ownerId: "browser-demo",
     questionIds: selected.map((q) => q.id),
+    questionVersions: Object.fromEntries(
+      selected.map((q) => [q.id, q.version]),
+    ),
     answers: {},
     flags: [],
     mode: config.mode,

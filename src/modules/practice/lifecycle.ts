@@ -1,5 +1,5 @@
 import type { Question, Session, Confidence } from "./types";
-import { grade } from "./engine";
+import { grade, pinnedQuestion } from "./engine";
 
 export function deadlinePassed(session: Session, now = Date.now()) {
   return (
@@ -35,8 +35,7 @@ export function recordAnswer(
     throw new Error("Question not in this session.");
   if (session.answers[input.questionId] && session.mode !== "exam")
     return session;
-  const q = pool.find((q) => q.id === input.questionId);
-  if (!q) throw new Error("Pinned question unavailable.");
+  const q = pinnedQuestion(session, pool, input.questionId);
   const previous = session.answers[input.questionId];
   return {
     ...session,

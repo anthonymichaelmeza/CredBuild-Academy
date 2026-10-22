@@ -30,6 +30,8 @@ export type Session = {
   id: string;
   ownerId: string;
   questionIds: string[];
+  /** Immutable revision selected for each ID. Legacy snapshots mean version 1. */
+  questionVersions?: Record<string, number>;
   answers: Record<string, Answer>;
   flags: string[];
   mode: "learning" | "adaptive" | "timed" | "exam";

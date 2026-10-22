@@ -11,6 +11,7 @@ export const authConfigured = () =>
   );
 export const demoEnabled = () =>
   !browserDemoEnabled() &&
+  !process.env.VERCEL &&
   process.env.ALLOW_LOCAL_DEMO === "true" &&
   !authConfigured();
 export type Actor = { id: string; mode: "demo" | "managed" };
