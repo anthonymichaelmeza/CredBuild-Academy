@@ -22,6 +22,7 @@ async function visit(route) {
   await page.goto(new URL(route, origin).href);
 }
 async function capture(name) {
+  await page.evaluate(() => scrollTo(0, 0));
   await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: path.join(output, name), fullPage: true });
   captures.push(name);
@@ -96,6 +97,7 @@ try {
     .click();
   await page.getByRole("radio").first().check();
   await expect(page.getByText("1 / 5 answered", { exact: true })).toBeVisible();
+  await expect(page.locator(".session-clock")).toContainText(/\d{2}:\d{2}/);
   await capture("exam-rehearsal.png");
   const mobile = await browser.newContext({ ...devices["Pixel 7"] });
   const small = await mobile.newPage();

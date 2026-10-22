@@ -1,0 +1,82 @@
+name: Quality checks
+
+on:
+  pull_request:
+  push:
+    branches: [main, "development/**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm audit --omit=dev --audit-level=high
+      - name: Build without service credentials
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BROWSER_DEMO: "false"
+          ALLOW_LOCAL_DEMO: "false"
+
+  browser-demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Use installed Chromium
+        run: node -e "console.log('CHROMIUM_PATH=' + require('@playwright/test').chromium.executablePath())" >> "$GITHUB_ENV"
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_BROWSER_DEMO: "true"
+      - run: npm run test:e2e:browser
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-failure-evidence
+          path: test-results/
+          retention-days: 7
+
+  server-learning:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Use installed Chromium
+        run: node -e "console.log('CHROMIUM_PATH=' + require('@playwright/test').chromium.executablePath())" >> "$GITHUB_ENV"
+      - run: npm run test:e2e
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-failure-evidence
+          path: test-results/
+          retention-days: 7
