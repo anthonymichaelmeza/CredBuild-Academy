@@ -4,48 +4,71 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, SlidersHorizontal, Info, ShieldAlert } from "lucide-react";
 import { useHydrated } from "./use-hydrated";
 import { domains } from "@/modules/catalog/blueprint";
+import { demoQuestions } from "@/demo/questions";
+import { sessionConfigSchema } from "@/modules/practice/engine";
 export function SessionBuilder({
   available,
   browserOnly = false,
+  initialDomain = "all",
+  initialTopic = "all",
+  initialCount = 25,
 }: {
   available: boolean;
   browserOnly?: boolean;
+  initialDomain?: string;
+  initialTopic?: string;
+  initialCount?: number;
 }) {
   const router = useRouter();
   const hydrated = useHydrated();
-  const [count, setCount] = useState(25);
+  const [count, setCount] = useState(initialCount);
   const [mode, setMode] = useState("adaptive");
-  const [domain, setDomain] = useState("all");
+  const [domain, setDomain] = useState(initialDomain);
+  const [topic, setTopic] = useState(initialTopic);
+  const [minutes, setMinutes] = useState(10);
   const [prioritizeMissed, setPrioritizeMissed] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const topics = [
+    ...new Set(
+      demoQuestions
+        .filter((q) => domain === "all" || q.domain === domain)
+        .map((q) => q.topic),
+    ),
+  ];
+  const eligible = demoQuestions.filter(
+    (q) =>
+      (domain === "all" || q.domain === domain) &&
+      (topic === "all" || q.topic === topic),
+  ).length;
+  const timed = mode === "timed" || mode === "exam";
   async function start() {
     setBusy(true);
     setError("");
     try {
+      const config = sessionConfigSchema.parse({
+        count,
+        mode,
+        domain,
+        topic,
+        prioritizeMissed,
+        ...(timed ? { durationSeconds: minutes * 60 } : {}),
+      });
+      let id: string;
       if (browserOnly) {
         const { createBrowserSession } = await import("@/demo/browser-store");
-        const id = createBrowserSession({
-          count,
-          mode,
-          domain,
-          prioritizeMissed,
+        id = createBrowserSession(config);
+      } else {
+        const r = await fetch("/api/practice", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "start", config }),
         });
-        router.push(`/practice/${id}`);
-        router.refresh();
-        return;
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error);
+        id = data.id;
       }
-      const r = await fetch("/api/practice", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "start",
-          config: { count, mode, domain, prioritizeMissed },
-        }),
-      });
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.error);
-      router.push(`/practice/${data.id}`);
+      router.push(`/practice/${id}`);
       router.refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unable to start session.");
@@ -61,18 +84,17 @@ export function SessionBuilder({
           <h1>
             Build your next session<span className="orange">.</span>
           </h1>
-          <p>
-            A focused set. Clear explanations. Progress you can come back to.
-          </p>
+          <p>Choose a focus, set your pace, and make the feedback count.</p>
         </div>
       </div>
-      <div className="notice">
+      <div className="notice compact-notice">
         <ShieldAlert size={20} />
         <div>
           <strong>Demonstration question bank</strong>
           <p>
             12 original AI-generated drafts. Sources and CHST alignment have not
-            been verified. This is not an approved instructional bank.
+            been verified. Focused sets of 1, 3, or 5 help you explore the small
+            bank; larger sets need more distinct content.
           </p>
         </div>
       </div>
@@ -89,14 +111,16 @@ export function SessionBuilder({
               <SlidersHorizontal size={20} />
               Session configuration
             </h2>
+            <span className="neutral-badge">{eligible} eligible questions</span>
           </div>
           <fieldset>
             <legend>How many questions?</legend>
-            <div className="count-options">
-              {[10, 25, 50, 100, 200].map((n) => (
+            <div className="count-options expanded">
+              {[1, 3, 5, 10, 25, 50, 100, 200].map((n) => (
                 <button
                   type="button"
                   key={n}
+                  disabled={!hydrated}
                   onClick={() => setCount(n)}
                   aria-pressed={count === n}
                   className={count === n ? "selected" : ""}
@@ -105,6 +129,10 @@ export function SessionBuilder({
                 </button>
               ))}
             </div>
+            <p className="fine-print">
+              1 / 3 / 5 are short demonstration sets. Questions are never
+              duplicated.
+            </p>
           </fieldset>
           <fieldset>
             <legend>How would you like to practice?</legend>
@@ -113,12 +141,22 @@ export function SessionBuilder({
                 [
                   "adaptive",
                   "Adaptive",
-                  "Prioritize learning gaps using a transparent rule-based score.",
+                  "Prioritize misses, low confidence, and time since review.",
                 ],
                 [
                   "learning",
                   "Learning",
-                  "A varied question set, with immediate feedback.",
+                  "Untimed practice with immediate explanations.",
+                ],
+                [
+                  "timed",
+                  "Timed practice",
+                  "A countdown and immediate feedback; first checked answers are final.",
+                ],
+                [
+                  "exam",
+                  "Exam rehearsal",
+                  "Autosave answers, change choices, and reveal explanations after submission.",
                 ],
               ].map(([value, label, text]) => (
                 <label
@@ -142,21 +180,61 @@ export function SessionBuilder({
               ))}
             </div>
           </fieldset>
-          <label className="field-label" htmlFor="domain">
-            Focus domain
-          </label>
-          <select
-            id="domain"
-            value={domain}
-            onChange={(e) => setDomain(e.target.value)}
-          >
-            <option value="all">All four domains</option>
-            {domains.map((d) => (
-              <option key={d.code} value={d.code}>
-                Domain {d.code} — {d.short}
-              </option>
-            ))}
-          </select>
+          <div className="field-grid">
+            <div>
+              <label className="field-label" htmlFor="domain">
+                Focus domain
+              </label>
+              <select
+                id="domain"
+                value={domain}
+                onChange={(e) => {
+                  setDomain(e.target.value);
+                  setTopic("all");
+                }}
+              >
+                <option value="all">All four domains</option>
+                {domains.map((d) => (
+                  <option key={d.code} value={d.code}>
+                    Domain {d.code} — {d.short}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="field-label" htmlFor="topic">
+                Focus topic
+              </label>
+              <select
+                id="topic"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                <option value="all">All topics</option>
+                {topics.map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          {timed && (
+            <label className="duration-field">
+              Demonstration duration (minutes)
+              <input
+                type="number"
+                min={1}
+                max={240}
+                step={1}
+                value={minutes}
+                onChange={(e) => setMinutes(Number(e.target.value))}
+                required
+              />
+              <small>
+                Your choice, not a verified BCSP exam duration. Expired sessions
+                submit on the open page or when reopened.
+              </small>
+            </label>
+          )}
           <label className="checkbox-row">
             <input
               type="checkbox"
@@ -168,8 +246,9 @@ export function SessionBuilder({
           <div className="soft-note">
             <Info size={16} />
             <span>
-              Instant explanations are on. Timed practice and the exam simulator
-              are scheduled for a later milestone.
+              {mode === "exam"
+                ? "This is a short unverified demo rehearsal, not a full CHST simulation. Feedback stays hidden until submission; the browser clock and scores are inspectable."
+                : "Instant explanations are on. Your first checked answer is final; start a new session to retry."}
             </span>
           </div>
           {error && (
@@ -197,23 +276,37 @@ export function SessionBuilder({
           <dl>
             <div>
               <dt>Questions</dt>
-              <dd>{count}</dd>
+              <dd>
+                {count} / {eligible} eligible
+              </dd>
             </div>
             <div>
               <dt>Mode</dt>
-              <dd>{mode === "adaptive" ? "Adaptive" : "Learning"}</dd>
+              <dd>
+                {mode === "exam"
+                  ? "Demo exam rehearsal"
+                  : mode === "timed"
+                    ? "Timed practice"
+                    : mode === "adaptive"
+                      ? "Adaptive"
+                      : "Learning"}
+              </dd>
             </div>
             <div>
               <dt>Coverage</dt>
               <dd>{domain === "all" ? "All domains" : `Domain ${domain}`}</dd>
             </div>
             <div>
-              <dt>Feedback</dt>
-              <dd>Instant</dd>
+              <dt>Topic</dt>
+              <dd>{topic === "all" ? "Mixed topics" : topic}</dd>
             </div>
             <div>
-              <dt>Missed priority</dt>
-              <dd>{prioritizeMissed ? "On" : "Off"}</dd>
+              <dt>Feedback</dt>
+              <dd>{mode === "exam" ? "After submission" : "Instant"}</dd>
+            </div>
+            <div>
+              <dt>Timer</dt>
+              <dd>{timed ? `${minutes} min (demo)` : "Untimed"}</dd>
             </div>
             <div>
               <dt>Content</dt>
@@ -221,17 +314,21 @@ export function SessionBuilder({
             </div>
           </dl>
           <div className="summary-tip">
-            <strong>Start with 10.</strong>
+            <strong>
+              {count > eligible
+                ? "This set needs more questions."
+                : "Your focus is ready."}
+            </strong>
             <p>
-              The demo bank holds 12 questions (3 per domain). Choose 10 and all
-              domains to try a complete session. Larger or narrower sets are
-              blocked until enough distinct content exists.
+              {count > eligible
+                ? `Only ${eligible} distinct items match. Choose a smaller size or broaden your filters. The default 25-question request is intentionally blocked.`
+                : "Use your results to find a related lesson, revisit missed concepts, and try another short set."}
             </p>
           </div>
           <p className="fine-print">
-            Adaptive v1 ranks recent misses, repeated errors, low confidence,
-            and time since review. It is an experimental recommendation, not an
-            exam-readiness prediction.
+            Adaptive recommendations are transparent rules, not a validated
+            readiness prediction. Browser demo progress stays on this device and
+            website address.
           </p>
         </aside>
       </div>

@@ -5,6 +5,9 @@ import { Dashboard } from "./dashboard";
 import { PracticeSession } from "./practice-session";
 import { Performance } from "./performance";
 import { useHydrated } from "./use-hydrated";
+import { useLearning } from "./use-learning";
+import { completedLesson, resetLearning } from "@/demo/learning-store";
+import { lessons } from "@/modules/learning/catalog";
 import { demoQuestions } from "@/demo/questions";
 import {
   browserSnapshot,
@@ -54,10 +57,27 @@ function StorageError({ message }: { message: string }) {
   );
 }
 export function BrowserDashboard() {
+  const learning = useLearning();
   const { hydrated, state, error } = useBrowserState();
   if (!hydrated) return <Loading />;
   if (!state) return <StorageError message={error!} />;
-  return <Dashboard sessions={state.sessions} browserOnly />;
+  const completed = learning.state
+    ? lessons.filter((l) => completedLesson(l.id, learning.state!)).length
+    : 0;
+  const next = learning.state
+    ? lessons.find((l) => !completedLesson(l.id, learning.state!))
+    : lessons[0];
+  return (
+    <Dashboard
+      sessions={state.sessions}
+      browserOnly
+      learning={{
+        completed,
+        title: next?.title || "All representative lessons completed",
+        href: next ? `/learn/${next.id}` : "/learn",
+      }}
+    />
+  );
 }
 export function BrowserSession({ id }: { id: string }) {
   const { hydrated, state, error } = useBrowserState();
@@ -90,6 +110,7 @@ export function BrowserSession({ id }: { id: string }) {
   );
 }
 export function BrowserPerformance() {
+  const learning = useLearning();
   const { hydrated, state, error } = useBrowserState();
   if (!hydrated) return <Loading />;
   if (!state) return <StorageError message={error!} />;
@@ -98,6 +119,13 @@ export function BrowserPerformance() {
       saved={state.sessions}
       questions={demoQuestions}
       marked={state.bookmarks}
+      completedLessonIds={
+        learning.state
+          ? lessons
+              .filter((l) => completedLesson(l.id, learning.state!))
+              .map((l) => l.id)
+          : []
+      }
     />
   );
 }
@@ -107,12 +135,13 @@ export function BrowserSettings() {
   function reset() {
     if (
       !window.confirm(
-        "Delete only CredBuilt browser-demo sessions and bookmarks on this website? This cannot be undone.",
+        "Delete CredBuilt demo sessions, bookmarks, and lesson progress on this website? This cannot be undone.",
       )
     )
       return;
     try {
       resetBrowserDemo();
+      resetLearning();
       setResetError("");
     } catch (e) {
       setResetError(e instanceof Error ? e.message : "Reset failed.");
@@ -137,6 +166,11 @@ export function BrowserSettings() {
           another browser, or leaving private browsing loses access to this
           progress. Anyone using the same browser profile can see it. Do not
           enter private or sensitive information.
+        </p>
+        <p>
+          <Link className="text-link" href="/admin">
+            Inspect content review requirements
+          </Link>
         </p>
         <dl>
           <div>
@@ -166,8 +200,9 @@ export function BrowserSettings() {
         </dl>
         <p>
           No official exam questions, approved instruction, protected exam
-          scoring, content publishing, or real accounts are provided. Existing
-          later-milestone pages remain unavailable.
+          scoring, content publishing, or real accounts are provided. Lessons
+          and short exam rehearsals are demonstrations; the full 200-question
+          simulation, flashcards, and planner remain unavailable.
         </p>
         {(error || resetError) && (
           <p className="error" role="alert">

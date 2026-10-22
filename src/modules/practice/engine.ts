@@ -1,17 +1,31 @@
 import { z } from "zod";
 import type { Answer, Question, Session, SessionView } from "./types";
-export const sessionConfigSchema = z.object({
-  count: z.union([
-    z.literal(10),
-    z.literal(25),
-    z.literal(50),
-    z.literal(100),
-    z.literal(200),
-  ]),
-  mode: z.enum(["learning", "adaptive"]),
-  domain: z.enum(["all", "1", "2", "3", "4"]),
-  prioritizeMissed: z.boolean().default(false),
-});
+export const sessionConfigSchema = z
+  .object({
+    count: z.union([
+      z.literal(1),
+      z.literal(3),
+      z.literal(5),
+      z.literal(10),
+      z.literal(25),
+      z.literal(50),
+      z.literal(100),
+      z.literal(200),
+    ]),
+    mode: z.enum(["learning", "adaptive", "timed", "exam"]),
+    domain: z.enum(["all", "1", "2", "3", "4"]),
+    prioritizeMissed: z.boolean().default(false),
+    topic: z.string().max(100).optional(),
+    durationSeconds: z.number().int().min(60).max(14400).optional(),
+  })
+  .refine(
+    (c) =>
+      !["timed", "exam"].includes(c.mode) || c.durationSeconds !== undefined,
+    {
+      message: "Choose a duration for timed sessions.",
+      path: ["durationSeconds"],
+    },
+  );
 export const answerSchema = z.object({
   questionId: z.string().max(80),
   choiceId: z.string().max(20),
@@ -50,11 +64,13 @@ export function selectQuestions(
   random: () => number = Math.random,
 ): Question[] {
   const eligible = pool.filter(
-    (q) => config.domain === "all" || q.domain === config.domain,
+    (q) =>
+      (config.domain === "all" || q.domain === config.domain) &&
+      (!config.topic || config.topic === "all" || q.topic === config.topic),
   );
   if (eligible.length < config.count)
     throw new Error(
-      `Only ${eligible.length} eligible demonstration questions are available. Select 10 questions and all domains, or wait for a larger reviewed bank. Questions are never duplicated.`,
+      `Only ${eligible.length} eligible demonstration questions are available. Choose a smaller focused set (1, 3, or 5), select all domains for 10 questions, or wait for a larger reviewed bank. Questions are never duplicated.`,
     );
   const randomized = eligible.map((q) => ({ q, tie: random() }));
   randomized.sort((a, b) => {
@@ -96,7 +112,10 @@ export function sessionView(session: Session, pool: Question[]): SessionView {
   });
   const feedback: SessionView["feedback"] = {};
   for (const id of session.questionIds) {
-    if (session.answers[id] || session.status === "submitted") {
+    if (
+      (session.mode !== "exam" && session.answers[id]) ||
+      session.status === "submitted"
+    ) {
       const q = pool.find((q) => q.id === id)!;
       feedback[id] = {
         correctChoice: q.correctChoice,
@@ -106,10 +125,25 @@ export function sessionView(session: Session, pool: Question[]): SessionView {
       };
     }
   }
-  return { ...safe, questions, feedback };
+  const answers =
+    session.mode === "exam" && session.status === "in_progress"
+      ? Object.fromEntries(
+          Object.entries(session.answers).map(([id, a]) => {
+            const { correct: _correct, ...rest } = a;
+            void _correct;
+            return [id, rest];
+          }),
+        )
+      : session.answers;
+  return { ...safe, answers, questions, feedback };
 }
-export function aggregate(sessions: Pick<Session, "answers" | "status">[]) {
-  const answers: Answer[] = sessions.flatMap((s) => Object.values(s.answers));
+export function aggregate(
+  sessions: (Pick<Session, "answers" | "status"> &
+    Partial<Pick<Session, "mode">>)[],
+) {
+  const answers: Answer[] = sessions
+    .filter((s) => s.mode !== "exam" || s.status === "submitted")
+    .flatMap((s) => Object.values(s.answers));
   const correct = answers.filter((a) => a.correct).length;
   return {
     answered: answers.length,

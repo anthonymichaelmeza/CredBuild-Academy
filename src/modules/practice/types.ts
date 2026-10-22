@@ -32,17 +32,21 @@ export type Session = {
   questionIds: string[];
   answers: Record<string, Answer>;
   flags: string[];
-  mode: "learning" | "adaptive";
+  mode: "learning" | "adaptive" | "timed" | "exam";
   status: "in_progress" | "submitted";
   createdAt: string;
   submittedAt: string | null;
   revision: number;
+  deadlineAt?: string;
+  submissionReason?: "manual" | "expired";
+  topic?: string;
 };
 export type SafeQuestion = Omit<
   Question,
   "correctChoice" | "explanation" | "reference" | "choices"
 > & { choices: { id: string; text: string }[] };
-export type SessionView = Omit<Session, "ownerId"> & {
+export type SessionView = Omit<Session, "ownerId" | "answers"> & {
+  answers: Record<string, Omit<Answer, "correct"> & { correct?: boolean }>;
   questions: SafeQuestion[];
   feedback: Record<
     string,

@@ -1,9 +1,13 @@
 // Only original, unverified demo fixtures may be imported here. No account data,
 // production question bank, credentials, database adapter, or server auth code.
 import { z } from "zod";
+import {
+  deadlinePassed,
+  finalize,
+  recordAnswer,
+} from "@/modules/practice/lifecycle";
 import { demoQuestions } from "./questions";
 import {
-  grade,
   selectQuestions,
   sessionConfigSchema,
   sessionView,
@@ -28,14 +32,17 @@ const storedSession = z
   .object({
     id: z.uuid(),
     ownerId: z.literal("browser-demo"),
-    questionIds: z.array(questionId).length(10),
+    questionIds: z.array(questionId).min(1).max(200),
     answers: z.partialRecord(questionId, answer),
-    flags: z.array(questionId).max(10),
-    mode: z.enum(["learning", "adaptive"]),
+    flags: z.array(questionId).max(200),
+    mode: z.enum(["learning", "adaptive", "timed", "exam"]),
     status: z.enum(["in_progress", "submitted"]),
     createdAt: z.iso.datetime(),
     submittedAt: z.iso.datetime().nullable(),
     revision: z.number().int().min(0),
+    deadlineAt: z.iso.datetime().optional(),
+    submissionReason: z.enum(["manual", "expired"]).optional(),
+    topic: z.string().max(100).optional(),
   })
   .superRefine((s, ctx) => {
     if (
@@ -118,12 +125,15 @@ export function createBrowserSession(input: unknown): string {
     throw new Error(
       "This browser demo holds up to 100 sessions. Reset browser demo in Account Settings before starting more.",
     );
-  const history = [...state.sessions].reverse().flatMap((s) =>
-    Object.entries(s.answers).map(([questionId, a]) => ({
-      questionId,
-      ...a,
-    })),
-  );
+  const history = [...state.sessions]
+    .reverse()
+    .filter((s) => s.mode !== "exam" || s.status === "submitted")
+    .flatMap((s) =>
+      Object.entries(s.answers).map(([questionId, a]) => ({
+        questionId,
+        ...a,
+      })),
+    );
   const selected = selectQuestions(demoQuestions, config, history);
   const session: Session = {
     id: crypto.randomUUID(),
@@ -136,6 +146,14 @@ export function createBrowserSession(input: unknown): string {
     createdAt: new Date().toISOString(),
     submittedAt: null,
     revision: 0,
+    ...(config.topic && config.topic !== "all" ? { topic: config.topic } : {}),
+    ...(["timed", "exam"].includes(config.mode)
+      ? {
+          deadlineAt: new Date(
+            Date.now() + config.durationSeconds! * 1000,
+          ).toISOString(),
+        }
+      : {}),
   };
   persist({ ...state, sessions: [session, ...state.sessions] });
   return session.id;
@@ -151,7 +169,7 @@ export function browserPracticeAction(
   if (action.action === "start")
     throw new Error("Use the session builder to begin.");
   const state = parseBrowserSnapshot(browserSnapshot());
-  const session = state.sessions.find((s) => s.id === action.sessionId);
+  let session = state.sessions.find((s) => s.id === action.sessionId);
   if (!session)
     throw new Error(
       "This session is not stored in this browser. Start a new demonstration session.",
@@ -173,10 +191,9 @@ export function browserPracticeAction(
     if (action.action === "submit") return browserSessionView(session);
     throw new Error("Session already submitted.");
   }
-  if (action.action === "submit") {
-    session.status = "submitted";
-    session.submittedAt = new Date().toISOString();
-  } else {
+  if (deadlinePassed(session)) session = finalize(session);
+  else if (action.action === "submit") session = finalize(session);
+  else {
     const id =
       action.action === "answer" ? action.input.questionId : action.questionId;
     if (!session.questionIds.includes(id))
@@ -186,17 +203,14 @@ export function browserPracticeAction(
         ? session.flags.filter((q) => q !== id)
         : [...session.flags, id];
     else {
-      if (session.answers[id]) return browserSessionView(session);
-      const q = demoQuestions.find((q) => q.id === id)!;
-      session.answers[id] = {
-        choiceId: action.input.choiceId,
-        confidence: action.input.confidence,
-        correct: grade(q, action.input.choiceId),
-        responseMs: action.input.responseMs,
-        answeredAt: new Date().toISOString(),
-      };
+      const updated = recordAnswer(session, demoQuestions, action.input);
+      if (updated === session) return browserSessionView(session);
+      session = updated;
     }
   }
+  state.sessions = state.sessions.map((s) =>
+    s.id === session!.id ? session! : s,
+  );
   session.revision++;
   persist(state);
   return browserSessionView(session);

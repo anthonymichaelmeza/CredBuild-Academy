@@ -1,14 +1,22 @@
-# CredBuilt Academy
+# CredBuilt Academy — v0.4
 
 **BUILD KNOWLEDGE. EARN CREDENTIALS.**
 
-A working Next.js application foundation and an initial CHST demonstration practice engine. This is an early development milestone, not a production-ready certification course.
+A working Next.js learning academy, practice engine, short exam rehearsal, and real-data analytics for a CHST demonstration. This is an early development milestone, not a production-ready certification course.
 
 ## Vercel browser demonstration — no service credentials
 
 For a browser-accessible demo, set **`NEXT_PUBLIC_BROWSER_DEMO=true`** in Vercel before Deploy. This is the only required variable for this mode. Do not add Clerk keys, a database URL, local-demo flags, or filesystem settings. Node.js 24 is pinned in package.json. See the [step-by-step Vercel demo guide](docs/vercel-demo.md).
 
 This explicit mode uses only browser site storage for demo progress and bypasses Clerk, PostgreSQL, and server-side progress writes. It supports the existing practice flow and shows a persistent limitations banner. There is no real account, cross-device synchronization, protected scoring, or approved instructional content. Clearing site data or changing the website address creates an empty demo workspace. The existing server-backed mode remains available when this public build-time flag is off.
+
+## v0.4 review workflow
+
+The v0.4 work lives on **`development/v0.4-learning-experience`**, separate from `main`. Pushing that development branch may create a Vercel **Preview** deployment; it must not be merged into the production branch until approved. Ensure **`NEXT_PUBLIC_BROWSER_DEMO=true`** is enabled for the **Preview** environment as well as Production, and use the deployment for this branch. No new service, secret, paid dependency, or database migration is required for the browser demo.
+
+The browser practice key **`credbuilt.browser-demo.v1` is unchanged**. Existing v0.3 snapshots are accepted without erasing them. New timed and focused sessions add optional fields. Lessons use a separate versioned `credbuilt.learning-demo.v1` namespace; a lesson revision invalidates completion until it is studied again. Each Vercel origin has independent browser-local history, so a new preview address starts empty.
+
+See [v0.4 review notes](docs/v04-review.md) for the implemented scope, test evidence, preview instructions, and remaining limits.
 
 ## Run locally
 
@@ -42,7 +50,12 @@ Stop the dev server first. Both commands use port 3000. This does not make the d
 - Practice builder with 10/25/50/100/200 counts, learning/adaptive modes, domain selection, explicit missed-question priority, and a summary. The 12-item demo bank permits ten distinct questions across all domains; shortages are explained rather than padded.
 - Server-side selection and grading, first-answer locking, instant explanations and distractor feedback, confidence ratings, per-question bookmarks, flags, and question navigation.
 - Saved session progress, resumable sessions, submission, results, missed/all-question review, session history, and domain accuracy. Demo activity is clearly identified.
-- Searchable reference discovery links, a curriculum framework, and honest availability states for later sections.
+- Eight representative demo lessons across the four supplied CHST domains, with topics/subtopics, original learning objectives, a section-based reader, references, two knowledge checks per lesson, versioned completion tracking, and related practice.
+- Domain/topic filters and focused 1/3/5-question sets alongside the original 10/25/50/100/200 options. Insufficient pools are blocked.
+- Timed practice and short exam rehearsals: pinned distinct questions, countdown/deadline checks, autosaved editable exam answers, flagged/unanswered navigation, automatic expiry finalization, withheld exam feedback, and detailed results. The full 200-question exam remains gated by reviewed content and verified timing.
+- Filterable domain/topic accuracy, repeated misses with underlying-session links, UTC activity, history, next incomplete lessons, and weak-topic practice suggestions from saved records.
+- A tested Draft → Technical review → Approved → Published → Retired content policy, with independent review/source gates and revision/audit handling. The public inspector explains the gates but cannot change status or publish.
+- Searchable reference discovery links and honest availability states for future flashcards/planner.
 - Drizzle ORM, a checksummed SQL migration, idempotent demonstration seeding, PGlite local PostgreSQL, and a configurable managed PostgreSQL adapter.
 - Server authorization, browser-demo isolation, input validation, same-origin mutation checks, optimistic concurrency, protected server modules, and denial of all administrative publishing endpoints.
 
@@ -58,7 +71,7 @@ Stop the dev server first. Both commands use port 3000. This does not make the d
 
 **Database:** browser-only demo mode does not use a database. In server-backed mode, local PostgreSQL behavior is exercised through PGlite. Live managed PostgreSQL connectivity, TLS configuration, pooling, deployment migrations, and cross-device account persistence remain unvalidated. PGlite is a single-process development fallback; do not point multiple application instances at one local data directory.
 
-**Later work:** timed practice and the 200-question exam engine, countdown/automatic expiry, complete source-review CMS and role management, published lessons, flashcards/spaced repetition, study planner, rich analytics, billing/entitlements, and an AI coach are not implemented. Their pages explain availability instead of displaying simulated tools. No timing or automatic-submission tests are claimed.
+**Later work:** an approved 200-question CHST simulation, a complete authenticated source-review CMS/editor and role management, technically reviewed instructional lessons, flashcards/spaced repetition, study planner, billing/entitlements, an AI coach, and validated readiness/retention models remain incomplete. The short rehearsal timer and expiry are implemented; a browser that is closed cannot run a background task and finalizes on reopening or its next action. Browser clocks and scoring are inspectable and are not an authoritative exam service.
 
 ## Environment configuration
 
@@ -99,7 +112,7 @@ Import `anthonymichaelmeza/CredBuild-Academy` with branch `main`, **Root Directo
 
 The repository includes all source, the lockfile, SQL migration, tests, and documentation. Every `.env*` file is excluded from Git. The safe, credential-free example is stored at `config/environment.example`; create local environment files from it or enter deployment variables securely through the hosting dashboard.
 
-**Use `NEXT_PUBLIC_BROWSER_DEMO=true` for this Vercel preview.** Practice then saves only in the visitor’s browser and does not need a hosted backend, migrations, Clerk, or filesystem writes. [Deployment instructions and limitations](docs/vercel-demo.md) describe the exact settings and test conditions. For durable account progress with browser demo turned off, a hosted PostgreSQL database and authentication are still required; file-backed PGlite must not be used for persistent progress in Vercel serverless functions.
+**Use `NEXT_PUBLIC_BROWSER_DEMO=true` for this Vercel preview.** Practice and demo lessons then save only in the visitor’s browser and does not need a hosted backend, migrations, Clerk, or filesystem writes. [Deployment instructions and limitations](docs/vercel-demo.md) describe the exact settings and test conditions. For durable account progress with browser demo turned off, a hosted PostgreSQL database and authentication are still required; file-backed PGlite must not be used for persistent progress in Vercel serverless functions.
 
 ## Architecture and next milestone
 

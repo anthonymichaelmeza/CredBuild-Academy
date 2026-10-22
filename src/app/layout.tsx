@@ -4,6 +4,7 @@ import { Shell } from "@/components/shell";
 import { authConfigured } from "@/modules/identity/auth";
 import { browserDemoEnabled } from "@/modules/runtime/mode";
 import "./globals.css";
+import "./v04.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";

@@ -18,9 +18,11 @@ import type { Session } from "@/modules/practice/types";
 export function Dashboard({
   sessions,
   browserOnly = false,
+  learning,
 }: {
   sessions: Session[];
   browserOnly?: boolean;
+  learning?: { completed: number; title: string; href: string };
 }) {
   const stats = aggregate(sessions);
   const resume = sessions.find((s) => s.status === "in_progress");
@@ -124,6 +126,19 @@ export function Dashboard({
           </div>
         ))}
       </div>
+      {learning && (
+        <section className="card learning-dashboard-link">
+          <div>
+            <div className="eyebrow">YOUR LEARNING ACADEMY</div>
+            <h2>{learning.completed} / 8 demo lessons completed</h2>
+            <p>Next: {learning.title}</p>
+          </div>
+          <Link className="button primary" href={learning.href}>
+            Continue learning
+            <ArrowRight size={16} />
+          </Link>
+        </section>
+      )}
       <div className="dashboard-columns">
         <section className="card domain-card">
           <div className="card-heading">
@@ -182,16 +197,16 @@ export function Dashboard({
             {
               href: "/learn",
               title: "Understand the fundamentals",
-              text: "Preview the structure of your learning path.",
+              text: "Read demo lessons and check your understanding.",
               icon: BookOpen,
               tag: "FRAMEWORK",
             },
             {
               href: "/exam",
               title: "Prepare for exam day",
-              text: "See simulator requirements and bank readiness.",
+              text: "Try a short rehearsal and see full-exam requirements.",
               icon: Timer,
-              tag: "UP NEXT",
+              tag: "DEMO REHEARSAL",
             },
           ].map(({ href, title, text, icon: Icon, tag }) => (
             <Link href={href} key={href} className="next-action">

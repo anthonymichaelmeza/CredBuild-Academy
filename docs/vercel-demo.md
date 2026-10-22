@@ -28,7 +28,7 @@ On Vercel's **New Project** screen:
 5. Submit the session to see results, review missed questions, and open **My Performance** for history.
 6. Open **Account Settings → Reset browser demo** to clear only this demo's sessions and bookmarks for this website. Reset is confirmed and cannot be undone.
 
-The browser-demo banner appears on every page. Navigation to planned lessons, exams, flashcards, and planner continues to show honest availability states.
+The browser-demo banner appears on every page. Version 0.4 adds representative lessons, browser-local completion, timed practice, short exam rehearsal, and real-data analytics. The full CHST simulation, flashcards, and planner remain unavailable. See v04-review.md for scope and preview review instructions.
 
 ## What this demonstration does and does not provide
 
@@ -52,7 +52,7 @@ The browser-demo banner appears on every page. Navigation to planned lessons, ex
 
 ## Maintainer validation
 
-The browser demo has dedicated unit and production-browser tests, in addition to the existing server-backed regression tests. To reproduce the hosted-demo conditions:
+The browser demo has dedicated unit and production-browser tests, in addition to the existing server-backed regression tests. Review v0.4 on development/v0.4-learning-experience; do not merge or promote to production without approval. To reproduce the hosted-demo conditions:
 
 ```bash
 NEXT_PUBLIC_BROWSER_DEMO=true ALLOW_LOCAL_DEMO=false DATABASE_URL= CLERK_SECRET_KEY= NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY= LOCAL_DATABASE_PATH=/proc/credbuilt-no-writes npm run build

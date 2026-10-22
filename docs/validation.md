@@ -2,7 +2,15 @@
 
 This file describes executed checks and their limits. The application is an initial foundation plus local demonstration practice, not the complete v0.3 product.
 
-## Executed successfully
+## v0.4 review-candidate validation
+
+The original checks below are retained as earlier evidence. Current v0.4 development adds 15 tests for a total of **44 passing Vitest tests**, with no original test removed or disabled. The original **four server-backed browser tests** pass; the expanded **ten browser-demo browser tests** exercise both desktop and Pixel 7 layouts. Production builds work with the browser flag on and off. See [v0.4 review notes](v04-review.md) for exact implemented features and limits.
+
+Browser checks initially found an exact-label locator that included option text. The selector now uses the actual accessible combobox role/name; the repeated-miss analytics workflow and locked publication gate pass. No assertions were removed to accommodate that selector correction.
+
+The demo remains client-local, with no real accounts, independently verified content, or protected exams. Timed rehearsal and browser-local lesson progress are now implemented; the earlier statements about unimplemented timing/lessons describe v0.3 only. Public content administration is still denied; the new inspector does not publish.
+
+## Earlier foundation checks executed successfully
 
 - TypeScript checking and ESLint.
 - Twenty-nine Vitest tests across six files: practice rules and allocation, dashboard/navigation, API boundaries, real PGlite PostgreSQL integration, browser-only persistence, and explicit browser-mode guards.

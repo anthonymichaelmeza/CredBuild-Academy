@@ -10,6 +10,9 @@ import {
   XCircle,
   ExternalLink,
 } from "lucide-react";
+import { SessionClock } from "./session-clock";
+import { browserPracticeAction } from "@/demo/browser-store";
+import { lessonForQuestion } from "@/modules/learning/catalog";
 import type { Confidence, SessionView } from "@/modules/practice/types";
 export function PracticeSession({
   initial,
@@ -24,11 +27,14 @@ export function PracticeSession({
   const [saved, setSaved] = useState(initialBookmarks);
   const [index, setIndex] = useState(0);
   const [choice, setChoice] = useState("");
-  const [confidence, setConfidence] = useState<Confidence>("medium");
+  const [confidence, setConfidence] = useState<Confidence>(
+    () => initial.answers[initial.questionIds[0]]?.confidence || "medium",
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [review, setReview] = useState(false);
   const [reviewMissed, setReviewMissed] = useState(false);
+  const [navigationFilter, setNavigationFilter] = useState("all");
   const started = useRef(0);
   useEffect(() => {
     started.current = Date.now();
@@ -36,6 +42,8 @@ export function PracticeSession({
   const question = session.questions[index];
   const answer = session.answers[question.id];
   const feedback = session.feedback[question.id];
+  const isExam = session.mode === "exam";
+  const relatedLesson = lessonForQuestion(question.id);
   const answered = Object.keys(session.answers).length;
   const correct = Object.values(session.answers).filter(
     (a) => a.correct,
@@ -53,7 +61,6 @@ export function PracticeSession({
     setError("");
     try {
       if (browserOnly) {
-        const { browserPracticeAction } = await import("@/demo/browser-store");
         const data = browserPracticeAction(
           { action, sessionId: session.id, ...extra },
           session.revision,
@@ -82,7 +89,9 @@ export function PracticeSession({
   function go(i: number) {
     setIndex(i);
     setChoice("");
-    setConfidence("medium");
+    setConfidence(
+      session.answers[session.questionIds[i]]?.confidence || "medium",
+    );
     setError("");
   }
   if (session.status === "submitted" && !review)
@@ -94,7 +103,12 @@ export function PracticeSession({
         </h1>
         <p className="lead">
           Here’s what this practice session showed. These are demo results, not
-          a prediction of exam performance.
+          a prediction of exam performance.{" "}
+          {session.submissionReason === "expired" && (
+            <strong>
+              Time expired — this session was automatically submitted.
+            </strong>
+          )}
         </p>
         <div className="results-grid">
           <div className="card result-main">
@@ -128,6 +142,21 @@ export function PracticeSession({
             })}
           </div>
         </div>
+        <section className="card analytics-section">
+          <h2>Results by topic</h2>
+          {[...new Set(session.questions.map((q) => q.topic))].map((topic) => {
+            const items = session.questions.filter((q) => q.topic === topic);
+            return (
+              <div className="result-domain" key={topic}>
+                <span>{topic}</span>
+                <strong>
+                  {items.filter((q) => session.answers[q.id]?.correct).length} /{" "}
+                  {items.length} correct
+                </strong>
+              </div>
+            );
+          })}
+        </section>
         <div className="results-actions">
           <button
             className="button primary"
@@ -182,6 +211,21 @@ export function PracticeSession({
           {answered} / {session.questions.length} answered
         </span>
       </div>
+      {session.deadlineAt && session.status === "in_progress" && (
+        <SessionClock
+          deadline={session.deadlineAt}
+          onExpire={() => {
+            if (!busy) void mutate("submit");
+          }}
+        />
+      )}
+      {isExam && !review && (
+        <p className="exam-mode-note">
+          Short demonstration rehearsal, not a full CHST exam. Choices autosave
+          and remain editable until submission. Explanations are hidden until
+          results.
+        </p>
+      )}
       <div className="session-progress">
         <span
           style={{ width: `${(answered / session.questions.length) * 100}%` }}
@@ -242,9 +286,26 @@ export function PracticeSession({
                   type="radio"
                   name="answer"
                   value={c.id}
-                  checked={(answer?.choiceId || choice) === c.id}
-                  disabled={Boolean(answer) || review || busy}
-                  onChange={() => setChoice(c.id)}
+                  checked={(choice || answer?.choiceId) === c.id}
+                  disabled={(!isExam && Boolean(answer)) || review || busy}
+                  onChange={() => {
+                    setChoice(c.id);
+                    if (isExam) {
+                      const elapsed = Math.max(
+                        0,
+                        Math.min(Date.now() - started.current, 86400000),
+                      );
+                      started.current = Date.now();
+                      void mutate("answer", {
+                        input: {
+                          questionId: question.id,
+                          choiceId: c.id,
+                          confidence,
+                          responseMs: elapsed,
+                        },
+                      });
+                    }
+                  }}
                 />
                 <span className="choice-letter">
                   {String.fromCharCode(65 + i)}
@@ -254,7 +315,7 @@ export function PracticeSession({
               </label>
             ))}
           </fieldset>
-          {!answer && !review && (
+          {(!answer || isExam) && !review && (
             <fieldset className="confidence">
               <legend>How confident are you?</legend>
               {(["low", "medium", "high"] as Confidence[]).map((c) => (
@@ -263,12 +324,30 @@ export function PracticeSession({
                     type="radio"
                     name="confidence"
                     checked={confidence === c}
-                    onChange={() => setConfidence(c)}
+                    disabled={busy}
+                    onChange={() => {
+                      setConfidence(c);
+                      if (isExam && answer)
+                        void mutate("answer", {
+                          input: {
+                            questionId: question.id,
+                            choiceId: answer.choiceId,
+                            confidence: c,
+                            responseMs: 0,
+                          },
+                        });
+                    }}
                   />
                   {c[0].toUpperCase() + c.slice(1)}
                 </label>
               ))}
             </fieldset>
+          )}
+          {isExam && answer && !review && (
+            <p role="status" className="save-status">
+              Answer saved in this workspace. You can change it before
+              submission.
+            </p>
           )}
           {feedback && (
             <section
@@ -307,8 +386,17 @@ export function PracticeSession({
               </a>
               <small>
                 {feedback.reference.locator} · Source not verified. Objective
-                mapping and related lessons pending editorial review.
+                mapping pending editorial review.
               </small>
+              {relatedLesson && (
+                <Link
+                  className="button secondary related-lesson"
+                  href={`/learn/${relatedLesson.id}`}
+                >
+                  Understand this concept: {relatedLesson.title}
+                  <ArrowRight size={15} />
+                </Link>
+              )}
             </section>
           )}
           {error && (
@@ -325,7 +413,7 @@ export function PracticeSession({
               <ArrowLeft size={16} />
               Previous
             </button>
-            {!answer && !review ? (
+            {!answer && !review && !isExam ? (
               <button
                 className="button primary"
                 disabled={!choice || busy}
@@ -368,11 +456,38 @@ export function PracticeSession({
         </section>
         <aside className="card question-navigator">
           <h2>Your session</h2>
-          <p>Move freely between questions. First checked answers are final.</p>
+          <p>
+            {isExam
+              ? "Choices autosave. Review flags and unanswered questions before submitting."
+              : "Move freely between questions. First checked answers are final."}
+          </p>
+          {!review && (
+            <label className="navigator-filter">
+              Show questions
+              <select
+                aria-label="Filter question navigator"
+                value={navigationFilter}
+                onChange={(e) => setNavigationFilter(e.target.value)}
+              >
+                <option value="all">All questions</option>
+                <option value="flagged">Flagged for review</option>
+                <option value="unanswered">Unanswered</option>
+              </select>
+            </label>
+          )}
           <div className="question-grid">
             {session.questions
               .map((q, i) => ({ q, i }))
-              .filter(({ i }) => allowedIndexes.includes(i))
+              .filter(
+                ({ q, i }) =>
+                  allowedIndexes.includes(i) &&
+                  (review ||
+                    navigationFilter === "all" ||
+                    (navigationFilter === "flagged" &&
+                      session.flags.includes(q.id)) ||
+                    (navigationFilter === "unanswered" &&
+                      !session.answers[q.id])),
+              )
               .map(({ q, i }) => (
                 <button
                   key={q.id}
@@ -413,8 +528,10 @@ export function PracticeSession({
             </button>
           )}
           <div className="soft-note">
-            Saved after every checked answer. Demo results are not part of an
-            approved question bank.
+            {isExam
+              ? "Saved after each choice. "
+              : "Saved after every checked answer. "}
+            Demo results are not part of an approved question bank.
           </div>
         </aside>
       </div>
