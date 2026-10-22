@@ -95,6 +95,8 @@ test("exam rehearsal autosaves choices, hides feedback, and auto-submits on expi
     ),
   ).toBeVisible();
   await expect(page.locator("section.feedback")).toHaveCount(0);
+  await expect(page.locator(".answer-option.incorrect")).toHaveCount(0);
+  await expect(page.locator(".answer-option.correct")).toHaveCount(0);
   await page.getByRole("radio").nth(1).check();
   await page.reload();
   await expect(page.getByRole("radio").nth(1)).toBeChecked();

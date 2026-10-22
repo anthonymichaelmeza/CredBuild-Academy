@@ -280,7 +280,7 @@ export function PracticeSession({
             {question.choices.map((c, i) => (
               <label
                 key={c.id}
-                className={`answer-option ${(answer?.choiceId || choice) === c.id ? "chosen" : ""} ${feedback?.correctChoice === c.id ? "correct" : ""} ${answer && !answer.correct && answer.choiceId === c.id ? "incorrect" : ""}`}
+                className={`answer-option ${(answer?.choiceId || choice) === c.id ? "chosen" : ""} ${feedback?.correctChoice === c.id ? "correct" : ""} ${feedback && answer?.correct === false && answer.choiceId === c.id ? "incorrect" : ""}`}
               >
                 <input
                   type="radio"

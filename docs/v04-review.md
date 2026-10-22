@@ -44,6 +44,8 @@ This is a workflow foundation, **not a complete authenticated editorial CMS**. T
 - The ten production browser-demo tests passed across desktop and Pixel 7 layouts, including the original browser-demo flows plus lesson completion/focused practice, answer autosave, persisted confidence, expiry auto-submission, analytics from two real practice sessions, and locked publishing.
 - Type checking, ESLint, formatting, and production builds with the browser flag on and off were executed successfully. See the validation record for any later correction or limitation.
 
+Visual inspection caught a choice-color condition treating hidden exam correctness as a wrong answer. Feedback colors now require graded feedback, and browser tests explicitly reject correct/incorrect coloring before exam submission. A fresh clone of the development branch also passed a clean dependency installation and browser-demo production build without credentials or dotenv files.
+
 Screenshots are captured from the running application with actual local demo interactions, rather than generated mockups. They are supplied as separate review artifacts, not mixed into the question bank or committed with private browser data.
 
 ## Preview review before approval
