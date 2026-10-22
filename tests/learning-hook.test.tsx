@@ -12,6 +12,48 @@ afterEach(() => {
 });
 
 describe("learning persistence adapter", () => {
+  it("ignores a superseded account read that resolves after a newer response", async () => {
+    vi.stubEnv("NEXT_PUBLIC_BROWSER_DEMO", "false");
+    let finishOld!: (value: Response) => void;
+    const stale = new Promise<Response>((resolve) => {
+      finishOld = resolve;
+    });
+    const latest = {
+      state: { version: 1, progress: {} },
+      revisions: { latest: 7 },
+    };
+    const fetcher = vi
+      .fn()
+      .mockReturnValueOnce(stale)
+      .mockResolvedValueOnce(Response.json(latest));
+    vi.stubGlobal("fetch", fetcher);
+    const { result } = renderHook(() => useLearning());
+    await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      window.dispatchEvent(new Event("focus"));
+    });
+    await waitFor(() => expect(result.current.state).toEqual(latest.state));
+    await act(async () => {
+      finishOld(
+        Response.json({
+          state: {
+            version: 1,
+            progress: {
+              stale: {
+                lessonVersion: 1,
+                sections: [],
+                checks: {},
+                completedAt: null,
+              },
+            },
+          },
+          revisions: { stale: 1 },
+        }),
+      );
+    });
+    expect(result.current.state).toEqual(latest.state);
+    expect(fetcher.mock.calls[0][1].signal.aborted).toBe(true);
+  });
   it("loads and saves account progress without reading or writing browser lesson storage", async () => {
     vi.stubEnv("NEXT_PUBLIC_BROWSER_DEMO", "false");
     const read = vi

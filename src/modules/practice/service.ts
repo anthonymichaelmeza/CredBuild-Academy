@@ -10,7 +10,10 @@ import type { Confidence, Question, Session } from "./types";
 import { deadlinePassed, finalize, recordAnswer } from "./lifecycle";
 let seeded: Promise<void> | undefined;
 async function ready() {
-  await (seeded ??= seedDemo());
+  await (seeded ??= seedDemo().catch((error) => {
+    seeded = undefined;
+    throw error;
+  }));
   return db();
 }
 export async function pool(): Promise<Question[]> {

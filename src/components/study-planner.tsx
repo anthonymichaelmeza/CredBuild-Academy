@@ -1,6 +1,12 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { z } from "zod";
 import {
   ArrowRight,
@@ -17,6 +23,7 @@ import {
   emptyPlanner,
   utcDate,
   validateProfile,
+  plannerStateSchema,
   type LearnerProfile,
   type PlannerAction,
   type PlannerSnapshot,
@@ -42,6 +49,10 @@ import { useLearning } from "./use-learning";
 
 const noSubscription = () => () => {};
 const noSnapshot = () => null;
+const connectedSnapshotSchema = z.object({
+  state: plannerStateSchema.nullable(),
+  revision: z.number().int().nonnegative(),
+});
 function errorMessage(error: unknown) {
   return error instanceof z.ZodError
     ? error.issues[0]?.message || "Check your entries."
@@ -233,29 +244,66 @@ export function StudyPlanner({
   const [pending, setPending] = useState(false);
   const [operationError, setOperationError] = useState("");
   const [notice, setNotice] = useState("");
-  useEffect(() => {
+  const mounted = useRef(false);
+  const saving = useRef(false);
+  const epoch = useRef(0);
+  const reading = useRef<AbortController | null>(null);
+  const writing = useRef<AbortController | null>(null);
+  const reloadRemote = useCallback(async () => {
     if (browserOnly || !available) return;
+    reading.current?.abort();
     const controller = new AbortController();
-    fetch("/api/profile", { cache: "no-store", signal: controller.signal })
-      .then(async (response) => {
-        const result = await response.json();
-        if (!response.ok)
-          throw new Error(
-            result.error || "Your study preferences could not be loaded.",
-          );
-        return result;
-      })
-      .then((result) => setRemote({ ...result, loading: false, error: "" }))
-      .catch((error) => {
-        if (error.name !== "AbortError")
-          setRemote((current) => ({
-            ...current,
-            loading: false,
-            error: errorMessage(error),
-          }));
+    reading.current = controller;
+    const currentEpoch = ++epoch.current;
+    const stale = () =>
+      !mounted.current ||
+      controller.signal.aborted ||
+      epoch.current !== currentEpoch;
+    try {
+      const response = await fetch("/api/profile", {
+        cache: "no-store",
+        signal: controller.signal,
       });
-    return () => controller.abort();
+      const result = await response.json();
+      if (stale()) return;
+      if (!response.ok)
+        throw new Error(
+          result.error || "Your study preferences could not be loaded.",
+        );
+      const snapshot = connectedSnapshotSchema.parse(result);
+      const weakDomains = z
+        .array(z.enum(["1", "2", "3", "4"]))
+        .parse(result.weakDomains || []);
+      setRemote({ ...snapshot, weakDomains, loading: false, error: "" });
+    } catch (error) {
+      if (stale()) return;
+      // A failed connected read must not display another identity's previous
+      // profile or fall back to browser-local demonstration preferences.
+      setRemote({
+        ...emptyPlanner,
+        weakDomains: [],
+        loading: false,
+        error: errorMessage(error),
+      });
+      throw error;
+    } finally {
+      if (reading.current === controller) reading.current = null;
+    }
   }, [browserOnly, available]);
+  useEffect(() => {
+    mounted.current = true;
+    const load = () => {
+      if (!saving.current) void reloadRemote().catch(() => {});
+    };
+    load();
+    window.addEventListener("focus", load);
+    return () => {
+      mounted.current = false;
+      reading.current?.abort();
+      writing.current?.abort();
+      window.removeEventListener("focus", load);
+    };
+  }, [reloadRemote]);
   let snapshot: PlannerSnapshot = remote;
   let loadError = browserOnly ? "" : remote.error;
   let evidenceError = "";
@@ -290,7 +338,16 @@ export function StudyPlanner({
     state?.profile.targetDate && state.profile.targetDate < today,
   );
   async function act(action: PlannerAction) {
-    if (pending) return;
+    if (saving.current) return;
+    saving.current = true;
+    reading.current?.abort();
+    const controller = new AbortController();
+    writing.current = controller;
+    const currentEpoch = ++epoch.current;
+    const stale = () =>
+      !mounted.current ||
+      controller.signal.aborted ||
+      epoch.current !== currentEpoch;
     setPending(true);
     setOperationError("");
     setNotice("");
@@ -301,15 +358,29 @@ export function StudyPlanner({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(action),
+          signal: controller.signal,
         });
         const result = await response.json();
-        if (!response.ok)
+        if (stale()) return;
+        if (!response.ok) {
+          if (response.status === 401) {
+            setRemote({
+              ...emptyPlanner,
+              weakDomains: [],
+              loading: false,
+              error: result.error || "Sign in to load your study plan.",
+            });
+            setEditing(false);
+          }
+          if (response.status === 409) await reloadRemote().catch(() => {});
           throw new Error(
             result.error || "Your study preferences could not be saved.",
           );
+        }
+        const saved = connectedSnapshotSchema.parse(result);
         setRemote((current) => ({
           ...current,
-          ...result,
+          ...saved,
           loading: false,
           error: "",
         }));
@@ -325,10 +396,13 @@ export function StudyPlanner({
         );
       }
     } catch (error) {
+      if (!mounted.current || controller.signal.aborted) return;
       setOperationError(errorMessage(error));
       throw error;
     } finally {
-      setPending(false);
+      saving.current = false;
+      if (writing.current === controller) writing.current = null;
+      if (mounted.current) setPending(false);
     }
   }
   return (

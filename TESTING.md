@@ -106,3 +106,7 @@ This creates disposable activity in a fresh browser context; it must not be used
   to validate. Tests of blockers/denials do not constitute those features.
 - Browser clocks/scores are intentionally inspectable. Response time is
   browser-reported, and current analytics do not establish exam readiness.
+
+## Release 0.6A checkpoint
+
+Independently reran the v0.5 baseline: 86 unit/integration tests and eight server-backed desktop/mobile browser cases passed before implementation. After connected-account reliability changes, 98 tests across 25 files and all eight server-backed browser cases passed. TypeScript, ESLint (after the ref cleanup), diff checks and a server-mode production build passed. New tests cover account switching/loading concealment, superseded requests, planner401/409 recovery, managed-subject ownership with isolated PGlite, initialization retry and PostgreSQL options. Live provider validation remains blocked; no claim of real Clerk registration or hosted cross-device testing is made.

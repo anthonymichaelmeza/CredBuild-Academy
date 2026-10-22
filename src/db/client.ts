@@ -8,6 +8,7 @@ import path from "node:path";
 import { createHash } from "node:crypto";
 import * as schema from "./schema";
 import { browserDemoEnabled } from "@/modules/runtime/mode";
+import { postgresOptions } from "./postgres-options";
 
 const migrationRequired = () =>
   new Error(
@@ -145,8 +146,11 @@ async function connect() {
     await mkdir(path.dirname(localPath), { recursive: true });
   const local = !managed ? new PGlite(localPath) : null;
   const pool = managed
-    ? new Pool({ connectionString: process.env.DATABASE_URL, max: 5 })
+    ? new Pool(postgresOptions(process.env.DATABASE_URL!))
     : null;
+  pool?.on("error", () => {
+    console.error(JSON.stringify({ event: "database_idle_connection_error" }));
+  });
   try {
     await migrateDatabase(local, pool);
   } catch (error) {

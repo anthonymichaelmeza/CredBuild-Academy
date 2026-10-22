@@ -37,25 +37,56 @@ export function useLearning() {
   const [pending, setPending] = useState(false);
   const working = useRef(false);
   const mounted = useRef(false);
+  const generation = useRef(0);
+  const reads = useRef<AbortController | null>(null);
+  const invalidateReads = useCallback(() => {
+    generation.current++;
+    reads.current?.abort();
+  }, []);
 
   const reload = useCallback(async () => {
     if (browserOnly) return;
-    const response = await fetch("/api/learning", {
-      cache: "no-store",
-      credentials: "same-origin",
-    });
-    const data = await response.json();
-    if (!response.ok)
-      throw new Error(data.error || "Lesson progress could not be loaded.");
-    const snapshot = {
-      state: learningStateSchema.parse(data.state),
-      revisions: data.revisions || {},
-    };
-    if (mounted.current) {
-      setServer(snapshot);
-      setError(null);
+    reads.current?.abort();
+    const controller = new AbortController();
+    reads.current = controller;
+    const requestGeneration = ++generation.current;
+    try {
+      const response = await fetch("/api/learning", {
+        cache: "no-store",
+        credentials: "same-origin",
+        signal: controller.signal,
+      });
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.error || "Lesson progress could not be loaded.");
+      const snapshot = {
+        state: learningStateSchema.parse(data.state),
+        revisions: data.revisions || {},
+      };
+      if (
+        mounted.current &&
+        !controller.signal.aborted &&
+        requestGeneration === generation.current
+      ) {
+        setServer(snapshot);
+        setError(null);
+      }
+      return snapshot;
+    } catch (error) {
+      if (
+        mounted.current &&
+        !controller.signal.aborted &&
+        requestGeneration === generation.current
+      ) {
+        setServer(null);
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Lesson progress could not be loaded.",
+        );
+      }
+      throw error;
     }
-    return snapshot;
   }, [browserOnly]);
   useEffect(() => {
     mounted.current = true;
@@ -65,20 +96,16 @@ export function useLearning() {
       };
     const load = () => {
       if (working.current) return;
-      void reload().catch((e) => {
-        if (mounted.current) {
-          setServer(null);
-          setError((e as Error).message);
-        }
-      });
+      void reload().catch(() => {});
     };
     load();
     window.addEventListener("focus", load);
     return () => {
       mounted.current = false;
+      invalidateReads();
       window.removeEventListener("focus", load);
     };
-  }, [browserOnly, reload]);
+  }, [browserOnly, reload, invalidateReads]);
   let state = server?.state || null;
   let storageError = error;
   if (browserOnly) {
@@ -101,6 +128,8 @@ export function useLearning() {
     if (!server)
       throw new Error("Load your saved progress before making changes.");
     working.current = true;
+    reads.current?.abort();
+    const requestGeneration = ++generation.current;
     setPending(true);
     try {
       const response = await fetch("/api/learning", {
@@ -116,7 +145,11 @@ export function useLearning() {
       });
       const data = await response.json();
       if (!response.ok) {
-        if (response.status === 401) {
+        if (
+          response.status === 401 &&
+          mounted.current &&
+          requestGeneration === generation.current
+        ) {
           setServer(null);
           setError(data.error || "Sign in to continue saving lesson progress.");
         }
@@ -125,7 +158,7 @@ export function useLearning() {
           data.error || "Lesson progress was not saved. Please retry.",
         );
       }
-      if (mounted.current) {
+      if (mounted.current && requestGeneration === generation.current) {
         setServer({
           state: learningStateSchema.parse(data.state),
           revisions: data.revisions || {},

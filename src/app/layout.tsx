@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Shell } from "@/components/shell";
-import { authConfigured } from "@/modules/identity/auth";
+import { actor, authConfigured } from "@/modules/identity/auth";
+import { ConnectedAccountBoundary } from "@/components/connected-account-boundary";
 import { browserDemoEnabled } from "@/modules/runtime/mode";
 import "./globals.css";
 import "./v04.css";
@@ -21,12 +22,13 @@ export const metadata: Metadata = {
   description:
     "Independent construction safety certification preparation. Build knowledge. Earn credentials.",
 };
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const managed = authConfigured();
+  const who = managed ? await actor() : null;
   const content = (
     <>
       <a className="skip-link" href="#main-content">
@@ -40,7 +42,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {managed ? <ClerkProvider>{content}</ClerkProvider> : content}
+        {managed ? (
+          <ClerkProvider>
+            <ConnectedAccountBoundary subject={who?.id || null}>
+              {content}
+            </ConnectedAccountBoundary>
+          </ClerkProvider>
+        ) : (
+          content
+        )}
       </body>
     </html>
   );
