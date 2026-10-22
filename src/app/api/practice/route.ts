@@ -1,30 +1,19 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { AccessError, requireActor } from "@/modules/identity/auth";
-import { sessionConfigSchema, answerSchema } from "@/modules/practice/engine";
+import { practiceActionSchema } from "@/modules/practice/requests";
+import { browserDemoEnabled } from "@/modules/runtime/mode";
 import * as service from "@/modules/practice/service";
 export const runtime = "nodejs";
-const actionSchema = z.discriminatedUnion("action", [
-  z.object({ action: z.literal("start"), config: sessionConfigSchema }),
-  z.object({
-    action: z.literal("answer"),
-    sessionId: z.uuid(),
-    input: answerSchema,
-  }),
-  z.object({ action: z.literal("submit"), sessionId: z.uuid() }),
-  z.object({
-    action: z.literal("flag"),
-    sessionId: z.uuid(),
-    questionId: z.string().max(80),
-  }),
-  z.object({
-    action: z.literal("bookmark"),
-    sessionId: z.uuid(),
-    questionId: z.string().max(80),
-    enabled: z.boolean(),
-  }),
-]);
 export async function POST(request: Request) {
+  if (browserDemoEnabled())
+    return NextResponse.json(
+      {
+        error:
+          "Browser demo mode does not accept server-side progress. Practice data stays in your browser.",
+      },
+      { status: 403 },
+    );
   try {
     const url = new URL(request.url);
     const expectedOrigin =
@@ -34,7 +23,7 @@ export async function POST(request: Request) {
       throw new AccessError("Request origin rejected.", 403);
     if (Number(request.headers.get("content-length") || 0) > 16384)
       throw new AccessError("Request too large.", 413);
-    const action = actionSchema.parse(await request.json());
+    const action = practiceActionSchema.parse(await request.json());
     const who = await requireActor(action.action === "start");
     if (action.action === "start") {
       try {

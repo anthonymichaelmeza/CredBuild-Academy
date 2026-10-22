@@ -1,4 +1,37 @@
 @import "tailwindcss";
+.browser-demo-banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 13px 42px;
+  background: #fff3e6;
+  border-bottom: 1px solid #f0d4b7;
+  color: #69421f;
+  font-size: 11px;
+}
+.browser-demo-banner strong {
+  color: #7e3900;
+}
+.browser-demo-banner span {
+  flex: 1;
+}
+.browser-demo-banner a {
+  text-decoration: underline;
+  font-weight: 650;
+}
+@media (max-width: 720px) {
+  .browser-demo-banner {
+    padding: 13px 20px;
+    display: block;
+    font-size: 10px;
+  }
+  .browser-demo-banner strong,
+  .browser-demo-banner span {
+    display: block;
+    margin-bottom: 4px;
+  }
+}
 @theme inline {
   --color-brand: #ff7900;
   --font-sans: Arial, Helvetica, sans-serif;

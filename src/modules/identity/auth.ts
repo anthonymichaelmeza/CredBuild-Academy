@@ -2,13 +2,17 @@ import "server-only";
 import { cookies } from "next/headers";
 import { auth } from "@clerk/nextjs/server";
 import { randomUUID } from "node:crypto";
+import { browserDemoEnabled } from "@/modules/runtime/mode";
 export const authConfigured = () =>
   Boolean(
+    !browserDemoEnabled() &&
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
     process.env.CLERK_SECRET_KEY,
   );
 export const demoEnabled = () =>
-  process.env.ALLOW_LOCAL_DEMO === "true" && !authConfigured();
+  !browserDemoEnabled() &&
+  process.env.ALLOW_LOCAL_DEMO === "true" &&
+  !authConfigured();
 export type Actor = { id: string; mode: "demo" | "managed" };
 export class AccessError extends Error {
   constructor(
@@ -19,6 +23,7 @@ export class AccessError extends Error {
   }
 }
 export async function actor(createDemo = false): Promise<Actor | null> {
+  if (browserDemoEnabled()) return null;
   if (authConfigured()) {
     const { userId } = await auth();
     return userId ? { id: userId, mode: "managed" } : null;

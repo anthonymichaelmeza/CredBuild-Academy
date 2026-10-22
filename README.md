@@ -4,6 +4,12 @@
 
 A working Next.js application foundation and an initial CHST demonstration practice engine. This is an early development milestone, not a production-ready certification course.
 
+## Vercel browser demonstration — no service credentials
+
+For a browser-accessible demo, set **`NEXT_PUBLIC_BROWSER_DEMO=true`** in Vercel before Deploy. This is the only required variable for this mode. Do not add Clerk keys, a database URL, local-demo flags, or filesystem settings. Node.js 24 is pinned in package.json. See the [step-by-step Vercel demo guide](docs/vercel-demo.md).
+
+This explicit mode uses only browser site storage for demo progress and bypasses Clerk, PostgreSQL, and server-side progress writes. It supports the existing practice flow and shows a persistent limitations banner. There is no real account, cross-device synchronization, protected scoring, or approved instructional content. Clearing site data or changing the website address creates an empty demo workspace. The existing server-backed mode remains available when this public build-time flag is off.
+
 ## Run locally
 
 Prerequisites: Node.js 24 LTS and npm 11, with access to the npm registry. No paid service is required for local demonstration use.
@@ -48,9 +54,9 @@ Stop the dev server first. Both commands use port 3000. This does not make the d
 
 **Blueprint:** the four CHST5 domain names and weights came from the user's brief. They remain marked unverified. Official BCSP page retrieval was blocked by a proxy 403 in this environment. Versioned structured data records this provenance. Provisional largest-remainder allocation for 200 questions is **73 / 40 / 45 / 42**, not a verified official configuration. No official duration, passing score, or endorsement is claimed.
 
-**Accounts:** Clerk integration is implemented but has not been exercised with live provider credentials. Without those credentials, explicit local demo mode uses an HTTP-only, SameSite cookie as a browser identity. Progress is stored on this machine; it does not provide real accounts, password recovery, or cross-device sync. Demo and managed account IDs are separate; there is no silent migration of demo history to accounts.
+**Accounts:** Clerk integration is implemented but has not been exercised with live provider credentials. Browser-only demo mode requires no account, cookie, or backend storage. In the separate server-backed local demo mode, an HTTP-only, SameSite cookie acts as a browser identity. Server-backed local progress is stored on the development machine; browser-only progress is stored on the visitor’s device. Neither demo provides real accounts, password recovery, or cross-device sync. Demo and managed account IDs are separate; there is no silent migration of demo history to accounts.
 
-**Database:** local PostgreSQL behavior is exercised through PGlite. Live managed PostgreSQL connectivity, TLS configuration, pooling, deployment migrations, and cross-device account persistence remain unvalidated. PGlite is a single-process development fallback; do not point multiple application instances at one local data directory.
+**Database:** browser-only demo mode does not use a database. In server-backed mode, local PostgreSQL behavior is exercised through PGlite. Live managed PostgreSQL connectivity, TLS configuration, pooling, deployment migrations, and cross-device account persistence remain unvalidated. PGlite is a single-process development fallback; do not point multiple application instances at one local data directory.
 
 **Later work:** timed practice and the 200-question exam engine, countdown/automatic expiry, complete source-review CMS and role management, published lessons, flashcards/spaced repetition, study planner, rich analytics, billing/entitlements, and an AI coach are not implemented. Their pages explain availability instead of displaying simulated tools. No timing or automatic-submission tests are claimed.
 
@@ -58,6 +64,7 @@ Stop the dev server first. Both commands use port 3000. This does not make the d
 
 | Variable                            | Purpose                                                                                                                      |
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_BROWSER_DEMO=true`     | The only required variable for the Vercel browser demo; public build-time flag, no backend or account needed                 |
 | `ALLOW_LOCAL_DEMO=true`             | Explicitly enable a local browser identity when Clerk is not configured; also allow PGlite when no database URL exists       |
 | `LOCAL_DATABASE_PATH`               | Local PGlite directory; defaults to `.local/credbuilt`; `:memory:` for isolated tests                                        |
 | `DATABASE_URL`                      | Optional managed PostgreSQL connection string; use the provider's verified TLS settings                                      |
@@ -66,7 +73,7 @@ Stop the dev server first. Both commands use port 3000. This does not make the d
 | `COOKIE_SECURE`                     | Set `true` for HTTPS; local HTTP development uses `false`                                                                    |
 | `APP_ORIGIN`                        | Exact canonical HTTPS origin behind a reverse proxy; otherwise same-origin checks use the incoming host and request protocol |
 
-Never commit `.env.local` or supply secrets in chat. Before enabling a public service, set up managed authentication and PostgreSQL, turn off local demo identities, set HTTPS/cookie/origin configuration, and complete the documented launch work. A partial Clerk configuration does not enable managed sign-in.
+Never commit `.env.local` or supply secrets in chat. Before enabling a production learning service, turn browser demo off, set up managed authentication and PostgreSQL, turn off local demo identities, set HTTPS/cookie/origin configuration, and complete the documented launch work. A labeled browser-only preview instead uses the single public demo flag and no credentials. A partial Clerk configuration does not enable managed sign-in.
 
 For a managed database, `npm run db:migrate` must run explicitly before application use. The migration ledger rejects changes to an already-applied migration. Add a new numbered migration and runner entry for future changes. The local fallback can initialize its schema on first use for convenience; seeding inserts drafts only and does not overwrite existing versions. Stop the app before running CLI operations against the same PGlite directory.
 
@@ -92,7 +99,7 @@ Import `anthonymichaelmeza/CredBuild-Academy` with branch `main`, **Root Directo
 
 The repository includes all source, the lockfile, SQL migration, tests, and documentation. Every `.env*` file is excluded from Git. The safe, credential-free example is stored at `config/environment.example`; create local environment files from it or enter deployment variables securely through the hosting dashboard.
 
-**Framework detection is separate from a working hosted backend.** File-backed PGlite is a single-process local fallback and must not be used for persistent progress in Vercel serverless functions. A hosted PostgreSQL database, explicit schema migration, and correctly configured authentication/demo identity settings are required to exercise practice there. Do not point LOCAL_DATABASE_PATH at an ephemeral directory and describe that as durable progress. No application logic was changed to disguise this limitation, and no secrets or local database contents are included in Git.
+**Use `NEXT_PUBLIC_BROWSER_DEMO=true` for this Vercel preview.** Practice then saves only in the visitor’s browser and does not need a hosted backend, migrations, Clerk, or filesystem writes. [Deployment instructions and limitations](docs/vercel-demo.md) describe the exact settings and test conditions. For durable account progress with browser demo turned off, a hosted PostgreSQL database and authentication are still required; file-backed PGlite must not be used for persistent progress in Vercel serverless functions.
 
 ## Architecture and next milestone
 

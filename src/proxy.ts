@@ -1,4 +1,5 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import { browserDemoEnabled } from "@/modules/runtime/mode";
 import {
   NextResponse,
   type NextRequest,
@@ -6,6 +7,7 @@ import {
 } from "next/server";
 const clerk = clerkMiddleware();
 export default function proxy(request: NextRequest, event: NextFetchEvent) {
+  if (browserDemoEnabled()) return NextResponse.next();
   if (
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
     process.env.CLERK_SECRET_KEY

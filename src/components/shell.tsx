@@ -31,9 +31,11 @@ const navigation = [
 export function Shell({
   children,
   managed,
+  browserOnly = false,
 }: {
   children: React.ReactNode;
   managed: boolean;
+  browserOnly?: boolean;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -140,7 +142,11 @@ export function Shell({
           </div>
           <div className="topbar-right">
             <span className="demo-dot" />
-            {managed ? "Connected account" : "Local demo workspace"}
+            {browserOnly
+              ? "Browser demo"
+              : managed
+                ? "Connected account"
+                : "Local demo workspace"}
             <Link
               href="/settings"
               aria-label="Open account settings"
@@ -150,6 +156,16 @@ export function Shell({
             </Link>
           </div>
         </header>
+        {browserOnly && (
+          <div className="browser-demo-banner" role="note">
+            <strong>Browser-only demonstration</strong>
+            <span>
+              No account or server database. Progress stays in this browser;
+              clearing site data or changing the website address resets it.
+            </span>
+            <Link href="/settings">Demo settings</Link>
+          </div>
+        )}
         <main id="main-content">{children}</main>
         <footer className="page-footer">
           <span>

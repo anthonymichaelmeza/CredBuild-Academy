@@ -1,3 +1,8 @@
+# Vercel preview: set this ONE variable to true in the Vercel dashboard before Deploy.
+# Browser demo bypasses Clerk and database access and uses browser site storage.
+# NEXT_PUBLIC_BROWSER_DEMO=true
+# Changes to NEXT_PUBLIC variables require a rebuild/redeployment.
+
 # Copy to .env.local. No real accounts or cross-device sync in demo mode.
 ALLOW_LOCAL_DEMO=true
 LOCAL_DATABASE_PATH=.local/credbuilt

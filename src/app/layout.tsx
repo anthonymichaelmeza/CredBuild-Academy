@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Shell } from "@/components/shell";
 import { authConfigured } from "@/modules/identity/auth";
+import { browserDemoEnabled } from "@/modules/runtime/mode";
 import "./globals.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
@@ -27,7 +28,9 @@ export default function RootLayout({
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <Shell managed={managed}>{children}</Shell>
+      <Shell managed={managed} browserOnly={browserDemoEnabled()}>
+        {children}
+      </Shell>
     </>
   );
   return (

@@ -15,7 +15,13 @@ import {
 import { domains } from "@/modules/catalog/blueprint";
 import { aggregate } from "@/modules/practice/engine";
 import type { Session } from "@/modules/practice/types";
-export function Dashboard({ sessions }: { sessions: Session[] }) {
+export function Dashboard({
+  sessions,
+  browserOnly = false,
+}: {
+  sessions: Session[];
+  browserOnly?: boolean;
+}) {
   const stats = aggregate(sessions);
   const resume = sessions.find((s) => s.status === "in_progress");
   return (
@@ -254,8 +260,11 @@ export function Dashboard({ sessions }: { sessions: Session[] }) {
       </section>
       <p className="demo-disclosure">
         Foundation preview · AI-generated demonstration questions are unreviewed
-        and excluded from the production bank. Local demo progress stays in this
-        browser’s workspace. Logo mark is a temporary placeholder.
+        and excluded from the production bank.{" "}
+        {browserOnly
+          ? "Progress is saved only in this browser’s site storage; there is no account or server database."
+          : "Local demo progress stays in this browser’s workspace."}{" "}
+        Logo mark is a temporary placeholder.
       </p>
     </div>
   );

@@ -14,9 +14,11 @@ import type { Confidence, SessionView } from "@/modules/practice/types";
 export function PracticeSession({
   initial,
   initialBookmarks,
+  browserOnly = false,
 }: {
   initial: SessionView;
   initialBookmarks: string[];
+  browserOnly?: boolean;
 }) {
   const [session, setSession] = useState(initial);
   const [saved, setSaved] = useState(initialBookmarks);
@@ -50,6 +52,16 @@ export function PracticeSession({
     setBusy(true);
     setError("");
     try {
+      if (browserOnly) {
+        const { browserPracticeAction } = await import("@/demo/browser-store");
+        const data = browserPracticeAction(
+          { action, sessionId: session.id, ...extra },
+          session.revision,
+        );
+        if ("bookmarks" in data) setSaved(data.bookmarks);
+        else setSession(data);
+        return;
+      }
       const r = await fetch("/api/practice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

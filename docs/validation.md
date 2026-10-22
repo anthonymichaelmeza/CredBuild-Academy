@@ -5,15 +5,17 @@ This file describes executed checks and their limits. The application is an init
 ## Executed successfully
 
 - TypeScript checking and ESLint.
-- Twenty Vitest tests across four files: practice rules and allocation, dashboard/navigation, API boundaries, and real PGlite PostgreSQL integration.
+- Twenty-nine Vitest tests across six files: practice rules and allocation, dashboard/navigation, API boundaries, real PGlite PostgreSQL integration, browser-only persistence, and explicit browser-mode guards.
 - SQL migration, demonstration seed, then a repeated seed against the local file-backed database. Twelve drafts remain; none are published.
 - Production build with all application routes compiled.
 - Production-server smoke check: dashboard rendering, ten-question session creation, server grading, and persisted-answer reload succeeded without browser page errors. The server is left running on port 3000.
 - Four Chromium Playwright tests: complete practice/persistence/review/ownership and reference/navigation/overflow, each on desktop and Pixel 7 layouts. The practice test answers all ten questions, checks bookmarks and flags after saving, refreshes, submits, reviews results, and checks access from another browser identity.
+- Four additional production-server browser-demo tests passed on desktop and Pixel 7 layouts, with no Clerk/database credentials, local database fallback disabled, and a deliberately unusable local database directory. These exercise all navigation routes, a full ten-question loop, bookmarks/flags/confidence persistence, refresh, results/missed review/history, separate browser storage, reset, blocked storage handling, no progress API requests, no demo identity cookie, and denied server/admin mutations.
+- Production builds passed with browser mode both disabled and enabled. Browser-mode tests verify that the database adapter refuses initialization and Clerk/cookie authentication is bypassed even if other credentials happen to exist. Node.js 24.x is now declared in package.json.
 - Visual inspection of desktop and mobile dashboard screenshots; no horizontal overflow was observed at 1440px or 390px width.
 - The complete reusable installation sequence ran successfully: frozen dependency install, migration checksum verification, non-destructive seed, and production build. Final lint and formatting checks passed.
 
-The environment configuration draft now contains tested `install_script` and `start_skill` instructions. Saving the draft does not publish a snapshot. Review and save those changes in environment settings, then publish the environment to retain this setup for future tasks. Fresh-task restoration has not been independently tested.
+The previously saved environment configuration draft contains local server-backed setup/startup instructions. For the separate Vercel browser preview, follow [vercel-demo.md](vercel-demo.md): the only required setting is `NEXT_PUBLIC_BROWSER_DEMO=true` before building. No migrations, secrets, or backend services are needed for that explicit mode. Saving a cloud environment draft does not publish a website. Fresh-task restoration and an actual Vercel deployment have not been independently tested.
 
 Browser testing initially exposed an ambiguous selector, an input usable before hydration, and a same-origin comparison using Next.js's internal hostname. The selectors were scoped, the search input is disabled until hydrated, development loopback access is explicitly configured, and mutations validate the incoming host or canonical configured origin. The full browser workflows then passed.
 

@@ -7,8 +7,11 @@ import { mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import * as schema from "./schema";
+import { browserDemoEnabled } from "@/modules/runtime/mode";
 
 async function connect() {
+  if (browserDemoEnabled())
+    throw new Error("Database access is disabled in browser demo mode.");
   const managed = Boolean(process.env.DATABASE_URL);
   if (!managed && process.env.ALLOW_LOCAL_DEMO !== "true")
     throw new Error(

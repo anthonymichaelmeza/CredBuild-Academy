@@ -4,7 +4,13 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, SlidersHorizontal, Info, ShieldAlert } from "lucide-react";
 import { useHydrated } from "./use-hydrated";
 import { domains } from "@/modules/catalog/blueprint";
-export function SessionBuilder({ available }: { available: boolean }) {
+export function SessionBuilder({
+  available,
+  browserOnly = false,
+}: {
+  available: boolean;
+  browserOnly?: boolean;
+}) {
   const router = useRouter();
   const hydrated = useHydrated();
   const [count, setCount] = useState(25);
@@ -17,6 +23,18 @@ export function SessionBuilder({ available }: { available: boolean }) {
     setBusy(true);
     setError("");
     try {
+      if (browserOnly) {
+        const { createBrowserSession } = await import("@/demo/browser-store");
+        const id = createBrowserSession({
+          count,
+          mode,
+          domain,
+          prioritizeMissed,
+        });
+        router.push(`/practice/${id}`);
+        router.refresh();
+        return;
+      }
       const r = await fetch("/api/practice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
