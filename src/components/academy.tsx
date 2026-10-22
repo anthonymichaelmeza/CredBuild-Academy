@@ -10,10 +10,10 @@ import {
 } from "lucide-react";
 import { domains } from "@/modules/catalog/blueprint";
 import { lessons } from "@/modules/learning/catalog";
-import { completedLesson, resetLearning } from "@/demo/learning-store";
+import { completedLesson } from "@/modules/learning/progress";
 import { useLearning } from "./use-learning";
 export function Academy() {
-  const { state, hydrated, error } = useLearning();
+  const { state, hydrated, error, reset, storageMode } = useLearning();
   const [domain, setDomain] = useState("all");
   const [query, setQuery] = useState("");
   const [resetError, setResetError] = useState("");
@@ -82,7 +82,12 @@ export function Academy() {
           >
             <span style={{ width: `${(completed / lessons.length) * 100}%` }} />
           </div>
-          <small>Browser-local progress · no certification credit</small>
+          <small>
+            {storageMode === "browser"
+              ? "Browser-local progress"
+              : "Server-saved progress"}{" "}
+            · no certification credit
+          </small>
         </div>
       </section>
       <div className="notice compact-notice">
@@ -99,14 +104,15 @@ export function Academy() {
           {resetError || error}
           <button
             className="button secondary"
-            onClick={() => {
+            onClick={async () => {
               if (
+                storageMode !== "browser" ||
                 window.confirm(
                   "Reset only demo lesson progress? Practice history will be kept.",
                 )
               ) {
                 try {
-                  resetLearning();
+                  await reset();
                   setResetError("");
                 } catch (e) {
                   setResetError((e as Error).message);
@@ -114,7 +120,9 @@ export function Academy() {
               }
             }}
           >
-            Reset learning progress
+            {storageMode === "browser"
+              ? "Reset learning progress"
+              : "Reload learning progress"}
           </button>
         </div>
       )}

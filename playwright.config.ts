@@ -19,6 +19,14 @@ export default defineConfig({
     url: "http://127.0.0.1:3000",
     reuseExistingServer: false,
     timeout: 120000,
-    env: { ALLOW_LOCAL_DEMO: "true", LOCAL_DATABASE_PATH: ".local/e2e" },
+    env: {
+      NEXT_PUBLIC_BROWSER_DEMO: "false",
+      ALLOW_LOCAL_DEMO: "true",
+      LOCAL_DATABASE_PATH: ".local/e2e",
+      DATABASE_URL: "",
+      CLERK_SECRET_KEY: "",
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "",
+      APP_ORIGIN: "",
+    },
   },
 });

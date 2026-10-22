@@ -8,6 +8,10 @@ import { BrowserPerformance, BrowserSettings } from "@/components/browser-demo";
 import { browserDemoEnabled } from "@/modules/runtime/mode";
 import { ReferenceLibrary } from "@/components/reference-library";
 import { AuthControls } from "@/components/auth-controls";
+import { performanceData } from "@/modules/performance/dto";
+import { readLearning } from "@/modules/learning/service";
+import { completedLesson } from "@/modules/learning/progress";
+import { lessons } from "@/modules/learning/catalog";
 export const dynamic = "force-dynamic";
 export default async function Section({
   params,
@@ -20,11 +24,18 @@ export default async function Section({
     if (browserDemoEnabled()) return <BrowserPerformance />;
     const who = await actor();
     const saved = who ? await history(who.id) : [];
+    const learning = who ? (await readLearning(who.id)).state : null;
     return (
       <Performance
-        saved={saved}
-        questions={saved.length ? await pool() : []}
+        {...performanceData(saved, saved.length ? await pool() : [])}
         marked={who ? await bookmarkList(who.id) : []}
+        completedLessonIds={
+          learning
+            ? lessons
+                .filter((l) => completedLesson(l.id, learning))
+                .map((l) => l.id)
+            : []
+        }
       />
     );
   }
@@ -57,6 +68,23 @@ export default async function Section({
               Managed sign-in not configured
             </span>
           )}
+          <div className="auth-actions">
+            <Link className="button secondary" href="/onboarding">
+              Set study goals
+            </Link>
+            <Link className="button secondary" href="/planner">
+              Open study planner
+            </Link>
+            {who && (
+              <a
+                className="button secondary"
+                href="/api/account/export"
+                download
+              >
+                Export my learning data
+              </a>
+            )}
+          </div>
           <dl>
             <div>
               <dt>Database</dt>
@@ -83,6 +111,16 @@ export default async function Section({
               <dd>Temporary hard-hat placeholder; original logo pending</dd>
             </div>
           </dl>
+          <h2>Account and subscription</h2>
+          <p>
+            No paid plan or billing provider is active. Upgrades, charges, and
+            team seats are unavailable.
+          </p>
+          <p className="fine-print">
+            Managed sign-in supports provider-configured password recovery and
+            email verification. Live account registration and hosted database
+            persistence still require configuration and validation.
+          </p>
         </section>
       </div>
     );
@@ -92,11 +130,6 @@ export default async function Section({
       "Keep knowledge within reach.",
       "Flashcards & retention",
       "Saved decks, missed-question cards, and a documented spaced-repetition schedule will arrive in Milestone 4. No review schedule is simulated.",
-    ],
-    planner: [
-      "Make room for your next step.",
-      "Study planner",
-      "Study goals and review scheduling are planned after the core practice and exam workflows. No calendar entries or reminders are created yet.",
     ],
   } as const;
   if (Object.hasOwn(upcoming, section)) {

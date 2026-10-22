@@ -1,0 +1,35 @@
+.auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+.auth-page {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+.program-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 24px;
+}
+.program-grid .outline-badge {
+  margin-left: 16px;
+}
+.program-grid h2 {
+  margin-top: 24px;
+}
+.program-domains {
+  padding-left: 20px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.settings-card > button + button {
+  margin-left: 12px;
+}
+@media (max-width: 900px) {
+  .program-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

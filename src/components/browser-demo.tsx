@@ -8,6 +8,12 @@ import { useHydrated } from "./use-hydrated";
 import { useLearning } from "./use-learning";
 import { completedLesson, resetLearning } from "@/demo/learning-store";
 import { lessons } from "@/modules/learning/catalog";
+import {
+  resetPlanner,
+  parsePlanner,
+  plannerSnapshot,
+} from "@/demo/planner-store";
+import { learningSnapshot, parseLearning } from "@/demo/learning-store";
 import { demoQuestions } from "@/demo/questions";
 import {
   browserSnapshot,
@@ -135,16 +141,39 @@ export function BrowserSettings() {
   function reset() {
     if (
       !window.confirm(
-        "Delete CredBuilt demo sessions, bookmarks, and lesson progress on this website? This cannot be undone.",
+        "Delete CredBuilt demo sessions, bookmarks, lesson progress, study goals, and planner tasks on this website? This cannot be undone.",
       )
     )
       return;
     try {
       resetBrowserDemo();
       resetLearning();
+      resetPlanner();
       setResetError("");
     } catch (e) {
       setResetError(e instanceof Error ? e.message : "Reset failed.");
+    }
+  }
+  function exportData() {
+    try {
+      const data = {
+        exportedAt: new Date().toISOString(),
+        storage: "browser-only-demo",
+        practice: parseBrowserSnapshot(browserSnapshot()),
+        learning: parseLearning(learningSnapshot()),
+        planner: parsePlanner(plannerSnapshot()),
+      };
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "credbuilt-demo-export.json";
+      link.click();
+      URL.revokeObjectURL(url);
+      setResetError("");
+    } catch (e) {
+      setResetError(e instanceof Error ? e.message : "Export failed.");
     }
   }
   return (
@@ -198,17 +227,34 @@ export function BrowserSettings() {
             <dd>Demonstration only; inspectable and editable in the browser</dd>
           </div>
         </dl>
+        <div className="auth-actions">
+          <Link className="button secondary" href="/onboarding">
+            Set study goals
+          </Link>
+          <Link className="button secondary" href="/planner">
+            Open study planner
+          </Link>
+        </div>
         <p>
           No official exam questions, approved instruction, protected exam
           scoring, content publishing, or real accounts are provided. Lessons
           and short exam rehearsals are demonstrations; the full 200-question
-          simulation, flashcards, and planner remain unavailable.
+          simulation and flashcards remain unavailable. The study planner uses
+          your saved goals; task check-offs are self-reported and do not award
+          certification credit.
         </p>
         {(error || resetError) && (
           <p className="error" role="alert">
             {resetError || error}
           </p>
         )}
+        <button
+          className="button secondary"
+          disabled={!hydrated}
+          onClick={exportData}
+        >
+          Export browser demo data
+        </button>
         <button
           className="button secondary"
           disabled={!hydrated}

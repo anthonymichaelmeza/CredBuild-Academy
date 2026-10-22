@@ -17,27 +17,29 @@ import { domains } from "@/modules/catalog/blueprint";
 import {
   canComplete,
   completedLesson,
-  lessonAction,
-} from "@/demo/learning-store";
+  type LessonAction,
+} from "@/modules/learning/progress";
 import { useLearning } from "./use-learning";
 function KnowledgeCheck({
-  lesson,
   check,
   saved,
+  act,
+  disabled,
 }: {
-  lesson: Lesson;
   check: Lesson["checks"][number];
   saved?: { choiceId: string; correct: boolean; attempts: number };
+  act: (action: LessonAction) => Promise<boolean>;
+  disabled: boolean;
 }) {
   const [choice, setChoice] = useState("");
   const [error, setError] = useState("");
   return (
     <form
       className="lesson-check"
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         try {
-          lessonAction(lesson.id, {
+          await act({
             type: "check",
             checkId: check.id,
             choiceId: choice || saved?.choiceId || "",
@@ -57,7 +59,7 @@ function KnowledgeCheck({
               name={check.id}
               checked={(choice || saved?.choiceId) === c.id}
               onChange={() => setChoice(c.id)}
-              disabled={saved?.correct}
+              disabled={disabled || saved?.correct}
             />
             {c.text}
           </label>
@@ -87,7 +89,7 @@ function KnowledgeCheck({
       )}
       <button
         className="button secondary"
-        disabled={saved?.correct || !(choice || saved?.choiceId)}
+        disabled={disabled || saved?.correct || !(choice || saved?.choiceId)}
       >
         {saved?.correct ? "Check complete" : "Check understanding"}
       </button>
@@ -96,16 +98,23 @@ function KnowledgeCheck({
 }
 export function LessonReader({ lessonId }: { lessonId: string }) {
   const lesson = lessons.find((l) => l.id === lessonId)!;
-  const { state, hydrated, error: storageError } = useLearning();
+  const {
+    state,
+    hydrated,
+    error: storageError,
+    action,
+    pending,
+    storageMode,
+  } = useLearning();
   const [sectionIndex, setSectionIndex] = useState(0);
   const [error, setError] = useState("");
   const section = lesson.sections[sectionIndex];
   const progress = state?.progress[lesson.id];
   const done = Boolean(state && completedLesson(lesson.id, state));
   const next = lessons[lessons.indexOf(lesson) + 1];
-  function act(action: Parameters<typeof lessonAction>[1]) {
+  async function act(input: LessonAction) {
     try {
-      lessonAction(lesson.id, action);
+      await action(lesson.id, input);
       setError("");
       return true;
     } catch (e) {
@@ -227,10 +236,10 @@ export function LessonReader({ lessonId }: { lessonId: string }) {
               </button>
               <button
                 className="button primary"
-                disabled={!hydrated || !state}
-                onClick={() => {
+                disabled={!hydrated || !state || pending}
+                onClick={async () => {
                   if (
-                    act({ type: "visit", sectionId: section.id }) &&
+                    (await act({ type: "visit", sectionId: section.id })) &&
                     sectionIndex < lesson.sections.length - 1
                   )
                     setSectionIndex(sectionIndex + 1);
@@ -253,9 +262,10 @@ export function LessonReader({ lessonId }: { lessonId: string }) {
             {lesson.checks.map((c) => (
               <KnowledgeCheck
                 key={`${lesson.id}-${c.id}`}
-                lesson={lesson}
                 check={c}
                 saved={progress?.checks[c.id]}
+                act={act}
+                disabled={!hydrated || !state || pending}
               />
             ))}
             {(storageError || error) && (
@@ -271,7 +281,9 @@ export function LessonReader({ lessonId }: { lessonId: string }) {
               </span>
               <button
                 className="button primary"
-                disabled={!state || done || !canComplete(lesson.id, state)}
+                disabled={
+                  !state || pending || done || !canComplete(lesson.id, state)
+                }
                 onClick={() => act({ type: "complete" })}
               >
                 {done ? "Lesson completed" : "Complete lesson"}
@@ -322,9 +334,10 @@ export function LessonReader({ lessonId }: { lessonId: string }) {
           )}
           <p className="demo-disclosure">
             AI-generated draft · not technically reviewed · not a site procedure
-            or a substitute for competent supervision. Progress is
-            browser-local, even when using the separate server-backed practice
-            mode.
+            or a substitute for competent supervision.{" "}
+            {storageMode === "browser"
+              ? "Progress is saved only in this browser and website address."
+              : "Progress is saved to your signed-in account, or to the local demo identity when using development mode."}
           </p>
         </article>
       </div>

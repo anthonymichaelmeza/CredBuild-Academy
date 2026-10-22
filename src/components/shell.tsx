@@ -17,16 +17,20 @@ import {
   X,
   ShieldCheck,
   HardHat,
+  GraduationCap,
+  MessageSquare,
 } from "lucide-react";
 const navigation = [
   ["/", "Dashboard", LayoutDashboard],
   ["/learn", "Learn", BookOpen],
+  ["/programs", "Certification Programs", GraduationCap],
   ["/practice", "Practice", Crosshair],
   ["/exam", "Exam Simulator", Timer],
   ["/performance", "My Performance", ChartNoAxesCombined],
   ["/flashcards", "Flashcards", Layers],
   ["/reference", "Reference Library", Library],
   ["/planner", "Study Planner", CalendarDays],
+  ["/coach", "AI Study Coach", MessageSquare],
 ] as const;
 export function Shell({
   children,
@@ -145,7 +149,7 @@ export function Shell({
             {browserOnly
               ? "Browser demo"
               : managed
-                ? "Connected account"
+                ? "Managed sign-in"
                 : "Local demo workspace"}
             <Link
               href="/settings"

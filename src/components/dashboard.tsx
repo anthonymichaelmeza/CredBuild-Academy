@@ -18,10 +18,12 @@ import type { Session } from "@/modules/practice/types";
 export function Dashboard({
   sessions,
   browserOnly = false,
+  managed = false,
   learning,
 }: {
   sessions: Session[];
   browserOnly?: boolean;
+  managed?: boolean;
   learning?: { completed: number; title: string; href: string };
 }) {
   const stats = aggregate(sessions);
@@ -66,6 +68,9 @@ export function Dashboard({
               Explore the learning path <ArrowUpRight size={15} />
             </Link>
           </div>
+          <Link className="hero-link" href="/planner">
+            Build my study plan <ArrowUpRight size={15} />
+          </Link>
         </div>
         <div className="hero-art" aria-hidden="true">
           <div className="grid-pattern" />
@@ -242,8 +247,15 @@ export function Dashboard({
                 </span>
                 <span>
                   <strong>
-                    {s.mode === "adaptive" ? "Adaptive" : "Learning"} practice ·
-                    demo
+                    {
+                      {
+                        adaptive: "Adaptive",
+                        learning: "Learning",
+                        timed: "Timed",
+                        exam: "Exam rehearsal",
+                      }[s.mode]
+                    }{" "}
+                    practice · demo
                   </strong>
                   <small>
                     {Object.keys(s.answers).length} of {s.questionIds.length}{" "}
@@ -278,7 +290,9 @@ export function Dashboard({
         and excluded from the production bank.{" "}
         {browserOnly
           ? "Progress is saved only in this browser’s site storage; there is no account or server database."
-          : "Local demo progress stays in this browser’s workspace."}{" "}
+          : managed
+            ? "Learning activity is saved to your verified account."
+            : "Local demo progress is stored on this development machine and belongs to this browser cookie."}{" "}
         Logo mark is a temporary placeholder.
       </p>
     </div>

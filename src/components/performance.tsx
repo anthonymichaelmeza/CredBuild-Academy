@@ -8,15 +8,19 @@ import {
   recommendedLessons,
 } from "@/modules/performance/analytics";
 import { focusedPracticeLink } from "@/modules/learning/catalog";
-import type { Question, Session } from "@/modules/practice/types";
+import type {
+  PerformanceQuestion,
+  PerformanceSession,
+} from "@/modules/performance/dto";
+import { findPinnedQuestion } from "@/modules/practice/engine";
 export function Performance({
   saved,
   questions,
   marked,
   completedLessonIds = [],
 }: {
-  saved: Session[];
-  questions: Question[];
+  saved: PerformanceSession[];
+  questions: PerformanceQuestion[];
   marked: string[];
   completedLessonIds?: string[];
 }) {
@@ -39,7 +43,7 @@ export function Performance({
       (days === "all" ||
         Date.parse(s.createdAt) >= now - Number(days) * 86400000) &&
       s.questionIds.some((id) => {
-        const q = questions.find((q) => q.id === id);
+        const q = findPinnedQuestion(s, questions, id);
         return (
           q &&
           (domain === "all" || q.domain === domain) &&
@@ -216,12 +220,15 @@ export function Performance({
         <section className="card">
           <h2>Repeatedly missed concepts</h2>
           <p className="fine-print">
-            Two or more recorded misses on the same question. Small samples are
-            shown explicitly.
+            Two or more recorded misses on the same question revision. Small
+            samples are shown explicitly.
           </p>
           {stats.repeated.length ? (
             stats.repeated.map((item) => (
-              <div className="missed-concept" key={item.question.id}>
+              <div
+                className="missed-concept"
+                key={`${item.question.id}:v${item.question.version}`}
+              >
                 <strong>{item.question.topic}</strong>
                 <p>
                   {item.misses} misses / {item.attempts} attempts

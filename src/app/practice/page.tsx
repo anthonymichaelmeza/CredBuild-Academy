@@ -1,6 +1,10 @@
 import { SessionBuilder } from "@/components/session-builder";
 import { actor, demoEnabled } from "@/modules/identity/auth";
 import { browserDemoEnabled } from "@/modules/runtime/mode";
+import { demoQuestions } from "@/demo/questions";
+import { pool } from "@/modules/practice/service";
+import { currentQuestionVersions } from "@/modules/practice/engine";
+import { performanceData } from "@/modules/performance/dto";
 export const dynamic = "force-dynamic";
 export default async function Practice({
   searchParams,
@@ -21,10 +25,22 @@ export default async function Practice({
     : 25;
   const focus = { initialDomain, initialTopic, initialCount };
   if (browserDemoEnabled())
-    return <SessionBuilder available browserOnly {...focus} />;
+    return (
+      <SessionBuilder
+        available
+        browserOnly
+        inventory={
+          performanceData([], currentQuestionVersions(demoQuestions)).questions
+        }
+        {...focus}
+      />
+    );
+  const available = demoEnabled() || Boolean(await actor());
+  const inventory = available ? currentQuestionVersions(await pool()) : [];
   return (
     <SessionBuilder
-      available={demoEnabled() || Boolean(await actor())}
+      available={available}
+      inventory={performanceData([], inventory).questions}
       {...focus}
     />
   );

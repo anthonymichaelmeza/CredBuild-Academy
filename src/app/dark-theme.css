@@ -1,0 +1,388 @@
+/* Shared CredBuilt surfaces and states. Keep --ink as the charcoal brand
+   color: legacy navigation uses it as a background, not as a text token. */
+:root {
+  color-scheme: dark;
+  --surface-base: #171b20;
+  --surface-card: #252c32;
+  --surface-raised: #303941;
+  --surface-control: #1d2329;
+  --text-primary: #ffffff;
+  --text-secondary: #bac3cc;
+  --text-subtle: #a6b1bc;
+  --accent-text: #ffad66;
+  --accent-surface: #3b2c20;
+  --accent-border: #916036;
+  --success-text: #a3e1bb;
+  --success-surface: #20382c;
+  --success-border: #497e5c;
+  --danger-text: #ffb6b1;
+  --danger-surface: #422a2c;
+  --danger-border: #a16a6a;
+  --paper: var(--surface-base);
+  --muted: var(--text-secondary);
+  --line: #414c57;
+}
+
+body {
+  color: var(--text-primary);
+  background: var(--surface-base);
+}
+
+::selection {
+  color: #171b20;
+  background: #ffad66;
+}
+
+button,
+input,
+select,
+textarea {
+  accent-color: var(--orange);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline-color: var(--orange);
+}
+
+.sidebar {
+  border-right: 1px solid #333e47;
+}
+
+.sidebar-note,
+.academy-hero {
+  background: var(--surface-card);
+}
+
+.topbar,
+.card,
+.stat-card,
+.outline-badge,
+.search-box,
+.review-stages > span,
+dialog {
+  background: var(--surface-card);
+  border-color: var(--line);
+  color: var(--text-primary);
+}
+
+.skip-link {
+  background: var(--orange);
+  color: #171b20;
+}
+
+.breadcrumb,
+.topbar-right,
+.eyebrow,
+.subtle-label,
+.stat-top,
+.stat-card p,
+.stat-value small,
+.stat-top svg,
+.domain-details > div > span,
+.domain-details > small,
+.next-action p,
+.next-action > svg,
+.demo-disclosure,
+.page-footer,
+dt,
+.fine-print,
+.result-domain span,
+.history-row small,
+.activity-list small,
+.question-meta,
+.question-navigator > small,
+.result-main small,
+.academy-lesson > footer > span,
+.course-domain > h3,
+.course-domain > a,
+.lesson-header > small,
+.learning-objectives small,
+.lesson-completion > span,
+.duration-field small,
+.navigator-filter,
+.full-exam-gate ul,
+.analytics-filters label,
+.accuracy-row span,
+.recommendation > small,
+.topic-stat-list article > div > span,
+.activity-day > strong,
+.quality-blockers li {
+  color: var(--text-secondary);
+}
+
+.breadcrumb strong,
+.learning-objectives ul,
+.reading-section > p,
+.feedback p {
+  color: var(--text-primary);
+}
+
+.breadcrumb > span {
+  color: var(--text-subtle);
+}
+
+.avatar {
+  color: var(--accent-text);
+  background: var(--accent-surface);
+  border-color: var(--surface-card);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.button.secondary,
+.count-options button,
+.filter-tabs > button,
+.reader-tabs > button,
+.icon-button,
+.question-grid button,
+.neutral-badge,
+.topic-chips > span,
+.domain-number,
+.empty-icon,
+.choice-letter {
+  background: var(--surface-control);
+  border-color: var(--line);
+  color: var(--text-secondary);
+}
+
+.button.secondary:hover,
+.filter-tabs > button:hover,
+.count-options button:hover,
+.icon-button:hover,
+.reader-tabs > button:hover,
+.question-grid button:hover,
+.course-domain > a:hover {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+.button.primary {
+  color: #171b20;
+  background: var(--orange);
+  border-color: var(--orange);
+}
+
+.button.primary:hover {
+  background: #ff9b3e;
+  border-color: #ff9b3e;
+}
+
+input:not([type="radio"]):not([type="checkbox"]),
+select,
+textarea,
+.duration-field > input,
+.field-label > input {
+  color: var(--text-primary);
+  background: var(--surface-control);
+  border-color: #71808e;
+}
+
+.search-box input {
+  background: transparent;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-subtle);
+  opacity: 1;
+}
+
+option {
+  color: var(--text-primary);
+  background: var(--surface-control);
+}
+
+.mode-option,
+.answer-option,
+.lesson-check label {
+  border-color: #647381;
+}
+
+.mode-option small {
+  color: var(--text-secondary);
+}
+
+.count-options button.selected,
+.mode-option.selected,
+.answer-option.chosen,
+.icon-button[aria-pressed="true"],
+.filter-tabs > button[aria-pressed="true"],
+.reader-tabs > button[aria-pressed="true"],
+.course-domain > a[aria-current="page"] {
+  color: var(--text-primary);
+  background: var(--accent-surface);
+  border-color: var(--orange);
+}
+
+.count-options button.selected,
+.icon-button[aria-pressed="true"],
+.reader-tabs > button > span,
+.reader-tabs > button[aria-pressed="true"] > span,
+.course-domain > h3 > span,
+.course-domain > a[aria-current="page"] {
+  color: var(--accent-text);
+}
+
+.text-link,
+.next-lesson-link,
+.feedback a,
+.history-row > span:last-child,
+.next-action:hover strong,
+.academy-lesson h2 a:hover,
+.recommendation > a > svg,
+.review-stages small,
+.quality-blockers svg,
+.empty-block > svg,
+.exam-requirements > svg,
+.rehearsal-card > svg,
+.full-exam-gate > svg,
+.result-main > svg {
+  color: var(--accent-text);
+}
+
+.progress-track,
+.session-progress,
+.activity-day > div {
+  background: #46525e;
+}
+
+.activity-day > div > span {
+  background: var(--orange);
+}
+
+.soft-note,
+.exam-mode-note {
+  background: var(--surface-control);
+  border-color: var(--line);
+  color: var(--text-secondary);
+}
+
+.browser-demo-banner,
+.notice,
+.summary-tip,
+.feedback,
+.knowledge-feedback,
+.reflection,
+.lesson-next,
+.learning-dashboard-link,
+.session-clock,
+.topic-label,
+.action-icon {
+  background: var(--accent-surface);
+  border-color: var(--accent-border);
+  color: var(--accent-text);
+}
+
+.browser-demo-banner strong,
+.notice strong,
+.summary-tip strong,
+.reflection .eyebrow {
+  color: var(--accent-text);
+}
+
+.browser-demo-banner span,
+.notice p,
+.summary-tip p,
+.feedback small,
+.knowledge-feedback small,
+.reflection p,
+.lesson-next p,
+.learning-dashboard-link p,
+.next-action small {
+  color: #dcc5b1;
+}
+
+.feedback p,
+.knowledge-feedback p {
+  color: var(--text-primary);
+}
+
+.answer-option.correct,
+.feedback.positive,
+.knowledge-feedback.positive,
+.save-status,
+.completed-badge {
+  background: var(--success-surface);
+  border-color: var(--success-border);
+  color: var(--success-text);
+}
+
+.answer-option.incorrect,
+.error,
+.clock-urgent {
+  background: var(--danger-surface);
+  border-color: var(--danger-border);
+  color: var(--danger-text);
+}
+
+.question-grid button.answered {
+  color: var(--text-primary);
+  background: #3d4a55;
+  border-color: #7f8e9b;
+}
+
+.question-grid button.current {
+  outline-color: var(--orange);
+}
+
+.planner-form-grid input,
+.planner-form-grid select,
+.planner-days-picker label {
+  border-color: #71808e;
+  background: var(--surface-control);
+  color: var(--text-primary);
+}
+
+.planner-muted,
+.planner-task p,
+.planner-method p,
+.planner-day > header > span {
+  color: var(--text-secondary);
+}
+
+.planner-success {
+  color: var(--success-text);
+}
+
+.planner-task-label {
+  color: var(--accent-text);
+}
+
+.next-action,
+dl > div,
+.question-actions,
+.academy-lesson > footer,
+.course-domain,
+.lesson-check,
+.lesson-completion,
+.lesson-reference,
+.recommendation,
+.topic-stat-list article,
+.missed-concept {
+  border-color: var(--line);
+}
+
+.planner-day > header,
+.planner-task {
+  border-color: var(--line);
+}
+
+dialog::backdrop {
+  background: #000b;
+}
+
+@media (max-width: 720px) {
+  .outline-badge,
+  .neutral-badge {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .program-grid .outline-badge {
+    margin: 12px 0 0;
+  }
+}

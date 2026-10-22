@@ -1,13 +1,24 @@
 "use client";
-import { SignInButton, SignOutButton } from "@clerk/nextjs";
+import Link from "next/link";
+import { SignOutButton } from "@clerk/nextjs";
 export function AuthControls({ signedIn }: { signedIn: boolean }) {
   return signedIn ? (
-    <SignOutButton>
-      <button className="button secondary">Sign out</button>
-    </SignOutButton>
+    <div className="auth-actions">
+      <Link className="button secondary" href="/account">
+        Manage account
+      </Link>
+      <SignOutButton redirectUrl="/">
+        <button className="button secondary">Sign out</button>
+      </SignOutButton>
+    </div>
   ) : (
-    <SignInButton mode="modal">
-      <button className="button primary">Sign in securely</button>
-    </SignInButton>
+    <div className="auth-actions">
+      <Link className="button primary" href="/sign-in">
+        Sign in securely
+      </Link>
+      <Link className="button secondary" href="/sign-up">
+        Create an account
+      </Link>
+    </div>
   );
 }

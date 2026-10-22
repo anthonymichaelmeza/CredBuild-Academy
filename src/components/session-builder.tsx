@@ -4,16 +4,18 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, SlidersHorizontal, Info, ShieldAlert } from "lucide-react";
 import { useHydrated } from "./use-hydrated";
 import { domains } from "@/modules/catalog/blueprint";
-import { demoQuestions } from "@/demo/questions";
 import { sessionConfigSchema } from "@/modules/practice/engine";
+import type { PerformanceQuestion } from "@/modules/performance/dto";
 export function SessionBuilder({
   available,
+  inventory,
   browserOnly = false,
   initialDomain = "all",
   initialTopic = "all",
   initialCount = 25,
 }: {
   available: boolean;
+  inventory: PerformanceQuestion[];
   browserOnly?: boolean;
   initialDomain?: string;
   initialTopic?: string;
@@ -31,12 +33,12 @@ export function SessionBuilder({
   const [busy, setBusy] = useState(false);
   const topics = [
     ...new Set(
-      demoQuestions
+      inventory
         .filter((q) => domain === "all" || q.domain === domain)
         .map((q) => q.topic),
     ),
   ];
-  const eligible = demoQuestions.filter(
+  const eligible = inventory.filter(
     (q) =>
       (domain === "all" || q.domain === domain) &&
       (topic === "all" || q.topic === topic),
@@ -92,9 +94,10 @@ export function SessionBuilder({
         <div>
           <strong>Demonstration question bank</strong>
           <p>
-            12 original AI-generated drafts. Sources and CHST alignment have not
-            been verified. Focused sets of 1, 3, or 5 help you explore the small
-            bank; larger sets need more distinct content.
+            {inventory.length} distinct original AI-generated drafts available
+            here. Sources and CHST alignment have not been verified. Focused
+            sets of 1, 3, or 5 help you explore the small bank; larger sets need
+            more distinct content.
           </p>
         </div>
       </div>
