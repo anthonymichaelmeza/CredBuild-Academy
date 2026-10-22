@@ -1,0 +1,103 @@
+# CredBuilt Academy
+
+**BUILD KNOWLEDGE. EARN CREDENTIALS.**
+
+A working Next.js application foundation and an initial CHST demonstration practice engine. This is an early development milestone, not a production-ready certification course.
+
+## Run locally
+
+Prerequisites: Node.js 24 LTS and npm 11, with access to the npm registry. No paid service is required for local demonstration use.
+
+```bash
+cd /workspace/CredBuild-Academy
+cp config/environment.example .env.local # only if .env.local does not already exist
+npm ci --cache /tmp/credbuilt-npm
+npm run db:migrate
+npm run db:seed
+npm run dev
+```
+
+The application listens on port **3000**. Open that port in your browser when running locally; cloud access requires a supported forwarded port. No public deployment or preview URL has been created. Choose **Practice → 10 questions → All four domains → Start session** to try the full workflow. The requested initial default is 25 adaptive questions; the small demo bank correctly refuses that request until you select 10.
+
+Existing `.env.local` and local progress must be preserved. The cloud workspace already has a non-secret `.env.local` enabling demo mode. On a machine where npm's default home cache is not writable, use the `/tmp/credbuilt-npm` cache shown above. Services do not survive environment snapshots; start the development server in each new task using the existing checkout, without creating a worktree.
+
+For a production-build smoke check on this same single-process development machine:
+
+```bash
+npm run build
+npm run start
+```
+
+Stop the dev server first. Both commands use port 3000. This does not make the demo configuration suitable for public deployment.
+
+## What works
+
+- Next.js App Router, strict TypeScript, Tailwind CSS 4, bundled Inter typography, Lucide icons, responsive dashboard/navigation, keyboard focus, and empty states.
+- Practice builder with 10/25/50/100/200 counts, learning/adaptive modes, domain selection, explicit missed-question priority, and a summary. The 12-item demo bank permits ten distinct questions across all domains; shortages are explained rather than padded.
+- Server-side selection and grading, first-answer locking, instant explanations and distractor feedback, confidence ratings, per-question bookmarks, flags, and question navigation.
+- Saved session progress, resumable sessions, submission, results, missed/all-question review, session history, and domain accuracy. Demo activity is clearly identified.
+- Searchable reference discovery links, a curriculum framework, and honest availability states for later sections.
+- Drizzle ORM, a checksummed SQL migration, idempotent demonstration seeding, PGlite local PostgreSQL, and a configurable managed PostgreSQL adapter.
+- Server authorization, browser-demo isolation, input validation, same-origin mutation checks, optimistic concurrency, protected server modules, and denial of all administrative publishing endpoints.
+
+## What is demonstrated or incomplete
+
+**Prototype and brand:** the uploaded text was a development brief, not the promised HTML prototype or logo. No prototype has been inspected, migrated, or declared preserved. The implementation follows the specified charcoal/orange/white direction; the hard-hat mark is explicitly a temporary placeholder. Supply the prototype and assets before design reconciliation.
+
+**Content:** all 12 original questions are AI-generated, unreviewed demonstration drafts. They teach illustrative planning/communication concepts and are not official questions. Reference URLs are discovery links, not reviewed technical citations. There are **zero approved production questions**. Never use this seed as a claim of reviewed CHST instruction.
+
+**Blueprint:** the four CHST5 domain names and weights came from the user's brief. They remain marked unverified. Official BCSP page retrieval was blocked by a proxy 403 in this environment. Versioned structured data records this provenance. Provisional largest-remainder allocation for 200 questions is **73 / 40 / 45 / 42**, not a verified official configuration. No official duration, passing score, or endorsement is claimed.
+
+**Accounts:** Clerk integration is implemented but has not been exercised with live provider credentials. Without those credentials, explicit local demo mode uses an HTTP-only, SameSite cookie as a browser identity. Progress is stored on this machine; it does not provide real accounts, password recovery, or cross-device sync. Demo and managed account IDs are separate; there is no silent migration of demo history to accounts.
+
+**Database:** local PostgreSQL behavior is exercised through PGlite. Live managed PostgreSQL connectivity, TLS configuration, pooling, deployment migrations, and cross-device account persistence remain unvalidated. PGlite is a single-process development fallback; do not point multiple application instances at one local data directory.
+
+**Later work:** timed practice and the 200-question exam engine, countdown/automatic expiry, complete source-review CMS and role management, published lessons, flashcards/spaced repetition, study planner, rich analytics, billing/entitlements, and an AI coach are not implemented. Their pages explain availability instead of displaying simulated tools. No timing or automatic-submission tests are claimed.
+
+## Environment configuration
+
+| Variable                            | Purpose                                                                                                                      |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `ALLOW_LOCAL_DEMO=true`             | Explicitly enable a local browser identity when Clerk is not configured; also allow PGlite when no database URL exists       |
+| `LOCAL_DATABASE_PATH`               | Local PGlite directory; defaults to `.local/credbuilt`; `:memory:` for isolated tests                                        |
+| `DATABASE_URL`                      | Optional managed PostgreSQL connection string; use the provider's verified TLS settings                                      |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk's public application key; both Clerk keys are required to activate managed authentication                              |
+| `CLERK_SECRET_KEY`                  | Clerk server credential, supplied securely outside source control                                                            |
+| `COOKIE_SECURE`                     | Set `true` for HTTPS; local HTTP development uses `false`                                                                    |
+| `APP_ORIGIN`                        | Exact canonical HTTPS origin behind a reverse proxy; otherwise same-origin checks use the incoming host and request protocol |
+
+Never commit `.env.local` or supply secrets in chat. Before enabling a public service, set up managed authentication and PostgreSQL, turn off local demo identities, set HTTPS/cookie/origin configuration, and complete the documented launch work. A partial Clerk configuration does not enable managed sign-in.
+
+For a managed database, `npm run db:migrate` must run explicitly before application use. The migration ledger rejects changes to an already-applied migration. Add a new numbered migration and runner entry for future changes. The local fallback can initialize its schema on first use for convenience; seeding inserts drafts only and does not overwrite existing versions. Stop the app before running CLI operations against the same PGlite directory.
+
+## Tests and checks
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run build
+npm run test:e2e
+```
+
+Vitest covers grading, count/domain shortages, adaptive ranking, safe question payloads, blueprint allocation, empty states, navigation, request validation/authorization, real PostgreSQL persistence and publication rejection constraints. Integration tests use an isolated in-memory PGlite instance and never a configured managed database.
+
+Playwright uses Chromium at `/usr/bin/chromium` by default in this cloud environment. Set `CHROMIUM_PATH` to a local Chromium/Chrome executable elsewhere. It starts a dev server itself on port 3000, so stop any existing application server first. E2E data is isolated in ignored `.local/e2e`, with separate browser identities for each run; it is not inserted into `.local/credbuilt`. Desktop and Pixel 7 layouts exercise a complete practice loop, refresh persistence, results/review, cross-browser authorization, reference search, mobile navigation, and overflow. Test traces are retained only on failure.
+
+See [validation evidence and limitations](docs/validation.md) for the executed checks. Live authentication and managed database workflows must be tested with real service configuration before being called ready.
+
+## Vercel project detection and deployment boundary
+
+Import `anthonymichaelmeza/CredBuild-Academy` with branch `main`, **Root Directory: `.`**, **Framework Preset: Next.js**, and the standard **Build Command: `npm run build`**. Leave the output directory at the framework default and select Node.js 24. The root package.json declares Next.js, and src/app contains the App Router source. These are the standard Next.js detection inputs; no Vercel deployment or dashboard import has been performed in this task.
+
+The repository includes all source, the lockfile, SQL migration, tests, and documentation. Every `.env*` file is excluded from Git. The safe, credential-free example is stored at `config/environment.example`; create local environment files from it or enter deployment variables securely through the hosting dashboard.
+
+**Framework detection is separate from a working hosted backend.** File-backed PGlite is a single-process local fallback and must not be used for persistent progress in Vercel serverless functions. A hosted PostgreSQL database, explicit schema migration, and correctly configured authentication/demo identity settings are required to exercise practice there. Do not point LOCAL_DATABASE_PATH at an ephemeral directory and describe that as durable progress. No application logic was changed to disguise this limitation, and no secrets or local database contents are included in Git.
+
+## Architecture and next milestone
+
+See [architecture](docs/architecture.md), [database design](docs/database-schema.md), and [phased plan](docs/implementation-plan.md). The initial migration is intentionally smaller than the complete logical schema. Session snapshots and question details use typed JSONB in this initial slice; normalized session-item, source, lesson, and analytics tables are planned before richer content and exam workflows. Separate server modules enforce boundaries around identity, catalog, content, and practice.
+
+Next: reconcile the actual prototype, validate managed sign-in/database persistence, obtain and review the current official blueprint, and build the protected source-review workflow before publishing instructional content. Then expand the approved bank and implement the server-timed exam simulator.
+
+CredBuilt Academy is independent and is not affiliated with or endorsed by BCSP.

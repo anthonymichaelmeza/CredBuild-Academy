@@ -1,0 +1,12 @@
+# Copy to .env.local. No real accounts or cross-device sync in demo mode.
+ALLOW_LOCAL_DEMO=true
+LOCAL_DATABASE_PATH=.local/credbuilt
+# Set false when local HTTP is required; true for HTTPS deployments.
+COOKIE_SECURE=false
+# Set to your exact HTTPS application origin behind a reverse proxy.
+# APP_ORIGIN=
+# Managed PostgreSQL: use your provider's TLS-verified connection string.
+# DATABASE_URL=
+# Managed authentication: set BOTH keys to activate Clerk.
+# NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+# CLERK_SECRET_KEY=
