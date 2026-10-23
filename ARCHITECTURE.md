@@ -1,7 +1,7 @@
 # Architecture
 
-Current milestone: v0.5 stable learning foundation, built from v0.4 on
-`development/stable-learning-foundation`. This describes implemented boundaries;
+Current milestone: v0.6A/B connected learning, built from the v0.5 foundation on
+`development/v0.6-connected-learning`. This describes implemented boundaries;
 [PRODUCT_ROADMAP.md](PRODUCT_ROADMAP.md) covers future work and
 [FEATURE_STATUS.md](FEATURE_STATUS.md) records validation status.
 
@@ -16,14 +16,15 @@ application uses its verified subject, never a client-selected account ID.
 | ------------ | -------------------------------------- | ----------------------------------------------------------------------------- |
 | Routes/UI    | `src/app`, `src/components`            | Pages, forms, navigation and feedback                                         |
 | Runtime      | `src/modules/runtime/mode.ts`          | Explicit browser-demo flag                                                    |
-| Identity     | `src/modules/identity`, `src/proxy.ts` | Provider or local-demo identity; admin writes denied                          |
+| Identity     | `src/modules/identity`, `src/proxy.ts` | Provider or local-demo identity; server-side resource ownership               |
 | Catalog      | `src/modules/catalog`                  | Provisional blueprint/version and domain allocation                           |
 | Learning     | `src/modules/learning`                 | Curriculum, progress rules, owner-scoped persistence                          |
 | Practice     | `src/modules/practice`                 | Configuration, unique revisions, grading, lifecycle and persistence           |
 | Exams        | `src/modules/exams`                    | Full-exam policy/gates; practice lifecycle handles rehearsals                 |
 | Performance  | `src/modules/performance`              | Minimal DTOs and actual-activity aggregates                                   |
 | Planner      | `src/modules/planner`                  | Preferences, per-owner profiles, weekly suggestions                           |
-| Content      | `src/modules/content`, SQL guards      | Review rules and publication rejection; no complete CMS                       |
+| Content      | `src/modules/content`, SQL guards      | Legacy pure policy and publication safeguards                                 |
+| Studio       | `src/modules/studio`, `/api/studio`    | Trusted roles, immutable authoring/review, transactional publication/import   |
 | HTTP         | `src/modules/http`                     | Origin/type/stream limits, private responses, safe errors, process throttling |
 | Database     | `src/db`                               | Mappings, checksummed migrations, non-publishing demo seed                    |
 | Browser demo | `src/demo`                             | Public unreviewed fixtures and isolated localStorage adapters                 |
@@ -53,7 +54,10 @@ every section and correct check; clients cannot submit correctness/completion.
 Owner/version progress uses revision comparisons to reject competing stale
 writes. Old history is retained; a new lesson version requires new completion.
 Browser mode shares the rules without changing its established key/format.
-The reader still delivers public demonstration content, not a protected CMS.
+The established reader still delivers public demonstration content. A separate
+connected reader delivers only published instructional revisions, strips check
+keys until grading, enforces prerequisites and saves owner/version progress.
+Editing or retiring content does not alter existing immutable learner records.
 
 The profile records a CHST goal, optional target date, days/minutes, learning
 preference and priority domains. A saved seven-day suggestion links actual
@@ -82,12 +86,53 @@ read/action. No background worker currently finalizes inactive sessions.
 `SessionView` allowlists question fields, omits owner identity and withholds exam
 correctness/explanations before submission. Performance uses a separate
 metadata-only DTO, excluding answer choices/keys/rationales and active-exam
-correctness. Public demo keys remain inspectable by design; this path must not
-deliver protected approved commercial content.
+correctness. Public demo keys remain inspectable by design. Published
+instructional questions are loaded only through server-side selection for
+authorized connected learners; they are never added to public demo fixtures.
+New published sessions select the requested certification and preserve exact
+revision pins. Paid-content entitlements and large-bank pagination remain future
+work; managed identity alone does not establish a subscription.
 
 Adaptive selection is a transparent heuristic using misses, confidence and time
 since review. Analytics/planner use actual saved activity and disclose sample
 sizes; they do not predict BCSP outcomes or establish validated mastery.
+
+## Editorial transactions and learner publication
+
+`/studio` and `/api/studio` require verified managed identity and trusted
+`editorial_roles`; an ordinary learner has no editorial role. A tightly scoped
+non-production local opt-in exists for tests, is disabled on Vercel, and is not
+a customer authentication path. Role grants/revocations occur only through the
+trusted CLI, never a client-supplied role or public role-selection API.
+
+`studio_content` holds identity/current revision; `studio_revisions` holds
+append-only authored snapshots. Workflow and compare-and-swap row versions are
+separate from immutable content. Every review records its exact revision,
+reviewer, source checks, findings and timestamp. Any contributor to a logical
+item is excluded from approving that item. Reviewers require the reviewer role;
+administrator status alone is not technical-review permission.
+
+Publication revalidates the canonical blueprint/objective, independently
+supporting sources and current approval inside one transaction. It materializes
+the exact reviewed question/lesson snapshot and sets matching Studio/learner
+publication pointers before advancing workflow. SQL triggers enforce these
+relationships. Revising published material creates a draft while the previous
+published revision stays available until replacement or retirement. Retired
+revisions remain available for pinned learner history.
+
+Import accepts up to 50 structured JSON question records with a bounded request
+body, schema validation, duplicate reporting and owner-bound expiring previews.
+Confirmation rechecks duplicates, inserts draft revisions, records audit and
+consumes the preview transactionally. Declared content origin is preserved,
+including `ai_generated`; a separate append-only per-record import event records
+ingestion. No imported approval, role or source-verification assertions are
+accepted.
+
+Media/source URLs are validated and rendered as structured text/media; editor
+HTML is not executed. The service does not fetch remote references to imply
+verification. Human source review remains necessary, and no approved production
+content is created by migration/seed. See
+[editorial operations](docs/editorial-workflow.md).
 
 ## Operations and expansion
 

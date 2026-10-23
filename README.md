@@ -1,13 +1,15 @@
-# CredBuilt Academy — stable learning foundation
+# CredBuilt Academy — connected learning development
 
 **BUILD KNOWLEDGE. EARN CREDENTIALS.**
 
-A Next.js learning platform under active development. This v0.5 milestone builds
-on the working v0.4 academy, practice engine, exam rehearsals and analytics. It
-adds database-backed lesson progress, saved learner goals, a weekly study planner
-and stronger API boundaries. It is not a production-ready commercial CHST course.
+A Next.js learning platform under active development. The v0.6A/B work preserves
+the v0.5 academy, practice engine, exam rehearsals, analytics and study planner.
+It strengthens connected-account boundaries and adds a protected Content Studio
+with revision-specific review, publication and learner delivery. It is not a
+production-ready commercial CHST course. Instructor/video and flashcard releases
+are subsequent work, not delivered features of this checkpoint.
 
-Development branch: **`development/stable-learning-foundation`**. `main` and the
+Development branch: **`development/v0.6-connected-learning`**. `main` and the
 production demo remain unchanged until the product owner approves a merge or
 promotion. A pushed development branch may trigger a Vercel **Preview**.
 
@@ -77,19 +79,29 @@ or generated artifacts. The safe template is
   Self-reported checklist items are distinguished from lesson completion.
 - Clerk sign-in/sign-up/account integration requires configuration. Live
   registration/recovery/verification and hosted PostgreSQL/cross-device behavior
-  still need provider validation; local tests do not establish them.
+  still need provider validation; local tests do not establish them. Status:
+  **Blocked: Live Provider Validation**. See the exact
+  [provider acceptance checklist](docs/connected-provider-validation.md).
 - Settings can download activity as JSON. Server exports use a limited safe
   activity projection; import/restore and account deletion are not implemented.
-- Review rules and rejection constraints exist. The public review inspector
-  cannot edit or publish. A protected editorial CMS is unfinished.
+- Content Studio at `/studio` supports question/lesson drafts, structured editors,
+  exact-revision reviews, changes/rejections, publication/retirement, JSON import
+  preview and append-only audit. Trusted database roles control every action;
+  the public `/admin` inspector remains read-only. Studio requires a connected
+  authorized account and is unavailable in the browser-only Vercel demo.
+- Published instructional lessons and practice questions have a separate
+  server-only delivery path. Unpublished drafts never enter learner selection.
+  New attempts pin revisions; retirement preserves historical grading. No
+  instructional material is published by the seed or this development work.
 
 All 12 questions and eight lessons are **unreviewed demonstrations**, with zero
 approved commercial questions or verified technical sources. CHST5 data remains
 user-supplied and provisional. No official questions, passing thresholds,
 verified official duration, BCSP affiliation or passing prediction is claimed.
 
-Paid AI, billing, teams, full flashcards/retention and protected commercial-bank
-delivery are not operational. Unavailable features are labeled. Brand work keeps
+Paid AI, billing, teams, video instruction and full flashcards/retention are not
+operational. Entitlement-based paid-bank access is not implemented. Unavailable
+features are labeled. Brand work keeps
 the CredBuilt direction; the original prototype and official geometric logo have
 not been supplied. See the feature matrix for the dark-interface validation state.
 
@@ -101,6 +113,7 @@ npm run lint
 npm test
 npm run build
 npm run test:e2e
+npm run test:e2e:studio
 ```
 
 Browser production tests require a browser-mode build first; modes are checked
@@ -111,6 +124,8 @@ provider exclusions.
 - [Architecture](ARCHITECTURE.md) and [database schema](DATABASE_SCHEMA.md)
 - [Feature status](FEATURE_STATUS.md) and [roadmap](PRODUCT_ROADMAP.md)
 - [Content policy](CONTENT_REVIEW_POLICY.md)
+- [Content Studio operations](docs/editorial-workflow.md)
+- [v0.6A/B release report](docs/v06-release-report.md)
 - [Deployment, migration and rollback](DEPLOYMENT.md)
 - [Testing](TESTING.md) and [security assumptions](SECURITY.md)
 

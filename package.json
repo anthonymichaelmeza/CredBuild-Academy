@@ -13,7 +13,9 @@
     "db:migrate": "CREDBUILT_MIGRATE=true tsx --conditions=react-server --env-file-if-exists=.env.local scripts/migrate.ts",
     "db:seed": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/seed.ts",
     "test:e2e:browser": "playwright test --config playwright.browser.config.ts",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test:e2e:studio": "playwright test --config playwright.studio.config.ts",
+    "studio:role": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/studio-role.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "7.9.19",

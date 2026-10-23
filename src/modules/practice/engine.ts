@@ -13,11 +13,23 @@ export const sessionConfigSchema = z
       z.literal(200),
     ]),
     mode: z.enum(["learning", "adaptive", "timed", "exam"]),
-    domain: z.enum(["all", "1", "2", "3", "4"]),
+    domain: z.string().min(1).max(80),
     prioritizeMissed: z.boolean().default(false),
     topic: z.string().max(100).optional(),
     durationSeconds: z.number().int().min(60).max(14400).optional(),
+    bank: z.enum(["demonstration", "published"]).optional(),
+    certification: z
+      .string()
+      .min(1)
+      .max(80)
+      .regex(/^[a-z0-9_-]+$/)
+      .optional(),
   })
+  .refine(
+    (c) =>
+      c.bank === "published" || ["all", "1", "2", "3", "4"].includes(c.domain),
+    { message: "Choose an available demonstration domain.", path: ["domain"] },
+  )
   .refine(
     (c) =>
       !["timed", "exam"].includes(c.mode) || c.durationSeconds !== undefined,
@@ -67,12 +79,16 @@ export function selectQuestions(
   // each identity before filtering so an obsolete topic cannot remain eligible.
   const eligible = currentQuestionVersions(pool).filter(
     (q) =>
+      (config.bank !== "published" ||
+        q.certification === (config.certification || "chst")) &&
       (config.domain === "all" || q.domain === config.domain) &&
       (!config.topic || config.topic === "all" || q.topic === config.topic),
   );
   if (eligible.length < config.count)
     throw new Error(
-      `Only ${eligible.length} eligible demonstration questions are available. Choose a smaller focused set (1, 3, or 5), select all domains for 10 questions, or wait for a larger reviewed bank. Questions are never duplicated.`,
+      config.bank === "published"
+        ? `Only ${eligible.length} eligible published questions are available. Choose a smaller set or another topic. Questions are never duplicated.`
+        : `Only ${eligible.length} eligible demonstration questions are available. Choose a smaller focused set (1, 3, or 5), select all domains for 10 questions, or wait for a larger reviewed bank. Questions are never duplicated.`,
     );
   const randomized = eligible.map((q) => ({ q, tie: random() }));
   randomized.sort((a, b) => {
@@ -136,6 +152,15 @@ export function sessionView(session: Session, pool: Question[]): SessionView {
     return {
       id: q.id,
       version: q.version,
+      ...(q.certification ? { certification: q.certification } : {}),
+      ...(q.blueprint
+        ? {
+            blueprint: {
+              version: q.blueprint.version,
+              objective: q.blueprint.objective,
+            },
+          }
+        : {}),
       domain: q.domain,
       topic: q.topic,
       difficulty: q.difficulty,
@@ -143,6 +168,16 @@ export function sessionView(session: Session, pool: Question[]): SessionView {
       contentKind: q.contentKind,
       origin: q.origin,
       reviewStatus: q.reviewStatus,
+      ...(q.questionType ? { questionType: q.questionType } : {}),
+      ...(q.media
+        ? {
+            media: q.media.map(({ url, alt, rights }) => ({
+              url,
+              alt,
+              rights,
+            })),
+          }
+        : {}),
       choices: q.choices.map(({ id, text }) => ({ id, text })),
     };
   });
@@ -158,6 +193,7 @@ export function sessionView(session: Session, pool: Question[]): SessionView {
         explanation: q.explanation,
         reference: q.reference,
         rationales: q.choices,
+        ...(q.solutionSteps ? { solutionSteps: [...q.solutionSteps] } : {}),
       };
     }
   }

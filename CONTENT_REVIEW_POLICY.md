@@ -6,68 +6,104 @@ exact supporting material and revision have actually been reviewed.
 
 ## Current content
 
-The 12 original AI-generated questions and eight representative lessons are
-unreviewed demonstrations. The source URLs are discovery links, not evidence of
+The 12 original AI-generated questions and eight representative lessons remain
+unreviewed demonstrations. Source URLs are discovery links, not evidence of
 technical verification. CHST5 headings/weights came from the product brief and
-are provisional. Official blueprint retrieval is blocked by the workspace's
-proxy; no official objective mapping, duration or passing score has been invented.
+are provisional. Official-source retrieval is blocked by the workspace proxy;
+no official objective mapping, duration or passing score has been invented.
 There are **zero approved commercial questions and zero verified technical
-sources** in this milestone.
+sources** supplied by this milestone.
 
-Demo content remains labeled throughout lessons, configuration, answering and
-results. It may support development/testing but cannot be promoted merely to
-meet a question-count target. No official exam items are reproduced or claimed.
+Demo content remains labeled in lessons, configuration, answering and results.
+It cannot be promoted to meet a question-count target. No official examination
+items are reproduced or claimed. Isolated fictional QA fixtures test publication
+rules; they are not instructional seed content or actual source reviews.
 
-## Required workflow
+## Operational workflow
 
 **Draft → Technical Review → Approved → Published → Retired**
 
-`src/modules/content/review.ts` implements a tested pure transition policy:
+Technical reviewers may instead request changes or reject a submitted revision.
+The author creates a new draft revision to address either decision. Revising an
+approved/published item also creates a new draft; it does not alter the approved
+snapshot or reuse approval. A previously published revision remains available
+until an administrator replaces or retires it. Historical learner attempts keep
+their exact question/lesson versions.
 
-- Keep origin (AI-generated/human-authored/imported) separate from status.
-- Require a verified blueprint revision, domain and exact objective mapping.
-- Require an explanation and supporting sources with title, HTTPS URL, edition,
-  exact section, reviewer, review date and notes.
-- Source reviewers and the approving technical reviewer must be independent of
-  the author. Technical approval belongs to the exact revision and follows the
-  supporting source reviews.
-- Authorized reviewers approve/request changes; administrators publish/retire.
-  Demonstration content cannot enter the published instructional bank.
-- Revision creates a draft, invalidates approval/source-review assertions and
-  preserves prior events. Reviewed material is not silently changed in place.
+The protected `/studio` interface and `/api/studio` service enforce this workflow
+using trusted server-stored roles:
 
-This policy expects a trusted server caller. Passing a role string into a pure
-function is not authentication or an operational publishing API.
+- **Learner:** no editorial access.
+- **Author:** create/revise own question/lesson drafts and submit for review.
+- **Technical reviewer:** inspect and review submitted items. Every contributor
+  to the logical item is excluded from independent review, including an
+  administrator who authored a revision.
+- **Administrator:** create/revise, record canonical blueprint reviews and
+  publish/retire eligible content. Administrator alone does not grant technical
+  reviewer permission.
 
-## Database and interface boundary
+There is no public role-grant action. A trusted operator grants/revokes roles
+through the CLI after the managed subject exists. Browser-demo mode cannot use
+the Studio. Local test identities require explicit non-production opt-in and
+are disabled on Vercel. See [editorial operations](docs/editorial-workflow.md).
 
-`0001_foundation.sql` rejects demonstration publication, self-approval and
-publication without a matching verified blueprint/objective/supporting review.
-Reviewed question content is protected from in-place changes. SQL question
-statuses currently use `draft/in_review/changes_requested/approved/rejected`,
-with publication in a separate pointer table; this differs from the pure policy
-above. That mapping must be reconciled transactionally before a real editor is
-enabled. Source evidence immutability, full field validation and every workflow
-audit event also need the completed editorial service.
+## Evidence required for approval
 
-The `/admin` page is a public read-only inspector of demo requirements.
-`/api/admin` denies writes; no learner can publish through it. Lesson revisions
-are immutable demo drafts in the database, not a completed approved lesson CMS.
-Do not claim that a policy test or rejection trigger alone establishes a secure
-content-management workflow.
+Keep origin (`ai_generated`, `human_authored`, `imported`) separate from status.
+AI generation or successful import is never evidence of correctness.
 
-## Before instructional publication
+The submitted immutable revision must include certification, canonical blueprint
+revision, domain, exact objective code, topic/subtopic, content and authoritative
+references. Each reference records title, public HTTPS URL, edition and exact
+supporting section. The canonical blueprint must have a recorded human review
+and matching objective/domain map. An independently reviewed source check must
+support every cited reference and contain findings. Approval records reviewer,
+timestamp, exact revision, source outcomes and explicit human attestation.
 
-Obtain the current official blueprint and technical source material. Record the
-document/version, retrieval/verification date, exact relevant section, reviewer
-and durable provenance. Verify answer, distractors, explanation, calculations,
-units, images and lesson claims against actual reviewed material. Link the
-review to the exact content revision and record any limitations/disagreement.
+Review the answer, every distractor, explanations, calculations/units, media
+rights and factual accuracy, knowledge checks and lesson claims against the
+actual source. Calculation/multi-step questions require worked steps;
+image-supported questions require licensed/original images with descriptions
+and rights metadata. Unsupported or contradictory source evidence blocks
+approval. Demonstration material cannot enter the instructional bank.
 
-Build authenticated author/reviewer/admin roles, a validated editor/importer,
-source-review capture, rejection/resubmission, immutable version history,
-publication/retirement and append-only audit records. Verify server/database
-boundaries, including self-approval, stale revisions, missing sources and role
-escalation. Respect source/media licensing and do not redistribute restricted
-standards. Expand the reviewed bank gradually; a full exam stays blocked until
-each required domain has enough distinct eligible questions.
+The application records human attestations; it cannot establish that a person
+actually read a source. A valid URL or completed form does not independently
+verify technical truth. The service does not fetch, scrape or auto-approve
+external references. Respect copyright and licensing, including restricted
+standards. Do not upload licensed source material to the public repository.
+
+## Server and database enforcement
+
+`src/modules/studio/service.ts` validates schemas, authorization, exact revision
+and optimistic row version inside transactions. `0004_content_studio.sql`
+adds append-only revision/review/source/audit records and SQL workflow,
+independence, canonical blueprint and publication guards. Migration `0001` stays
+unchanged. Legacy question states remain `draft/in_review/changes_requested/
+approved/rejected`; the new Studio workflow uses `technical_review` and
+publication pointers rather than rewriting historical rows.
+
+Only a trusted administrator can publish an approved current revision. The
+transaction materializes the exact reviewed immutable learner snapshot, sets
+matching Studio and learner pointers, advances workflow and appends audit.
+Retirement removes current pointers while preserving history. Published learner
+APIs apply safe projections; unpublished drafts and grading keys are not sent
+to learners. Paid entitlements remain future work.
+
+Structured JSON bulk import validates at most 50 question records, reports
+duplicates/errors and requires confirmation of an owner-bound expiring preview.
+Confirmation rechecks duplicates and inserts all records as drafts in one
+transaction. Imported records cannot supply approval, roles or review evidence.
+The public `/admin` inspector remains read-only and `/api/admin` still denies
+writes; these are separate from protected Content Studio.
+
+## Before commercial use
+
+Obtain and actually review the current official blueprint and technical sources.
+Register new canonical revisions as needed; never relabel supplied provisional
+metadata as official without comparing the actual document. Record source
+edition, exact locators, review dates, reviewer identity and durable provenance.
+Complete live-provider validation, least-privilege database access, editorial
+operator training, independent review and operational/security checks before
+commercial publication. Policy tests and isolated fixtures do not complete
+those gates.

@@ -29,9 +29,24 @@ for unfinished launch requirements.
 - Server lesson writes validate section/check IDs, grade against stored content,
   reject forged completion/correctness and use optimistic revisions. Profiles
   also reject stale writes; manual checklist marks do not establish learning.
-- Administrative publishing endpoints deny all writes. SQL constraints reject
-  unsafe publication, and immutable lesson revisions preserve history. These
-  are safeguards, not a delivered role-based editorial CMS.
+- The public `/api/admin` endpoint still denies writes. Protected `/api/studio`
+  derives author/reviewer/administrator roles from the database, never a client
+  role. Role grants/revocations are trusted CLI operations. Authors can access
+  their items; reviewers/administrators can inspect editorial content. Ordinary
+  learners cannot access draft keys or editorial actions.
+- Editorial review excludes every contributor to the logical item. Approvals
+  require immutable revision/source evidence, canonical blueprint mapping and
+  independent human attestation. Only administrators publish; transactions and
+  SQL guards require exact reviewed canonical learner snapshots and matching
+  pointers. Revisions/reviews/source records/audit are append-only. Edits create
+  drafts rather than mutating published material.
+- JSON imports use strict schemas, bounded bodies, duplicate checks,
+  owner-bound expiring previews and single-use transactional confirmation.
+  Imported questions remain drafts; client approval/role fields are rejected.
+- Connected UI hides prior account state while identity changes and discards
+  superseded requests. Connected read/write errors never fall back to local
+  demo storage. PostgreSQL uses verified remote TLS, bounded pools/timeouts and
+  safe generic connection errors.
 - Security headers include no-sniff, frame denial and a referrer policy. Secrets,
   `.env*`, local databases, dependencies and build/report artifacts are ignored
   by Git. Public build flags contain no credentials.
@@ -47,15 +62,29 @@ identity does not prove these provider behaviors.
 Database privacy currently relies on application ownership predicates; there
 is no installed row-level-security or organization tenant policy. Runtime DB
 credentials are trusted and need least privilege. Migration credentials should
-be separate. A completed CMS must reconcile database/policy states, secure source
-evidence, role administration and every sensitive audit event.
+be separate. Studio roles do not make runtime SQL credentials untrusted: anyone
+with those credentials is an infrastructure operator. Review production
+privileges, grant/revoke procedures and audit retention before launch.
 
 All demonstration keys are intentionally public, including fixtures imported by
 browser learning/practice modules. Do not place an approved paid bank in those
-modules or infer commercial answer protection from hidden UI. Approved content
-requires a separate trusted server selection/delivery path and entitlement
-checks. The current bank/query/history implementation targets a small demo, not
-thousands of protected questions.
+modules or infer commercial answer protection from hidden UI. Published content
+now uses separate server-only selection and safe learner projections. This does
+not implement paid entitlements. Bank/history queries remain bounded small-bank
+implementations and require pagination/scale work before thousands of questions.
+
+Editor content is structured text, not executable arbitrary HTML. Media/source
+URLs accept public HTTPS or restricted local media paths as applicable, reject
+embedded credentials and obvious private hosts, and carry rights metadata.
+The server does not fetch arbitrary URLs. URL syntax checks do not establish
+trustworthiness, media rights or technical verification; a future media-ingestion
+service will need its own network isolation, malware/content checks and access
+policy. Current external media is not a protected paid asset service.
+
+Studio local test access requires both local flags, non-production execution and
+absence of Vercel. Do not enable it for customer records. The browser-only demo
+cannot use Studio. Human attestations are recorded, not independently proven by
+the application; operator discipline and review quality remain material risks.
 
 Browser timers are editable; server mode enforces deadline comparisons on
 requests, but has no inactive-session expiry worker. Browser response time is

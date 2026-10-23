@@ -2,7 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, LockKeyhole } from "lucide-react";
 import { actor, authConfigured, demoEnabled } from "@/modules/identity/auth";
-import { history, pool, bookmarkList } from "@/modules/practice/service";
+import {
+  history,
+  historyQuestionPool,
+  bookmarkList,
+} from "@/modules/practice/service";
 import { Performance } from "@/components/performance";
 import { BrowserPerformance, BrowserSettings } from "@/components/browser-demo";
 import { browserDemoEnabled } from "@/modules/runtime/mode";
@@ -27,7 +31,18 @@ export default async function Section({
     const learning = who ? (await readLearning(who.id)).state : null;
     return (
       <Performance
-        {...performanceData(saved, saved.length ? await pool() : [])}
+        {...performanceData(
+          saved,
+          saved.length
+            ? (await historyQuestionPool()).filter((q) =>
+                saved.some(
+                  (s) =>
+                    s.questionIds.includes(q.id) &&
+                    (s.questionVersions?.[q.id] ?? 1) === q.version,
+                ),
+              )
+            : [],
+        )}
         marked={who ? await bookmarkList(who.id) : []}
         completedLessonIds={
           learning

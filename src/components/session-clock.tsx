@@ -4,9 +4,11 @@ import { Timer } from "lucide-react";
 export function SessionClock({
   deadline,
   onExpire,
+  instructional = false,
 }: {
   deadline: string;
   onExpire: () => void;
+  instructional?: boolean;
 }) {
   const [seconds, setSeconds] = useState<number | null>(null);
   useEffect(() => {
@@ -24,7 +26,11 @@ export function SessionClock({
     <div
       className={`session-clock ${seconds !== null && seconds < 60 ? "clock-urgent" : ""}`}
       role="timer"
-      aria-label="Demonstration time remaining"
+      aria-label={
+        instructional
+          ? "Practice time remaining"
+          : "Demonstration time remaining"
+      }
       aria-live="off"
     >
       <Timer size={17} />
@@ -35,7 +41,7 @@ export function SessionClock({
               .toString()
               .padStart(2, "0")}:${(seconds % 60).toString().padStart(2, "0")}`}
       </strong>
-      <small>Demo timer</small>
+      <small>{instructional ? "Practice timer" : "Demo timer"}</small>
     </div>
   );
 }

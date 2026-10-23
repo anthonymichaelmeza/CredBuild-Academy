@@ -13,6 +13,9 @@ export function SessionBuilder({
   initialDomain = "all",
   initialTopic = "all",
   initialCount = 25,
+  bank = "demonstration",
+  certification = "chst",
+  certificationOptions = ["chst"],
 }: {
   available: boolean;
   inventory: PerformanceQuestion[];
@@ -20,6 +23,9 @@ export function SessionBuilder({
   initialDomain?: string;
   initialTopic?: string;
   initialCount?: number;
+  bank?: "demonstration" | "published";
+  certification?: string;
+  certificationOptions?: string[];
 }) {
   const router = useRouter();
   const hydrated = useHydrated();
@@ -54,6 +60,7 @@ export function SessionBuilder({
         domain,
         topic,
         prioritizeMissed,
+        ...(bank === "published" ? { bank, certification } : {}),
         ...(timed ? { durationSeconds: minutes * 60 } : {}),
       });
       let id: string;
@@ -92,12 +99,15 @@ export function SessionBuilder({
       <div className="notice compact-notice">
         <ShieldAlert size={20} />
         <div>
-          <strong>Demonstration question bank</strong>
+          <strong>
+            {bank === "published"
+              ? "Published instructional bank"
+              : "Demonstration question bank"}
+          </strong>
           <p>
-            {inventory.length} distinct original AI-generated drafts available
-            here. Sources and CHST alignment have not been verified. Focused
-            sets of 1, 3, or 5 help you explore the small bank; larger sets need
-            more distinct content.
+            {bank === "published"
+              ? `${inventory.length} distinct questions are currently published after independent source review. Availability is checked again when your session starts. This is independent preparation, not an official examination.`
+              : `${inventory.length} distinct original AI-generated drafts available here. Sources and CHST alignment have not been verified. Focused sets of 1, 3, or 5 help you explore the small bank; larger sets need more distinct content.`}
           </p>
         </div>
       </div>
@@ -133,8 +143,9 @@ export function SessionBuilder({
               ))}
             </div>
             <p className="fine-print">
-              1 / 3 / 5 are short demonstration sets. Questions are never
-              duplicated.
+              {bank === "published"
+                ? "Short focused sets are available when the bank is small. Questions are never duplicated."
+                : "1 / 3 / 5 are short demonstration sets. Questions are never duplicated."}
             </p>
           </fieldset>
           <fieldset>
@@ -184,6 +195,28 @@ export function SessionBuilder({
             </div>
           </fieldset>
           <div className="field-grid">
+            {bank === "published" && (
+              <div>
+                <label className="field-label" htmlFor="certification">
+                  Certification
+                </label>
+                <select
+                  id="certification"
+                  value={certification}
+                  onChange={(event) =>
+                    router.push(
+                      `/practice?bank=published&certification=${encodeURIComponent(event.target.value)}`,
+                    )
+                  }
+                >
+                  {certificationOptions.map((id) => (
+                    <option key={id} value={id}>
+                      {id.toUpperCase()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div>
               <label className="field-label" htmlFor="domain">
                 Focus domain
@@ -196,12 +229,22 @@ export function SessionBuilder({
                   setTopic("all");
                 }}
               >
-                <option value="all">All four domains</option>
-                {domains.map((d) => (
-                  <option key={d.code} value={d.code}>
-                    Domain {d.code} — {d.short}
-                  </option>
-                ))}
+                <option value="all">
+                  {bank === "published"
+                    ? "All published domains"
+                    : "All four domains"}
+                </option>
+                {bank === "published"
+                  ? [...new Set(inventory.map((q) => q.domain))].map((code) => (
+                      <option key={code} value={code}>
+                        Domain {code}
+                      </option>
+                    ))
+                  : domains.map((d) => (
+                      <option key={d.code} value={d.code}>
+                        Domain {d.code} — {d.short}
+                      </option>
+                    ))}
               </select>
             </div>
             <div>
@@ -222,7 +265,9 @@ export function SessionBuilder({
           </div>
           {timed && (
             <label className="duration-field">
-              Demonstration duration (minutes)
+              {bank === "published"
+                ? "Practice duration (minutes)"
+                : "Demonstration duration (minutes)"}
               <input
                 type="number"
                 min={1}
@@ -250,7 +295,9 @@ export function SessionBuilder({
             <Info size={16} />
             <span>
               {mode === "exam"
-                ? "This is a short unverified demo rehearsal, not a full CHST simulation. Feedback stays hidden until submission; the browser clock and scores are inspectable."
+                ? bank === "published"
+                  ? "This practice rehearsal uses a duration you choose. It is not a full official CHST simulation. Feedback stays hidden until submission; server deadlines enforce the saved duration."
+                  : "This is a short unverified demo rehearsal, not a full CHST simulation. Feedback stays hidden until submission; the browser clock and scores are inspectable."
                 : "Instant explanations are on. Your first checked answer is final; start a new session to retry."}
             </span>
           </div>
@@ -287,7 +334,9 @@ export function SessionBuilder({
               <dt>Mode</dt>
               <dd>
                 {mode === "exam"
-                  ? "Demo exam rehearsal"
+                  ? bank === "published"
+                    ? "Practice exam rehearsal"
+                    : "Demo exam rehearsal"
                   : mode === "timed"
                     ? "Timed practice"
                     : mode === "adaptive"
@@ -309,11 +358,19 @@ export function SessionBuilder({
             </div>
             <div>
               <dt>Timer</dt>
-              <dd>{timed ? `${minutes} min (demo)` : "Untimed"}</dd>
+              <dd>
+                {timed
+                  ? `${minutes} min${bank === "published" ? "" : " (demo)"}`
+                  : "Untimed"}
+              </dd>
             </div>
             <div>
               <dt>Content</dt>
-              <dd>Unverified demo</dd>
+              <dd>
+                {bank === "published"
+                  ? "Published instruction"
+                  : "Unverified demo"}
+              </dd>
             </div>
           </dl>
           <div className="summary-tip">
@@ -330,8 +387,10 @@ export function SessionBuilder({
           </div>
           <p className="fine-print">
             Adaptive recommendations are transparent rules, not a validated
-            readiness prediction. Browser demo progress stays on this device and
-            website address.
+            readiness prediction.{" "}
+            {browserOnly
+              ? "Browser demo progress stays on this device and website address."
+              : "Connected practice progress saves to your learner identity."}
           </p>
         </aside>
       </div>

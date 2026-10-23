@@ -61,7 +61,11 @@ export function Performance({
           </h1>
           <p>Every recommendation starts with something you actually did.</p>
         </div>
-        <span className="outline-badge">Demonstration activity only</span>
+        <span className="outline-badge">
+          {saved.some((s) => s.bank === "published")
+            ? "Saved learning activity"
+            : "Demonstration activity only"}
+        </span>
       </div>
       <div className="analytics-filters card">
         <label>
@@ -290,7 +294,7 @@ export function Performance({
                       : s.mode === "timed"
                         ? "Timed"
                         : "Learning"}{" "}
-                  practice · demo
+                  practice · {s.bank === "published" ? "reviewed bank" : "demo"}
                 </strong>
                 <small>
                   {new Date(s.createdAt).toISOString().slice(0, 10)} ·{" "}
@@ -321,7 +325,7 @@ export function Performance({
         )}
       </section>
       <p className="demo-disclosure">
-        All numbers come from saved browser activity and the selected filters.
+        All numbers come from saved learner activity and the selected filters.
         In-progress exam-rehearsal accuracy is excluded until submission.
         Completed-session results count unanswered questions as incorrect;
         accuracy above uses answered questions. No pass prediction or validated

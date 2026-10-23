@@ -2,9 +2,12 @@ export type Confidence = "low" | "medium" | "high";
 export type Question = {
   id: string;
   version: number;
+  /** Absent on the original CHST demonstration fixtures. */
+  certification?: string;
+  blueprint?: { version: string; objective: string };
   domain: string;
   topic: string;
-  difficulty: "introductory" | "intermediate";
+  difficulty: "introductory" | "intermediate" | "advanced";
   stem: string;
   choices: { id: string; text: string; rationale: string }[];
   correctChoice: string;
@@ -15,9 +18,17 @@ export type Question = {
     locator: string;
     verifiedAt: string | null;
   };
-  contentKind: "demonstration";
-  origin: "ai_generated";
-  reviewStatus: "draft";
+  contentKind: "demonstration" | "instructional";
+  origin: "ai_generated" | "human_authored" | "imported";
+  reviewStatus: "draft" | "approved" | "published";
+  questionType?:
+    | "multiple_choice"
+    | "scenario"
+    | "calculation"
+    | "image_hazard"
+    | "multi_step";
+  media?: { url: string; alt: string; rights: string }[];
+  solutionSteps?: string[];
 };
 export type Answer = {
   choiceId: string;
@@ -42,10 +53,13 @@ export type Session = {
   deadlineAt?: string;
   submissionReason?: "manual" | "expired";
   topic?: string;
+  /** Absent on legacy attempts, which always use the demonstration bank. */
+  bank?: "demonstration" | "published";
+  certification?: string;
 };
 export type SafeQuestion = Omit<
   Question,
-  "correctChoice" | "explanation" | "reference" | "choices"
+  "correctChoice" | "explanation" | "reference" | "choices" | "solutionSteps"
 > & { choices: { id: string; text: string }[] };
 export type SessionView = Omit<Session, "ownerId" | "answers"> & {
   answers: Record<string, Omit<Answer, "correct"> & { correct?: boolean }>;
@@ -57,6 +71,7 @@ export type SessionView = Omit<Session, "ownerId" | "answers"> & {
       explanation: string;
       reference: Question["reference"];
       rationales: Question["choices"];
+      solutionSteps?: string[];
     }
   >;
 };

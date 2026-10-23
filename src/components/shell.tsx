@@ -36,17 +36,24 @@ export function Shell({
   children,
   managed,
   browserOnly = false,
+  studioEnabled = false,
 }: {
   children: React.ReactNode;
   managed: boolean;
   browserOnly?: boolean;
+  studioEnabled?: boolean;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const current =
     navigation.find(([href]) =>
       href === "/" ? pathname === "/" : pathname.startsWith(href),
-    )?.[1] || "Account Settings";
+    )?.[1] ||
+    (pathname.startsWith("/studio")
+      ? "Content Studio"
+      : pathname.startsWith("/onboarding")
+        ? "Study goals"
+        : "Account Settings");
   return (
     <div className="app-shell">
       <div className="mobile-bar">
@@ -131,6 +138,16 @@ export function Shell({
             <Settings size={19} />
             Account Settings
           </Link>
+          {studioEnabled && (
+            <Link
+              className="nav-item"
+              href="/studio"
+              onClick={() => setOpen(false)}
+            >
+              <ShieldCheck size={19} />
+              Content Studio
+            </Link>
+          )}
           <div className="sidebar-footer">
             BUILD KNOWLEDGE.
             <br />

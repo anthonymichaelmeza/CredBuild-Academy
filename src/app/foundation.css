@@ -28,6 +28,22 @@
 .settings-card > button + button {
   margin-left: 12px;
 }
+.question-media {
+  margin: 20px 0;
+}
+.question-media img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+.question-media figcaption {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 8px;
+}
+.worked-solution {
+  white-space: pre-wrap;
+}
 @media (max-width: 900px) {
   .program-grid {
     grid-template-columns: minmax(0, 1fr);

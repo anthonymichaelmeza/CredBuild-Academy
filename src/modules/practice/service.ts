@@ -1,5 +1,5 @@
 import "server-only";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
 import { db } from "@/db/client";
 import { seedDemo } from "@/db/seed";
@@ -8,6 +8,7 @@ import { AccessError, type Actor } from "@/modules/identity/auth";
 import { selectQuestions, sessionView, type Config } from "./engine";
 import type { Confidence, Question, Session } from "./types";
 import { deadlinePassed, finalize, recordAnswer } from "./lifecycle";
+import { listPublishedQuestions } from "@/modules/studio/publication";
 let seeded: Promise<void> | undefined;
 async function ready() {
   await (seeded ??= seedDemo().catch((error) => {
@@ -30,6 +31,45 @@ export async function pool(): Promise<Question[]> {
       )
   ).map((r) => r.data);
 }
+/** Only current publication pointers are eligible for a new instructional set. */
+export async function publishedPool(): Promise<Question[]> {
+  await ready();
+  return listPublishedQuestions();
+}
+export async function historyQuestionPool(): Promise<Question[]> {
+  const [demonstrations, instructional] = await Promise.all([
+    pool(),
+    listPublishedQuestions(true),
+  ]);
+  return [...demonstrations, ...instructional];
+}
+export function requirePublishedLearner(who: Actor) {
+  const isolatedLocal =
+    process.env.ALLOW_LOCAL_STUDIO === "true" &&
+    process.env.ALLOW_LOCAL_DEMO === "true" &&
+    !process.env.VERCEL &&
+    process.env.NODE_ENV !== "production";
+  if (who.mode !== "managed" && !isolatedLocal)
+    throw new AccessError(
+      "Published instruction requires a connected learner account.",
+      403,
+    );
+}
+/** Historical lookup deliberately ignores publication pointers. Retirement may
+ * stop new attempts, but must never change already-pinned grading or review. */
+async function pinnedPool(session: Session): Promise<Question[]> {
+  const orm = await ready();
+  const ids = session.questionIds.map(
+    (id) =>
+      `${id}:v${session.questionVersions === undefined ? 1 : session.questionVersions[id]}`,
+  );
+  if (!ids.length) return [];
+  const rows = await orm
+    .select()
+    .from(questionVersions)
+    .where(inArray(questionVersions.id, ids));
+  return rows.map((row) => row.data);
+}
 export async function history(owner: string): Promise<Session[]> {
   const orm = await ready();
   return (
@@ -43,6 +83,7 @@ export async function history(owner: string): Promise<Session[]> {
 }
 export async function startSession(who: Actor, config: Config) {
   const orm = await ready();
+  if (config.bank === "published") requirePublishedLearner(who);
   const previous = await history(who.id);
   const attempts = [...previous]
     .reverse()
@@ -53,7 +94,11 @@ export async function startSession(who: Actor, config: Config) {
         ...a,
       })),
     );
-  const selected = selectQuestions(await pool(), config, attempts);
+  const selected = selectQuestions(
+    config.bank === "published" ? await publishedPool() : await pool(),
+    config,
+    attempts,
+  );
   await orm
     .insert(users)
     .values({ id: who.id, identityMode: who.mode })
@@ -72,6 +117,12 @@ export async function startSession(who: Actor, config: Config) {
     createdAt: new Date().toISOString(),
     submittedAt: null,
     revision: 0,
+    ...(config.bank === "published"
+      ? {
+          bank: "published" as const,
+          certification: config.certification || "chst",
+        }
+      : {}),
     ...(config.topic && config.topic !== "all" ? { topic: config.topic } : {}),
     ...(["timed", "exam"].includes(config.mode)
       ? {
@@ -118,12 +169,12 @@ async function save(session: Session) {
       "This session changed in another tab. Refresh and try again.",
       409,
     );
-  return sessionView(updated, await pool());
+  return sessionView(updated, await pinnedPool(updated));
 }
 export async function view(id: string, owner: string) {
   const session = await ownedSession(id, owner);
   if (deadlinePassed(session)) return save(finalize(session));
-  return sessionView(session, await pool());
+  return sessionView(session, await pinnedPool(session));
 }
 export async function answer(
   id: string,
@@ -140,13 +191,14 @@ export async function answer(
     throw new AccessError("Session already submitted.", 409);
   if (!session.questionIds.includes(input.questionId))
     throw new AccessError("Question not in this session.", 400);
-  const updated = recordAnswer(session, await pool(), input);
-  if (updated === session) return sessionView(session, await pool());
+  const questions = await pinnedPool(session);
+  const updated = recordAnswer(session, questions, input);
+  if (updated === session) return sessionView(session, questions);
   return save(updated);
 }
 export async function submit(id: string, owner: string) {
   const s = await ownedSession(id, owner);
-  if (s.status === "submitted") return sessionView(s, await pool());
+  if (s.status === "submitted") return sessionView(s, await pinnedPool(s));
   return save(finalize(s));
 }
 export async function flag(id: string, owner: string, questionId: string) {
@@ -171,7 +223,15 @@ export async function setBookmark(
   enabled: boolean,
 ) {
   const orm = await ready();
-  if (!(await pool()).some((q) => q.id === questionId))
+  const [known] = await orm
+    .select()
+    .from(questionVersions)
+    .where(eq(questionVersions.questionId, questionId))
+    .limit(1);
+  if (
+    !known ||
+    (known.contentKind !== "demonstration" && known.reviewStatus !== "approved")
+  )
     throw new AccessError("Unknown question.", 400);
   if (enabled)
     await orm

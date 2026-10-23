@@ -114,3 +114,56 @@ export const learnerProfiles = pgTable("learner_profiles", {
     .defaultNow()
     .notNull(),
 });
+export const editorialRoles = pgTable(
+  "editorial_roles",
+  {
+    subjectId: text("subject_id")
+      .notNull()
+      .references(() => users.id),
+    role: text("role").notNull(),
+    grantedBy: text("granted_by").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.subjectId, t.role] })],
+);
+export const studioContent = pgTable("studio_content", {
+  id: text("id").primaryKey(),
+  kind: text("kind").notNull(),
+  certificationId: text("certification_id")
+    .notNull()
+    .references(() => certifications.id),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => users.id),
+  currentRevision: integer("current_revision").notNull(),
+  rowVersion: integer("row_version").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+export const studioRevisions = pgTable("studio_revisions", {
+  id: text("id").primaryKey(),
+  contentId: text("content_id")
+    .notNull()
+    .references(() => studioContent.id),
+  revision: integer("revision").notNull(),
+  authorId: text("author_id")
+    .notNull()
+    .references(() => users.id),
+  data: jsonb("data").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+export const publishedLessons = pgTable("published_lessons", {
+  lessonId: text("lesson_id").primaryKey(),
+  lessonVersionId: text("lesson_version_id")
+    .notNull()
+    .references(() => lessonVersions.id),
+  publishedBy: text("published_by").notNull(),
+  publishedAt: timestamp("published_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});

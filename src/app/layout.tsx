@@ -8,6 +8,7 @@ import "./globals.css";
 import "./v04.css";
 import "./foundation.css";
 import "./planner.css";
+import "./studio.css";
 import "./dark-theme.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
@@ -34,7 +35,18 @@ export default async function RootLayout({
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <Shell managed={managed} browserOnly={browserDemoEnabled()}>
+      <Shell
+        managed={managed}
+        browserOnly={browserDemoEnabled()}
+        studioEnabled={
+          managed ||
+          (!browserDemoEnabled() &&
+            process.env.ALLOW_LOCAL_STUDIO === "true" &&
+            process.env.ALLOW_LOCAL_DEMO === "true" &&
+            !process.env.VERCEL &&
+            process.env.NODE_ENV !== "production")
+        }
+      >
         {children}
       </Shell>
     </>

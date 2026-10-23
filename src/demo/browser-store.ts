@@ -128,6 +128,10 @@ function persist(state: BrowserDemoState) {
 }
 export function createBrowserSession(input: unknown): string {
   const config = sessionConfigSchema.parse(input);
+  if (config.bank === "published")
+    throw new Error(
+      "Published instructional questions require a connected account; they are not included in the browser demonstration.",
+    );
   const state = parseBrowserSnapshot(browserSnapshot());
   if (state.sessions.length >= 100)
     throw new Error(

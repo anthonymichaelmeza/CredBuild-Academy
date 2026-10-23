@@ -11,6 +11,13 @@ import {
   type LearningState,
 } from "./progress";
 import type { LessonWrite } from "./requests";
+import {
+  getPublishedLesson,
+  listPublishedLessons,
+} from "@/modules/studio/publication";
+import { requirePublishedLearner } from "@/modules/practice/service";
+import { completeable } from "./progress";
+import { safePublishedLesson, type ConnectedLesson } from "./published-types";
 
 export type LearningSnapshot = {
   state: LearningState;
@@ -31,7 +38,7 @@ export async function readLearning(owner: string): Promise<LearningSnapshot> {
     .from(lessonProgress)
     .where(eq(lessonProgress.ownerId, owner));
   const snapshot: LearningSnapshot = { state: emptyLearning(), revisions: {} };
-  for (const lesson of lessons) {
+  for (const lesson of [...lessons, ...(await listPublishedLessons())]) {
     const row = rows.find(
       (r) => r.lessonVersionId === `${lesson.id}:v${lesson.version}`,
     );
@@ -45,8 +52,14 @@ export async function readLearning(owner: string): Promise<LearningSnapshot> {
 
 export async function saveLesson(who: Actor, input: LessonWrite) {
   const orm = await ready();
-  const current = lessons.find((l) => l.id === input.lessonId);
+  const current =
+    lessons.find((l) => l.id === input.lessonId) ||
+    (await getPublishedLesson(input.lessonId));
   if (!current) throw new AccessError("Lesson not found.", 404);
+  if (current.contentKind === "instructional") {
+    requirePublishedLearner(who);
+    await assertPrerequisites(who.id, current);
+  }
   if (current.version !== input.lessonVersion)
     throw new AccessError(
       "This lesson has a new revision. Refresh to study the current version.",
@@ -107,4 +120,51 @@ export async function saveLesson(who: Actor, input: LessonWrite) {
       409,
     );
   return readLearning(who.id);
+}
+
+export async function assertPrerequisites(
+  owner: string,
+  lesson: ConnectedLesson,
+) {
+  if (!lesson.prerequisites.length) return;
+  const state = (await readLearning(owner)).state;
+  for (const id of lesson.prerequisites) {
+    const prerequisite =
+      lessons.find((candidate) => candidate.id === id) ||
+      (await getPublishedLesson(id));
+    if (
+      !prerequisite ||
+      !state.progress[id]?.completedAt ||
+      !completeable(prerequisite, state.progress[id])
+    )
+      throw new AccessError(
+        "Complete this lesson's prerequisite learning before starting it. Return to Learn to continue your pathway.",
+        403,
+      );
+  }
+}
+
+export async function publishedLessonResource(who: Actor, id: string) {
+  requirePublishedLearner(who);
+  const lesson = await getPublishedLesson(id);
+  if (!lesson) throw new AccessError("Published lesson not found.", 404);
+  await assertPrerequisites(who.id, lesson);
+  const saved = await readLearning(who.id);
+  const progress = saved.state.progress[id] || null;
+  const feedback: Record<
+    string,
+    { correctChoice: string; explanation: string }
+  > = {};
+  for (const check of lesson.checks)
+    if (progress?.checks[check.id])
+      feedback[check.id] = {
+        correctChoice: check.correctChoice,
+        explanation: check.explanation,
+      };
+  return {
+    lesson: safePublishedLesson(lesson),
+    progress,
+    revision: saved.revisions[id] || 0,
+    feedback,
+  };
 }

@@ -30,6 +30,10 @@ async function migrationSources() {
       path.join(process.cwd(), "src/db/migrations/0003_learner_profiles.sql"),
       "utf8",
     ),
+    readFile(
+      path.join(process.cwd(), "src/db/migrations/0004_content_studio.sql"),
+      "utf8",
+    ),
   ]);
   return sources.map((source, i) => ({
     id: String(i + 1).padStart(4, "0"),
@@ -163,12 +167,42 @@ async function connect() {
     : managedDrizzle(pool!, { schema });
   return {
     orm,
+    query: async (text: string, params: unknown[] = []) => {
+      if (local) return local.query<Record<string, unknown>>(text, params);
+      return pool!.query<Record<string, unknown>>(text, params);
+    },
+    transaction: async <T>(work: (query: DatabaseQuery) => Promise<T>) => {
+      if (local)
+        return local.transaction((tx) =>
+          work((text, params = []) =>
+            tx.query<Record<string, unknown>>(text, params),
+          ),
+        );
+      const client = await pool!.connect();
+      try {
+        await client.query("BEGIN");
+        const result = await work((text, params = []) =>
+          client.query<Record<string, unknown>>(text, params),
+        );
+        await client.query("COMMIT");
+        return result;
+      } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+      } finally {
+        client.release();
+      }
+    },
     close: async () => {
       await local?.close();
       await pool?.end();
     },
   };
 }
+export type DatabaseQuery = (
+  text: string,
+  params?: unknown[],
+) => Promise<{ rows: Record<string, unknown>[] }>;
 type Connection = Awaited<ReturnType<typeof connect>>;
 const globalDb = globalThis as unknown as { credbuiltDb?: Promise<Connection> };
 export function connection() {

@@ -1,5 +1,9 @@
 import { z } from "zod";
 import { lessons, type Lesson } from "./catalog";
+export type GradableLesson = Pick<
+  Lesson,
+  "id" | "version" | "sections" | "checks"
+>;
 
 export const lessonProgressSchema = z.object({
   lessonVersion: z.number().int().positive(),
@@ -39,7 +43,10 @@ export const emptyLearning = (): LearningState => ({
   progress: {},
 });
 
-export function completeable(lesson: Lesson, progress?: LessonProgress) {
+export function completeable(
+  lesson: GradableLesson,
+  progress?: LessonProgress,
+) {
   return Boolean(
     progress?.lessonVersion === lesson.version &&
     lesson.sections.every((s) => progress.sections.includes(s.id)) &&
@@ -49,7 +56,7 @@ export function completeable(lesson: Lesson, progress?: LessonProgress) {
 
 /** Shared state machine; server callers supply the persisted lesson revision. */
 export function applyLessonAction(
-  lesson: Lesson,
+  lesson: GradableLesson,
   previous: LessonProgress | undefined,
   input: LessonAction,
   now = new Date().toISOString(),
@@ -82,7 +89,7 @@ export function applyLessonAction(
   } else {
     if (!completeable(lesson, progress))
       throw new Error(
-        "Visit every section and answer both demonstration knowledge checks correctly before completing this lesson.",
+        "Visit every section and answer every knowledge check correctly before completing this lesson.",
       );
     progress.completedAt ??= now;
   }

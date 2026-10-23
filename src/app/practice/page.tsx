@@ -5,6 +5,11 @@ import { demoQuestions } from "@/demo/questions";
 import { pool } from "@/modules/practice/service";
 import { currentQuestionVersions } from "@/modules/practice/engine";
 import { performanceData } from "@/modules/performance/dto";
+import {
+  publishedPool,
+  requirePublishedLearner,
+} from "@/modules/practice/service";
+import Link from "next/link";
 export const dynamic = "force-dynamic";
 export default async function Practice({
   searchParams,
@@ -12,9 +17,17 @@ export default async function Practice({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const query = await searchParams;
+  const bank = query.bank === "published" ? "published" : "demonstration";
+  const certification =
+    typeof query.certification === "string" &&
+    /^[a-z0-9_-]{1,80}$/.test(query.certification)
+      ? query.certification
+      : "chst";
   const initialDomain =
     typeof query.domain === "string" &&
-    ["1", "2", "3", "4"].includes(query.domain)
+    (bank === "published"
+      ? query.domain.length <= 80
+      : ["1", "2", "3", "4"].includes(query.domain))
       ? query.domain
       : "all";
   const initialTopic =
@@ -24,6 +37,19 @@ export default async function Practice({
     ? count
     : 25;
   const focus = { initialDomain, initialTopic, initialCount };
+  if (browserDemoEnabled() && bank === "published")
+    return (
+      <div className="page-wrap narrow">
+        <h1>Published practice needs a connected account.</h1>
+        <p>
+          The credential-free demonstration includes only unreviewed public
+          fixtures.
+        </p>
+        <Link className="button primary" href="/practice">
+          Return to demonstration practice
+        </Link>
+      </div>
+    );
   if (browserDemoEnabled())
     return (
       <SessionBuilder
@@ -35,13 +61,54 @@ export default async function Practice({
         {...focus}
       />
     );
-  const available = demoEnabled() || Boolean(await actor());
-  const inventory = available ? currentQuestionVersions(await pool()) : [];
+  const who = await actor();
+  let publishedAvailable = false;
+  if (who) {
+    try {
+      requirePublishedLearner(who);
+      publishedAvailable = true;
+    } catch {}
+  }
+  const available =
+    bank === "published" ? publishedAvailable : demoEnabled() || Boolean(who);
+  const inventory = available
+    ? currentQuestionVersions(
+        bank === "published" ? await publishedPool() : await pool(),
+      )
+    : [];
+  const certificationOptions = [
+    ...new Set([
+      certification,
+      ...inventory
+        .map((q) => q.certification)
+        .filter((id): id is string => Boolean(id)),
+    ]),
+  ];
+  const selectedInventory =
+    bank === "published"
+      ? inventory.filter((q) => q.certification === certification)
+      : inventory;
   return (
-    <SessionBuilder
-      available={available}
-      inventory={performanceData([], inventory).questions}
-      {...focus}
-    />
+    <>
+      <div className="page-wrap narrow" style={{ paddingBottom: 0 }}>
+        <nav className="auth-actions" aria-label="Choose practice content">
+          <Link className="button secondary" href="/practice">
+            Demonstration bank
+          </Link>
+          <Link className="button secondary" href="/practice?bank=published">
+            Published instructional bank
+          </Link>
+        </nav>
+      </div>
+      <SessionBuilder
+        key={`${bank}:${certification}`}
+        available={available}
+        bank={bank}
+        inventory={performanceData([], selectedInventory).questions}
+        certification={certification}
+        certificationOptions={certificationOptions}
+        {...focus}
+      />
+    </>
   );
 }

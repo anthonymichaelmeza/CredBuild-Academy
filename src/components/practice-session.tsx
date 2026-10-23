@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
@@ -43,6 +44,7 @@ export function PracticeSession({
   const answer = session.answers[question.id];
   const feedback = session.feedback[question.id];
   const isExam = session.mode === "exam";
+  const instructional = session.bank === "published";
   const relatedLesson = lessonForQuestion(question.id);
   const answered = Object.keys(session.answers).length;
   const correct = Object.values(session.answers).filter(
@@ -97,13 +99,18 @@ export function PracticeSession({
   if (session.status === "submitted" && !review)
     return (
       <div className="page-wrap narrow">
-        <div className="eyebrow">SESSION COMPLETE · DEMONSTRATION</div>
+        <div className="eyebrow">
+          SESSION COMPLETE ·{" "}
+          {instructional ? "REVIEWED INSTRUCTIONAL PRACTICE" : "DEMONSTRATION"}
+        </div>
         <h1>
           You put in the work<span className="orange">.</span>
         </h1>
         <p className="lead">
-          Here’s what this practice session showed. These are demo results, not
-          a prediction of exam performance.{" "}
+          Here’s what this practice session showed.{" "}
+          {instructional
+            ? "Practice performance is not a prediction of official examination results."
+            : "These are demo results, not a prediction of exam performance."}{" "}
           {session.submissionReason === "expired" && (
             <strong>
               Time expired — this session was automatically submitted.
@@ -191,8 +198,9 @@ export function PracticeSession({
           </Link>
         </div>
         <p className="demo-disclosure">
-          AI-generated demonstration content · technical sources not verified ·
-          no official passing score applied.
+          {instructional
+            ? "Published instructional content · revision-specific technical review recorded · no official passing score applied."
+            : "AI-generated demonstration content · technical sources not verified · no official passing score applied."}
         </p>
       </div>
     );
@@ -201,7 +209,10 @@ export function PracticeSession({
       <div className="session-top">
         <div>
           <div className="eyebrow">
-            {session.mode.toUpperCase()} PRACTICE · UNVERIFIED DEMONSTRATION
+            {session.mode.toUpperCase()} PRACTICE ·{" "}
+            {instructional
+              ? "REVIEWED INSTRUCTIONAL CONTENT"
+              : "UNVERIFIED DEMONSTRATION"}
           </div>
           <h1>
             {review ? "Learn from every answer." : "One question at a time."}
@@ -214,6 +225,7 @@ export function PracticeSession({
       {session.deadlineAt && session.status === "in_progress" && (
         <SessionClock
           deadline={session.deadlineAt}
+          instructional={instructional}
           onExpire={() => {
             if (!busy) void mutate("submit");
           }}
@@ -221,9 +233,11 @@ export function PracticeSession({
       )}
       {isExam && !review && (
         <p className="exam-mode-note">
-          Short demonstration rehearsal, not a full CHST exam. Choices autosave
-          and remain editable until submission. Explanations are hidden until
-          results.
+          {instructional
+            ? "A configured practice rehearsal, not an official examination."
+            : "Short demonstration rehearsal, not a full CHST exam."}{" "}
+          Choices autosave and remain editable until submission. Explanations
+          are hidden until results.
         </p>
       )}
       <div className="session-progress">
@@ -275,6 +289,19 @@ export function PracticeSession({
             Domain {question.domain} · {question.topic}
           </span>
           <h2 className="question-stem">{question.stem}</h2>
+          {question.media?.map((media) => (
+            <figure className="question-media" key={media.url}>
+              <Image
+                src={media.url}
+                alt={media.alt}
+                width={960}
+                height={540}
+                unoptimized
+                referrerPolicy="no-referrer"
+              />
+              <figcaption>{media.rights}</figcaption>
+            </figure>
+          ))}
           <fieldset className="answer-options">
             <legend className="sr-only">Choose your answer</legend>
             {question.choices.map((c, i) => (
@@ -367,6 +394,16 @@ export function PracticeSession({
                   : "Unanswered question"}
               </h3>
               <p>{feedback.explanation}</p>
+              {!!feedback.solutionSteps?.length && (
+                <div className="worked-solution">
+                  <h4>Worked solution</h4>
+                  <ol>
+                    {feedback.solutionSteps.map((step, index) => (
+                      <li key={index}>{step}</li>
+                    ))}
+                  </ol>
+                </div>
+              )}
               <details>
                 <summary>Why the other choices don’t fit</summary>
                 <ul>
@@ -385,8 +422,10 @@ export function PracticeSession({
                 <ExternalLink size={14} />
               </a>
               <small>
-                {feedback.reference.locator} · Source not verified. Objective
-                mapping pending editorial review.
+                {feedback.reference.locator} ·{" "}
+                {instructional
+                  ? `Technical source review recorded${feedback.reference.verifiedAt ? ` on ${feedback.reference.verifiedAt.slice(0, 10)}` : ""}.`
+                  : "Source not verified. Objective mapping pending editorial review."}
               </small>
               {relatedLesson && (
                 <Link
@@ -531,7 +570,9 @@ export function PracticeSession({
             {isExam
               ? "Saved after each choice. "
               : "Saved after every checked answer. "}
-            Demo results are not part of an approved question bank.
+            {instructional
+              ? "Question revisions stay attached to this attempt. Practice scores do not establish certification readiness."
+              : "Demo results are not part of an approved question bank."}
           </div>
         </aside>
       </div>

@@ -73,6 +73,7 @@ jobs:
       - name: Use installed Chromium
         run: node -e "console.log('CHROMIUM_PATH=' + require('@playwright/test').chromium.executablePath())" >> "$GITHUB_ENV"
       - run: npm run test:e2e
+      - run: npm run test:e2e:studio
       - name: Upload failure evidence
         if: failure()
         uses: actions/upload-artifact@v4

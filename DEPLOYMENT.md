@@ -1,7 +1,7 @@
 # Deployment, migrations and recovery
 
 Repository: `anthonymichaelmeza/CredBuild-Academy`. Current development branch:
-**`development/stable-learning-foundation`**. Do not merge to `main`, promote a
+**`development/v0.6-connected-learning`**. Do not merge to `main`, promote a
 deployment, delete a Vercel project or change production settings without product
 owner approval. Native Git pushes to a development branch may trigger previews.
 
@@ -39,6 +39,7 @@ evidence of a Vercel application 403 or a failed deployment.
 | `CLERK_SECRET_KEY`                  | Unused                    | Required server secret, entered securely in hosting settings             |
 | `APP_ORIGIN`                        | Unused for local progress | Exact canonical HTTPS origin used by same-origin mutation checks         |
 | `ALLOW_LOCAL_DEMO`                  | Unneeded                  | `false`/unset; local identity is disabled on Vercel                      |
+| `ALLOW_LOCAL_STUDIO`                | Unused                    | `false`/unset; local editorial test bypass is disabled on Vercel         |
 | `LOCAL_DATABASE_PATH`               | Unused                    | Do not use PGlite as serverless persistence                              |
 | `COOKIE_SECURE`                     | Unused                    | Only controls the local-demo cookie; Clerk controls its own cookies      |
 | `CREDBUILT_MIGRATE`                 | Unused                    | Explicit migration CLI sets it; do not enable runtime schema mutation    |
@@ -68,8 +69,28 @@ without touching production:
    sign-in, goals, lesson completion, practice, exams, history and cross-device
    resume. Use two accounts to test ownership isolation and expired sessions.
 
-Provider setup and a green build do not complete the commercial course: content,
-editorial delivery and operational launch blockers remain in `FEATURE_STATUS.md`.
+Detailed live acceptance steps and secure TLS requirements are in
+[connected provider validation](docs/connected-provider-validation.md).
+Remote URLs with an explicit `sslmode` must use `verify-full`; certificate
+validation is never disabled to make a provider connection succeed. Default
+remote connections also require verified TLS. Provider setup and a green build
+do not complete the commercial course: content and operational launch blockers
+remain in `FEATURE_STATUS.md`.
+
+## Content Studio preview
+
+The no-credentials browser demo deliberately cannot author/review/publish. To
+review the protected Studio, first configure the isolated connected preview
+above, migrate it through `0004`, and sign in with distinct author, reviewer and
+administrator accounts. A trusted operator then grants the corresponding
+database roles through `npm run studio:role`; there is no self-service role
+selector. See [editorial workflow](docs/editorial-workflow.md) for exact commands.
+
+Do not set `ALLOW_LOCAL_STUDIO` on Vercel or publish fictional test approvals.
+The isolated local Studio browser suite provides reproducible interface evidence
+while live providers are unavailable. Studio UI availability is separate from
+actual instructional publication: the provisional blueprint and demo material
+must remain unapproved until independently reviewed.
 
 ## Migration rollout
 
@@ -81,7 +102,9 @@ npm run db:seed
 
 The CLI accepts injected environment variables and optionally reads `.env.local`
 (`--env-file-if-exists`); no local secret file is required in a job. Migration
-`0001` is preserved; `0002` adds lessons/progress and `0003` adds learner profiles.
+`0001` is preserved; `0002` adds lessons/progress, `0003` adds learner profiles and
+`0004` adds trusted editorial roles, revision/review/audit workflow, import previews
+and guarded instructional publication.
 The checksummed ledger rejects edited applied files. Managed migrations run in
 a transaction with an advisory lock. Application startup only verifies them;
 it refuses a missing/pending migration rather than applying schema changes.
@@ -99,7 +122,7 @@ and restart. Never share one local directory across processes/instances.
 ## CI, production protection and failures
 
 `.github/workflows/quality.yml` defines checks plus separate browser-demo and
-server-learning browser jobs. Observe its actual GitHub run before treating CI
+server-learning browser jobs, including the isolated Studio suite. Observe its actual GitHub run before treating CI
 as green. Configure repository branch protection/rulesets in GitHub to require
 review and checks on `main`; workflow YAML alone cannot enforce protection.
 Keep the Vercel production branch on `main`. Use pull requests or the compare

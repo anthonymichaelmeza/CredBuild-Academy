@@ -3,6 +3,9 @@ import { cookies } from "next/headers";
 import { auth } from "@clerk/nextjs/server";
 import { randomUUID } from "node:crypto";
 import { browserDemoEnabled } from "@/modules/runtime/mode";
+import { AccessError, type Actor } from "./access";
+export { AccessError } from "./access";
+export type { Actor } from "./access";
 export const authConfigured = () =>
   Boolean(
     !browserDemoEnabled() &&
@@ -14,15 +17,6 @@ export const demoEnabled = () =>
   !process.env.VERCEL &&
   process.env.ALLOW_LOCAL_DEMO === "true" &&
   !authConfigured();
-export type Actor = { id: string; mode: "demo" | "managed" };
-export class AccessError extends Error {
-  constructor(
-    message = "Sign in to continue.",
-    public status = 401,
-  ) {
-    super(message);
-  }
-}
 export async function actor(createDemo = false): Promise<Actor | null> {
   if (browserDemoEnabled()) return null;
   if (authConfigured()) {

@@ -73,7 +73,7 @@ Audit baseline on 2026-10-22: **44/44 original tests passed** across nine files;
 `npm audit --omit=dev` reported zero production dependency advisories. Earlier
 v0.4 browser evidence is in `docs/v04-review.md` and `docs/validation.md`.
 
-Current milestone evidence on 2026-10-22:
+Historical v0.5 milestone evidence on 2026-10-22:
 
 - **86/86 unit/integration tests passed across 20 files.**
 - **8/8 server-backed desktop/mobile browser cases passed.** The two lesson cases were also rerun after adding authenticated export and anonymous-denial assertions; both passed.
@@ -102,11 +102,57 @@ This creates disposable activity in a fresh browser context; it must not be used
   workspace's proxy. A tunnel 403 is not an application response or deployment
   diagnosis. Confirm actual Ready status/commit/environment in Vercel.
 - There is no approved 200-question exam, reviewed technical content, payment
-  provider, paid AI, organizational tenant service or functional editorial CMS
-  to validate. Tests of blockers/denials do not constitute those features.
+  provider, paid AI or organizational tenant service to validate. Editorial
+  workflow tests use isolated fictional fixtures; they do not verify actual
+  technical sources or constitute production editorial operations.
 - Browser clocks/scores are intentionally inspectable. Response time is
   browser-reported, and current analytics do not establish exam readiness.
 
 ## Release 0.6A checkpoint
 
 Independently reran the v0.5 baseline: 86 unit/integration tests and eight server-backed desktop/mobile browser cases passed before implementation. After connected-account reliability changes, 98 tests across 25 files and all eight server-backed browser cases passed. TypeScript, ESLint (after the ref cleanup), diff checks and a server-mode production build passed. New tests cover account switching/loading concealment, superseded requests, planner401/409 recovery, managed-subject ownership with isolated PGlite, initialization retry and PostgreSQL options. Live provider validation remains blocked; no claim of real Clerk registration or hosted cross-device testing is made.
+
+## Release 0.6B verification
+
+The Content Studio suite is separate from the original learner suites:
+
+```bash
+npm run test:e2e:studio
+```
+
+It uses the explicit non-production local Studio opt-in and an isolated ignored
+`.local/studio-e2e` database. A guarded fixture script resets only that exact
+test directory while the application is stopped, creates test roles and leaves
+the supplied demonstration curriculum unapproved. Never aim this configuration
+at a learner/customer database or enable the test opt-in on Vercel. Test
+identities/fixture reviews do not prove managed-provider behavior or source
+verification.
+
+Completed local v0.6A/B verification:
+
+- **135/135 unit/integration tests passed across 32 files.** Coverage includes
+  trusted roles, ownership, self-approval rejection, missing-source/canonical
+  blueprint blockers, stale revisions, immutable audit/history,
+  publication/retirement, JSON import and safe published learner DTOs.
+- **6/6 Content Studio desktop/Pixel 7 browser cases passed.** These exercise
+  the operational author/reviewer interface and authorization/import boundaries
+  using explicitly isolated local QA identities.
+- **8/8 original server-backed desktop/mobile browser cases passed.**
+- Server-mode production build without provider credentials passed.
+- Browser-mode production build with `NEXT_PUBLIC_BROWSER_DEMO=true` passed.
+- TypeScript, ESLint and formatting checks passed. The production dependency
+  audit reported zero vulnerabilities.
+- **14/14 original production browser-demo desktop/mobile cases passed** with
+  provider credentials absent, local database fallback disabled and an unusable
+  filesystem database path. Together the three suites passed **28 browser cases**.
+
+Actual application screenshots were captured at
+`/workspace/artifacts/v06/studio-author-desktop.png` and
+`/workspace/artifacts/v06/studio-reviewer-mobile.png`. They use isolated QA
+identities and draft/review activity, not approved instructional content or
+customer records. Screenshots are generated artifacts outside Git.
+
+These checks establish local application behavior, not live Clerk registration,
+hosted PostgreSQL connectivity or cross-device recovery. Those remain
+**Blocked: Live Provider Validation**. See the
+[release report](docs/v06-release-report.md) for the checkpoint scope and limits.

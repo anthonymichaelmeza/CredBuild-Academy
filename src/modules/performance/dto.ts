@@ -19,6 +19,7 @@ export type PerformanceSession = Pick<
   | "createdAt"
   | "submittedAt"
   | "submissionReason"
+  | "bank"
 > & { answers: Record<string, PerformanceAnswer> };
 
 /** Call before crossing a server-to-client boundary, including RSC props. */
@@ -34,6 +35,7 @@ export function performanceData(saved: Session[], questions: Question[]) {
       status: session.status,
       createdAt: session.createdAt,
       submittedAt: session.submittedAt,
+      ...(session.bank && { bank: session.bank }),
       ...(session.submissionReason && {
         submissionReason: session.submissionReason,
       }),
