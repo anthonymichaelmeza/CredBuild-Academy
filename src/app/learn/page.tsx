@@ -7,8 +7,34 @@ import { listPublishedLessons } from "@/modules/studio/publication";
 import { publishedLessonMetadata } from "@/modules/learning/published-types";
 import { readLearning } from "@/modules/learning/service";
 export const dynamic = "force-dynamic";
+function CurriculumLink() {
+  return (
+    <section className="page-wrap curriculum-learn-link">
+      <div className="card curriculum-summary">
+        <div>
+          <div className="eyebrow">FOLLOW THE CHST5 BLUEPRINT</div>
+          <h2>Your full 78-statement study map</h2>
+          <p>
+            Explore the supplied official statements and CredBuilt study
+            outlines. This map preserves the document version and distinguishes
+            unreviewed study aids from published instruction.
+          </p>
+        </div>
+        <Link className="button secondary" href="/curriculum">
+          Explore CHST5 curriculum
+        </Link>
+      </div>
+    </section>
+  );
+}
 export default async function LearnPage() {
-  if (browserDemoEnabled()) return <Academy />;
+  if (browserDemoEnabled())
+    return (
+      <>
+        <CurriculumLink />
+        <Academy />
+      </>
+    );
   const who = await actor();
   let connected = false;
   if (who) {
@@ -17,7 +43,13 @@ export default async function LearnPage() {
       connected = true;
     } catch {}
   }
-  if (!who || !connected) return <Academy />;
+  if (!who || !connected)
+    return (
+      <>
+        <CurriculumLink />
+        <Academy />
+      </>
+    );
   const [published, progress] = await Promise.all([
     listPublishedLessons(),
     readLearning(who.id),
@@ -25,6 +57,7 @@ export default async function LearnPage() {
   const metadata = published.map(publishedLessonMetadata);
   return (
     <>
+      <CurriculumLink />
       <section className="page-wrap" style={{ paddingBottom: 0 }}>
         <div className="eyebrow">YOUR CONNECTED LEARNING LIBRARY</div>
         <h2>Published instructional lessons</h2>

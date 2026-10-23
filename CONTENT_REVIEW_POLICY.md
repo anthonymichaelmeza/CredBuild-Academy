@@ -4,106 +4,154 @@ CredBuilt Academy is independent and is not affiliated with or endorsed by
 BCSP. Content must not be described as source-verified or approved unless the
 exact supporting material and revision have actually been reviewed.
 
-## Current content
+## Current content and supplied documents
 
-The 12 original AI-generated questions and eight representative lessons remain
-unreviewed demonstrations. Source URLs are discovery links, not evidence of
-technical verification. CHST5 headings/weights came from the product brief and
-are provisional. Official-source retrieval is blocked by the workspace proxy;
-no official objective mapping, duration or passing score has been invented.
-There are **zero approved commercial questions and zero verified technical
-sources** supplied by this milestone.
+The original 12 AI-generated demonstration questions and eight representative
+lessons remain unreviewed. The new 100 original AI instructional drafts also
+have **zero source verification, technical approval or publication**. Their
+browser projection is explicitly demonstration content, not a production bank.
+Source URLs and bibliography entries are discovery/candidate references, not
+evidence of answer support.
 
-Demo content remains labeled in lessons, configuration, answering and results.
-It cannot be promoted to meet a question-count target. No official examination
-items are reproduced or claimed. Isolated fictional QA fixtures test publication
-rules; they are not instructional seed content or actual source reviews.
+The complete supplied CHST5 blueprint **V.2022.04.12** and bibliography
+**V.2021.06.09** were read and transcribed, preserving all 78 statements and 21
+listings. Exact attachment transcription is distinct from independent human
+technical review. Online-version checks were blocked by the environment's
+CONNECT proxy before reaching the target service; the latest official versions
+remain unconfirmed. No official duration, passing score or source-verification
+date is invented. The older provisional blueprint remains for historical
+compatibility. See [document provenance](docs/chst-source-provenance.md).
 
-## Operational workflow
+The new batch is original AI working material, not copied official BCSP exam
+questions or a copyrighted commercial bank. Isolated fictional QA approvals test
+the guards; they are not production content, actual technical reviews or seed
+approvals. Content cannot be promoted merely to meet quantity targets.
 
-**Draft → Technical Review → Approved → Published → Retired**
+## Operational workflow and trusted roles
 
-Technical reviewers may instead request changes or reject a submitted revision.
-The author creates a new draft revision to address either decision. Revising an
-approved/published item also creates a new draft; it does not alter the approved
-snapshot or reuse approval. A previously published revision remains available
-until an administrator replaces or retires it. Historical learner attempts keep
-their exact question/lesson versions.
+**Draft → Source Verification Pending → Source Verified → Technical Review →
+Approved → Published → Retired**
 
-The protected `/studio` interface and `/api/studio` service enforce this workflow
-using trusted server-stored roles:
+Source examination may request changes. Technical reviewers may request changes
+or reject a submitted revision. Addressing a decision creates a new immutable
+draft; approval/source evidence never transfers automatically. Revising approved
+or published content also creates a draft while preserving the released snapshot.
+An administrator replaces or retires the prior publication separately. Historical
+attempts retain their exact content versions.
+
+Protected `/studio` and `/api/studio` use trusted server-stored roles:
 
 - **Learner:** no editorial access.
-- **Author:** create/revise own question/lesson drafts and submit for review.
-- **Technical reviewer:** inspect and review submitted items. Every contributor
-  to the logical item is excluded from independent review, including an
-  administrator who authored a revision.
-- **Administrator:** create/revise, record canonical blueprint reviews and
-  publish/retire eligible content. Administrator alone does not grant technical
-  reviewer permission.
+- **Author:** create/revise own question/lesson drafts and request source
+  examination or submit for technical review.
+- **Technical reviewer:** independently examine sources and separately record
+  technical review. Anyone who contributed to the logical item is excluded from
+  reviewing it, including an administrator who authored a revision.
+- **Administrator:** author/revise, record actual canonical blueprint review and
+  publish/retire eligible revisions. Administrator alone does not grant
+  technical-review permission.
 
-There is no public role-grant action. A trusted operator grants/revokes roles
-through the CLI after the managed subject exists. Browser-demo mode cannot use
-the Studio. Local test identities require explicit non-production opt-in and
-are disabled on Vercel. See [editorial operations](docs/editorial-workflow.md).
+Roles are granted/revoked only through the trusted operator CLI after a verified
+managed subject and first saved activity exist. There is no public role selector.
+Browser-demo mode cannot use Studio. Explicit local test access is restricted to
+non-production, non-Vercel execution and requires database roles. See
+[editorial operations](docs/editorial-workflow.md) and
+[CHST setup](docs/chst-content-engine.md).
 
-## Evidence required for approval
+## Separate source examination and technical approval
 
 Keep origin (`ai_generated`, `human_authored`, `imported`) separate from status.
-AI generation or successful import is never evidence of correctness.
+AI generation, successful import and source verification are not technical
+approval. Every review applies to the exact immutable revision.
 
-The submitted immutable revision must include certification, canonical blueprint
-revision, domain, exact objective code, topic/subtopic, content and authoritative
-references. Each reference records title, public HTTPS URL, edition and exact
-supporting section. The canonical blueprint must have a recorded human review
-and matching objective/domain map. An independently reviewed source check must
-support every cited reference and contain findings. Approval records reviewer,
-timestamp, exact revision, source outcomes and explicit human attestation.
+Record certification, canonical blueprint revision, domain, exact objective,
+topic/subtopic, instructional content and candidate references. Each source needs
+a classification, title, edition and exact supporting locator before approval.
+A public HTTPS URL is used when available. A physical book without a URL must
+match a registered publication's identity, exact title and edition; the reviewer
+must still actually examine its cited section. Unknown fields may remain empty
+in a draft; they block positive verification/approval rather than receiving
+invented textbook pages or standards sections.
 
-Review the answer, every distractor, explanations, calculations/units, media
-rights and factual accuracy, knowledge checks and lesson claims against the
-actual source. Calculation/multi-step questions require worked steps;
-image-supported questions require licensed/original images with descriptions
-and rights metadata. Unsupported or contradictory source evidence blocks
-approval. Demonstration material cannot enter the instructional bank.
+An independent authorized source examiner records findings, supporting/
+contradictory/insufficient outcomes, exact citation metadata, timestamp and human
+attestation. Every cited reference must have a distinct supporting check for
+positive source verification. Technical review then separately checks correctness,
+answer and distractor quality, explanations, calculations/units, diagrams/media,
+rights, lesson claims and knowledge checks. Calculation/multi-step questions need
+worked reasoning; image questions require original/licensed described images.
+The canonical blueprint needs actual human review and an exact objective/domain
+map before technical approval/publication.
 
-The application records human attestations; it cannot establish that a person
-actually read a source. A valid URL or completed form does not independently
-verify technical truth. The service does not fetch, scrape or auto-approve
-external references. Respect copyright and licensing, including restricted
-standards. Do not upload licensed source material to the public repository.
+Classify each source as a **regulatory requirement**, **consensus standard**,
+**professional guidance** or **supplemental learning resource**. Legal
+applicability depends on identified jurisdiction/scope; a consensus standard or
+textbook is not automatically binding law. BCSP bibliography inclusion does not
+prove support for an answer. Unknown currency/link status stays unknown; an old
+publication year alone does not establish that a source is outdated.
 
-## Server and database enforcement
+The application records attestations and evidence; it cannot establish that a
+person read a source or independently guarantee technical truth. It does not
+fetch, scrape or auto-approve external references. Respect copyright/licensing,
+including restricted standards. Do not upload licensed source text or private
+review/customer material into the public repository.
 
-`src/modules/studio/service.ts` validates schemas, authorization, exact revision
-and optimistic row version inside transactions. `0004_content_studio.sql`
-adds append-only revision/review/source/audit records and SQL workflow,
-independence, canonical blueprint and publication guards. Migration `0001` stays
-unchanged. Legacy question states remain `draft/in_review/changes_requested/
-approved/rejected`; the new Studio workflow uses `technical_review` and
-publication pointers rather than rewriting historical rows.
+## Server, SQL and historical enforcement
 
-Only a trusted administrator can publish an approved current revision. The
-transaction materializes the exact reviewed immutable learner snapshot, sets
-matching Studio and learner pointers, advances workflow and appends audit.
-Retirement removes current pointers while preserving history. Published learner
-APIs apply safe projections; unpublished drafts and grading keys are not sent
-to learners. Paid entitlements remain future work.
+The Studio service validates schemas, identity/role, exact revision and optimistic
+row version inside transactions. Migration `0004` adds immutable revisions,
+independent reviews and transactional publication/audit. Additive `0005` separates
+source-verification events, requires exact supporting citation metadata and
+current reviewer authorization at approval/publication, and orders evidence by
+monotonic event number. It also guards the canonical attached objective/domain
+mapping. Migrations `0001`–`0004` are preserved.
 
-Structured JSON bulk import validates at most 50 question records, reports
-duplicates/errors and requires confirmation of an owner-bound expiring preview.
-Confirmation rechecks duplicates and inserts all records as drafts in one
-transaction. Imported records cannot supply approval, roles or review evidence.
-The public `/admin` inspector remains read-only and `/api/admin` still denies
-writes; these are separate from protected Content Studio.
+Legacy question states remain `draft/in_review/changes_requested/approved/
+rejected`; Studio records the expanded workflow separately and uses publication
+pointers. Legacy items already in technical review can request source examination
+but cannot bypass it to approve/publish. All 78 canonical statements must be
+preserved in a human blueprint review. CredBuilt's objective IDs encode the
+printed statement location; they are not BCSP-issued codes. Seeding exact
+attachments does not mark the blueprint independently verified.
 
-## Before commercial use
+Only an administrator may publish the current approved revision. The transaction
+rechecks separate source evidence and technical approval, materializes the exact
+reviewed learner snapshot, sets matching publication pointers and appends audit.
+Retirement removes active pointers without deleting canonical learner history.
+Unpublished drafts never enter connected production selection. Safe learner DTOs
+withhold keys/references until appropriate feedback and after exam submission.
+Paid entitlements remain future work.
 
-Obtain and actually review the current official blueprint and technical sources.
-Register new canonical revisions as needed; never relabel supplied provisional
-metadata as official without comparing the actual document. Record source
-edition, exact locators, review dates, reviewer identity and durable provenance.
+## Import, coverage and content reports
+
+Structured JSON import validates at most 50 question records, previews
+errors/duplicates and requires owner-bound expiring one-use confirmation. It
+creates drafts transactionally and preserves declared AI/human origin while
+recording ingestion separately. Client approval, role or verification fields are
+rejected. The separate trusted `content:import-chst` command imports the stable-ID
+100-question AI batch under an existing authorized author; it cannot create
+identities, grant roles, verify, approve or publish. Identical repeats skip;
+conflicts reject without overwrite. Public fixture totals must not be mistaken
+for database import counts.
+
+Protected `/studio/coverage` reads actual current database heads and active
+publication pointers, including question/domain/objective/status totals and
+coverage gaps. Reported source currency is unknown, not an invented outdated
+count. Connected learners can report current published or owned historical
+content. Authorized reviewer/administrator triage is append-only; resolving a
+concern does not automatically edit, verify, approve, retire or republish content.
+The public `/admin` inspector and denying `/api/admin` remain separate.
+
+## Before beta or commercial publication
+
+Actually examine the technical references and the current official blueprint,
+record editions/locators/reviewer evidence, resolve all draft accuracy concerns
+and complete independent technical approval. Confirm that the supplied versions
+remain applicable. Add reviewed instructional lessons; study outlines alone do
+not provide a complete approved curriculum. A 300-reviewed-question private beta
+is a future target, followed by 1,000 and 2,000 reviewed-content targets. Quantity
+must not replace source verification or review.
+
 Complete live-provider validation, least-privilege database access, editorial
-operator training, independent review and operational/security checks before
-commercial publication. Policy tests and isolated fixtures do not complete
-those gates.
+operator training and operational/security checks before commercial use. Local
+tests, successful imports and fictional QA approvals do not satisfy those gates.

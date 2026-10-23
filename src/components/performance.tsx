@@ -13,6 +13,7 @@ import type {
   PerformanceSession,
 } from "@/modules/performance/dto";
 import { findPinnedQuestion } from "@/modules/practice/engine";
+import { getChstObjective } from "@/modules/curriculum/catalog";
 export function Performance({
   saved,
   questions,
@@ -26,11 +27,13 @@ export function Performance({
 }) {
   const [domain, setDomain] = useState("all");
   const [topic, setTopic] = useState("all");
+  const [objective, setObjective] = useState("all");
   const [days, setDays] = useState("all");
   const [now] = useState(() => Date.now());
   const stats = analyzeSessions(saved, questions, {
     domain,
     topic,
+    objective,
     ...(days === "all" ? {} : { since: now - Number(days) * 86400000 }),
   });
   const recommendations = recommendedLessons(
@@ -47,7 +50,8 @@ export function Performance({
         return (
           q &&
           (domain === "all" || q.domain === domain) &&
-          (topic === "all" || q.topic === topic)
+          (topic === "all" || q.topic === topic) &&
+          (objective === "all" || q.blueprint?.objective === objective)
         );
       }),
   );
@@ -81,6 +85,26 @@ export function Performance({
             {domains.map((d) => (
               <option key={d.code} value={d.code}>
                 {d.short}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Objective
+          <select
+            value={objective}
+            onChange={(event) => setObjective(event.target.value)}
+          >
+            <option value="all">All mapped objectives</option>
+            {[
+              ...new Set(
+                questions.flatMap((q) =>
+                  q.blueprint?.objective ? [q.blueprint.objective] : [],
+                ),
+              ),
+            ].map((id) => (
+              <option key={id} value={id}>
+                {getChstObjective(id)?.statement || id}
               </option>
             ))}
           </select>
@@ -220,6 +244,62 @@ export function Performance({
           </p>
         )}
       </section>
+      <section className="card analytics-section">
+        <h2>Evidence by blueprint objective</h2>
+        <p className="fine-print">
+          These labels summarize your recorded answers. Needs review means
+          accuracy below 75% or at least half the answers were low confidence;
+          fewer than five other answers form a limited sample. Consistent sample
+          is descriptive, not validated mastery or a prediction of passing.
+          Response times are browser-reported.
+        </p>
+        {stats.objectives.length ? (
+          <div className="topic-stat-list">
+            {stats.objectives.map((item) => (
+              <article key={item.value}>
+                <div>
+                  <strong>
+                    {getChstObjective(item.value)?.statement || item.value}
+                  </strong>
+                  <span>
+                    {item.accuracy}% · {item.answered} answers ·{" "}
+                    {item.lowConfidence} low confidence ·{" "}
+                    {Math.round(item.averageResponseMs / 1000)}s average ·{" "}
+                    {item.evidence}
+                  </span>
+                </div>
+                <div className="topic-stat-actions">
+                  <Link
+                    className="text-link"
+                    href={`/curriculum/${encodeURIComponent(item.value)}`}
+                  >
+                    Study the mapped objective
+                    <ArrowRight size={14} />
+                  </Link>
+                  <Link
+                    className="text-link"
+                    href={`/practice?bank=${item.banks.includes("published") ? "published" : item.banks.includes("curriculum_drafts") ? "curriculum_drafts" : "demonstration"}&objective=${encodeURIComponent(item.value)}&count=1`}
+                  >
+                    Targeted practice
+                  </Link>
+                  <Link
+                    className="text-link"
+                    href={`/practice/${item.sessionIds[0]}`}
+                  >
+                    Underlying session
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="fine-print">
+            No answered questions with an explicit objective mapping match these
+            filters. Legacy demonstration questions are not assigned invented
+            official objective mappings.
+          </p>
+        )}
+      </section>
       <div className="analytics-grid analytics-section">
         <section className="card">
           <h2>Repeatedly missed concepts</h2>
@@ -244,6 +324,14 @@ export function Performance({
                   Review a contributing session
                   <ArrowRight size={14} />
                 </Link>
+                {item.question.blueprint?.objective && (
+                  <Link
+                    className="text-link"
+                    href={`/curriculum/${encodeURIComponent(item.question.blueprint.objective)}`}
+                  >
+                    Study the related objective before retrying
+                  </Link>
+                )}
               </div>
             ))
           ) : (
@@ -294,7 +382,12 @@ export function Performance({
                       : s.mode === "timed"
                         ? "Timed"
                         : "Learning"}{" "}
-                  practice · {s.bank === "published" ? "reviewed bank" : "demo"}
+                  practice ·{" "}
+                  {s.bank === "published"
+                    ? "reviewed bank"
+                    : s.bank === "curriculum_drafts"
+                      ? "unreviewed curriculum drafts"
+                      : "demo"}
                 </strong>
                 <small>
                   {new Date(s.createdAt).toISOString().slice(0, 10)} ·{" "}

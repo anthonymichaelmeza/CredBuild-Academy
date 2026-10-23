@@ -1,6 +1,8 @@
 import { rm } from "node:fs/promises";
 import { seedDemo } from "../src/db/seed";
 import { connection } from "../src/db/client";
+import { chstDraftRecords } from "../src/content/chst/draft-bank";
+import { importOriginalDraftBatch } from "../src/modules/studio/service";
 import {
   grantStudioRole,
   localStudioEnabled,
@@ -34,7 +36,15 @@ for (const [id, role] of identities) {
   );
   await grantStudioRole(subject, role, "isolated-browser-test-fixture");
 }
+await importOriginalDraftBatch(
+  { id: `demo:${identities[0][0]}`, mode: "demo" },
+  chstDraftRecords.map(({ id, content, category }) => ({
+    id,
+    content,
+    category,
+  })),
+);
 console.log(
-  "Isolated local Studio test roles prepared; all demonstration content remains unapproved.",
+  "Isolated local Studio test roles and 100 original AI drafts prepared; no content is source-verified, approved, or published.",
 );
 await c.close();

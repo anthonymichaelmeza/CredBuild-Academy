@@ -8,7 +8,7 @@ content is silently copied into the approved bank.
 ## Access and role bootstrap
 
 Use an isolated connected Preview with browser-demo mode off, configured Clerk
-and PostgreSQL, and migrations applied through `0004_content_studio.sql`. See
+and PostgreSQL, and migrations applied through `0005_curriculum_sources.sql`. See
 [provider configuration](connected-provider-validation.md) and
 [deployment](../DEPLOYMENT.md). Live-provider validation is still blocked until
 that environment is supplied and tested.
@@ -67,9 +67,19 @@ and original ownership do not change. Prior approvals and review evidence do not
 transfer to the new draft. A new draft can coexist with the prior published
 revision until an administrator approves the replacement process.
 
-## Canonical blueprint and technical review
+## Canonical blueprint, source examination and technical review
+
+The current flow is **Draft → Source Verification Pending → Source Verified →
+Technical Review → Approved → Published → Retired**. Source examination and
+technical approval are separate records and actions. Existing in-flight
+technical reviews may request source examination; no compatibility route can
+bypass source evidence at approval/publication.
 
 The canonical certification/blueprint must already be registered in the database.
+The supplied CHST5 V.2022.04.12 revision now includes all 78 exact statements
+and domain weights. It is seeded without human verification. Recording a human
+review of this revision must preserve every canonical statement and mapping;
+CredBuilt IDs encode the printed location and are not BCSP-issued objective codes.
 The Studio administrator can record a human blueprint review only after actually
 examining the official document: source URL, edition, exact section, findings and
 objective/domain map. Existing provisional metadata must be compared to the
@@ -78,12 +88,22 @@ new canonical revision through a reviewed migration/operator process; do not
 assert verification merely to unblock publishing. Verified revisions are
 immutable and need new revisions for changes.
 
-An author submits the exact current draft for technical review. A reviewer who
+An author requests source verification on the exact current draft. An independent
+reviewer actually examines every citation and records supporting/contradictory/
+insufficient evidence, findings, exact edition/locator and URL. Physical books
+without URLs must match a registered publication's exact title/edition and still
+have an examined supporting section. Positive examination requires distinct
+supporting evidence for every source. Empty/unknown fields are valid draft
+placeholders, never positive verification. The latest source decision is ordered
+by a monotonic event number, not ambiguous timestamp ties.
+
+After source verification, the author submits for technical review. A reviewer who
 has never contributed to the logical item records findings and a supporting,
 contradictory or insufficient outcome for every source examined, then approves,
 requests changes or rejects the revision. Approval requires supporting evidence
 for every cited source, exact canonical blueprint objective/domain mapping,
-complete pedagogical fields and explicit human attestation. Missing-source or
+complete pedagogical fields, separate current source proof and explicit human
+attestation. Missing-source or
 unverified-blueprint items can be returned for revision; they cannot be approved.
 
 Check answers, distractors, calculations/units, explanations, diagrams/media,
@@ -114,7 +134,7 @@ not historical content. Existing owned attempts still grade/review their pinned
 revision. New attempts cannot select retired material. Stale tabs receive a
 conflict and must reload; they cannot approve or publish an old revision.
 
-## JSON bulk import
+## JSON bulk import and explicit CHST batch
 
 Download the JSON question template from the Studio importer. Import supports
 structured JSON arrays, at most 50 question records per request. CSV parsing is
@@ -130,6 +150,27 @@ transaction. Declared origin, including `ai_generated`, remains on the immutable
 revision; a separate `import_ingested` event records the ingestion method and
 preview identity. Invalid/duplicate previews must be corrected and previewed
 again. Confirmation is not technical review or publication.
+
+The shipped 100-question CHST batch uses a separate trusted operator command,
+`npm run content:import-chst -- existing-author-subject`, with stable IDs,
+atomic/idempotent draft-only ingestion and preserved AI provenance. It does not
+create users, grant roles, examine sources or publish. See
+[the content-engine setup](chst-content-engine.md) for the complete procedure.
+Public browser drafts do not prove that the database imported these records.
+
+## Coverage and concerns
+
+Reviewers/administrators can open `/studio/coverage` for actual database
+domain/objective/status counts, gaps, source freshness and content concerns.
+Filters and drill-downs link to the 25-row paginated editorial list; totals are
+not limited to its first page. Coverage gaps use the stated local threshold
+(fewer than two records), not an official BCSP sufficiency standard.
+
+Source currency remains unknown until actually checked; no outdated status is
+invented from a publication year. Connected learners can report current
+published or owned historical revisions. Reviewer/administrator triage appends
+under-review/resolved/dismissed decisions and notes; it never automatically
+changes a revision, source status or publication.
 
 ## Audit and security boundaries
 

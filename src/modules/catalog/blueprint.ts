@@ -1,4 +1,5 @@
-// User-supplied CHST5 data: not independently verified against BCSP in this task.
+// Weights match the supplied BCSP CHST5 PDF (printed version 2022.04.12).
+// Current online version and independent human verification remain unconfirmed.
 export const domains = [
   {
     code: "1",
@@ -28,7 +29,9 @@ export const domains = [
 export const blueprint = {
   version: "CHST5",
   verified: false,
-  provenance: "User-supplied; official source review pending",
+  documentVersion: "2022.04.12",
+  provenance:
+    "Supplied BCSP CHST5 attachment, printed version 2022.04.12; latest online version and independent human review remain unconfirmed",
   source:
     "https://www.bcsp.org/construction-health-and-safety-technician-chst/",
 };

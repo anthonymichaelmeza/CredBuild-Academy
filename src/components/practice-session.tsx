@@ -9,9 +9,11 @@ import {
   Flag,
   CheckCircle2,
   XCircle,
-  ExternalLink,
 } from "lucide-react";
 import { SessionClock } from "./session-clock";
+import { QuestionReferences } from "./question-references";
+import { ContentReportForm } from "./content-report-form";
+import { getChstObjective } from "@/modules/curriculum/catalog";
 import { browserPracticeAction } from "@/demo/browser-store";
 import { lessonForQuestion } from "@/modules/learning/catalog";
 import type { Confidence, SessionView } from "@/modules/practice/types";
@@ -45,6 +47,7 @@ export function PracticeSession({
   const feedback = session.feedback[question.id];
   const isExam = session.mode === "exam";
   const instructional = session.bank === "published";
+  const curriculumDraft = session.bank === "curriculum_drafts";
   const relatedLesson = lessonForQuestion(question.id);
   const answered = Object.keys(session.answers).length;
   const correct = Object.values(session.answers).filter(
@@ -164,6 +167,52 @@ export function PracticeSession({
             );
           })}
         </section>
+        {session.questions.some(
+          (question) => question.blueprint?.objective,
+        ) && (
+          <section className="card analytics-section">
+            <h2>Results by blueprint objective</h2>
+            {[
+              ...new Set(
+                session.questions.flatMap((question) =>
+                  question.blueprint?.objective
+                    ? [question.blueprint.objective]
+                    : [],
+                ),
+              ),
+            ].map((objective) => {
+              const items = session.questions.filter(
+                (question) => question.blueprint?.objective === objective,
+              );
+              const responses = items.flatMap((question) =>
+                session.answers[question.id]
+                  ? [session.answers[question.id]]
+                  : [],
+              );
+              return (
+                <div className="result-domain" key={objective}>
+                  <Link
+                    className="text-link"
+                    href={`/curriculum/${encodeURIComponent(objective)}`}
+                  >
+                    {getChstObjective(objective)?.statement || objective}
+                  </Link>
+                  <strong>
+                    {
+                      items.filter(
+                        (question) => session.answers[question.id]?.correct,
+                      ).length
+                    }{" "}
+                    / {items.length} correct ·{" "}
+                    {responses.length
+                      ? `${Math.round(responses.reduce((sum, answer) => sum + answer.responseMs, 0) / responses.length / 1000)}s average`
+                      : "Not answered"}
+                  </strong>
+                </div>
+              );
+            })}
+          </section>
+        )}
         <div className="results-actions">
           <button
             className="button primary"
@@ -417,16 +466,24 @@ export function PracticeSession({
                     ))}
                 </ul>
               </details>
-              <a href={feedback.reference.url} target="_blank" rel="noreferrer">
-                {feedback.reference.title}
-                <ExternalLink size={14} />
-              </a>
-              <small>
-                {feedback.reference.locator} ·{" "}
-                {instructional
-                  ? `Technical source review recorded${feedback.reference.verifiedAt ? ` on ${feedback.reference.verifiedAt.slice(0, 10)}` : ""}.`
-                  : "Source not verified. Objective mapping pending editorial review."}
-              </small>
+              <QuestionReferences
+                references={
+                  feedback.references?.length
+                    ? feedback.references
+                    : [feedback.reference]
+                }
+                instructional={instructional}
+              />
+              {question.blueprint?.objective && (
+                <Link
+                  className="button secondary related-lesson"
+                  href={`/curriculum/${encodeURIComponent(question.blueprint.objective)}`}
+                >
+                  Study this blueprint objective
+                  {curriculumDraft ? " · demonstration outline" : ""}
+                  <ArrowRight size={15} />
+                </Link>
+              )}
               {relatedLesson && (
                 <Link
                   className="button secondary related-lesson"
@@ -435,6 +492,13 @@ export function PracticeSession({
                   Understand this concept: {relatedLesson.title}
                   <ArrowRight size={15} />
                 </Link>
+              )}
+              {instructional && !browserOnly && (
+                <ContentReportForm
+                  key={`${question.id}:v${question.version}`}
+                  contentId={question.id}
+                  revision={question.version}
+                />
               )}
             </section>
           )}

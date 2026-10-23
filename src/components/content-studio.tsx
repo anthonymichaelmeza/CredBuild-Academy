@@ -8,16 +8,34 @@ import type {
   StudioItem,
   StudioSnapshot as Snapshot,
 } from "@/modules/studio/model";
+import { studioStatuses } from "@/modules/studio/model";
 import { DraftEditor, newDraft } from "./studio/editor";
 import { ItemDetails, BlueprintReview } from "./studio/review";
 import { ImportQuestions } from "./studio/importer";
 import { Status, statusLabel, uid } from "./studio/fields";
 type Task = "library" | "editor" | "import" | "blueprint";
-export function ContentStudio({ initial }: { initial: Snapshot }) {
+type LibraryFilters = {
+  page?: number;
+  search?: string;
+  status?: string;
+  domain?: string;
+  objective?: string;
+  kind?: string;
+};
+export function ContentStudio({
+  initial,
+  initialFilters = {},
+}: {
+  initial: Snapshot;
+  initialFilters?: LibraryFilters;
+}) {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(initial);
   const [task, setTask] = useState<Task>("library");
   const [selectedId, setSelected] = useState<string | null>(
     initial.items[0]?.id || null,
+  );
+  const [selectedDetail, setSelectedDetail] = useState<StudioItem | null>(
+    initial.items[0] || null,
   );
   const [editor, setEditor] = useState<{
     draft: ContentDraft;
@@ -25,9 +43,12 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
     key: string;
   } | null>(null);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
-  const [query, setQuery] = useState("");
-  const [kind, setKind] = useState("all");
-  const [status, setStatus] = useState("all");
+  const [query, setQuery] = useState(initialFilters.search || "");
+  const [kind, setKind] = useState(initialFilters.kind || "all");
+  const [status, setStatus] = useState(initialFilters.status || "all");
+  const [domain, setDomain] = useState(initialFilters.domain || "all");
+  const [objective, setObjective] = useState(initialFilters.objective || "");
+  const activeFilters = useRef<LibraryFilters>(initialFilters);
   const [busy, setBusy] = useState(false);
   const pending = useRef(false);
   const [error, setError] = useState("");
@@ -44,6 +65,7 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
     setEditor(null);
     setPreview(null);
     setSelected(null);
+    setSelectedDetail(null);
   }, []);
   const reload = useCallback(
     async (preferred?: string) => {
@@ -52,11 +74,18 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
       const controller = new AbortController();
       reads.current.controller = controller;
       const epoch = ++reads.current.epoch;
-      const response = await fetch("/api/studio", {
-        cache: "no-store",
-        credentials: "same-origin",
-        signal: controller.signal,
+      const parameters = new URLSearchParams();
+      Object.entries(activeFilters.current).forEach(([key, value]) => {
+        if (value && value !== "all") parameters.set(key, String(value));
       });
+      const response = await fetch(
+        `/api/studio${parameters.size ? `?${parameters}` : ""}`,
+        {
+          cache: "no-store",
+          credentials: "same-origin",
+          signal: controller.signal,
+        },
+      );
       const data = await response.json();
       if (
         !mounted.current ||
@@ -68,8 +97,36 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
         if ([401, 403].includes(response.status)) clearPrivate();
         throw new Error(data.error || "Content Studio could not be reloaded.");
       }
+      let detail = preferred
+        ? data.items.find((item: StudioItem) => item.id === preferred)
+        : data.items[0];
+      if (preferred && !detail) {
+        const detailResponse = await fetch(
+          `/api/studio?id=${encodeURIComponent(preferred)}`,
+          {
+            cache: "no-store",
+            credentials: "same-origin",
+            signal: controller.signal,
+          },
+        );
+        const detailData = await detailResponse.json();
+        if (
+          !mounted.current ||
+          controller.signal.aborted ||
+          epoch !== reads.current.epoch
+        )
+          return;
+        if (!detailResponse.ok) {
+          if ([401, 403].includes(detailResponse.status)) clearPrivate();
+          throw new Error(
+            detailData.error || "The saved revision could not be reloaded.",
+          );
+        }
+        detail = detailData;
+      }
       setSnapshot(data as Snapshot);
-      if (preferred) setSelected(preferred);
+      setSelected(detail?.id || null);
+      setSelectedDetail(detail || null);
     },
     [clearPrivate],
   );
@@ -138,16 +195,9 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
   );
   const administrator = Boolean(access?.roles.includes("administrator"));
   const selected =
-    snapshot?.items.find((item) => item.id === selectedId) || null;
-  const filtered =
-    snapshot?.items.filter(
-      (item) =>
-        (kind === "all" || item.kind === kind) &&
-        (status === "all" || item.status === status) &&
-        `${item.data.title} ${item.data.topic} ${item.id}`
-          .toLowerCase()
-          .includes(query.toLowerCase()),
-    ) || [];
+    snapshot?.items.find((item) => item.id === selectedId) ||
+    (selectedDetail?.id === selectedId ? selectedDetail : null);
+  const filtered = snapshot?.items || [];
   async function workflow(action: string, extra: Record<string, unknown> = {}) {
     if (!selected) return;
     await request({
@@ -244,6 +294,13 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
             Blueprint source review
           </button>
         )}
+        {snapshot.access.roles.some(
+          (role) => role === "reviewer" || role === "administrator",
+        ) && (
+          <Link className="button secondary" href="/studio/coverage">
+            Curriculum coverage and reports
+          </Link>
+        )}
       </div>
       {error && (
         <p className="error" role="alert">
@@ -323,7 +380,27 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
         />
       ) : (
         <>
-          <div className="studio-toolbar">
+          <form
+            className="studio-toolbar"
+            onSubmit={(event) => {
+              event.preventDefault();
+              activeFilters.current = {
+                page: 1,
+                search: query,
+                status,
+                domain,
+                objective,
+                kind,
+              };
+              void reload().catch((caught) =>
+                setError(
+                  caught instanceof Error
+                    ? caught.message
+                    : "The content library could not be loaded.",
+                ),
+              );
+            }}
+          >
             <label className="search-box">
               <Search size={18} />
               <span className="sr-only">Search Studio content</span>
@@ -354,24 +431,45 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
               onChange={(event) => setStatus(event.target.value)}
             >
               <option value="all">All review states</option>
-              {[
-                "draft",
-                "technical_review",
-                "changes_requested",
-                "rejected",
-                "approved",
-                "published",
-                "retired",
-              ].map((value) => (
+              {studioStatuses.map((value) => (
                 <option key={value} value={value}>
                   {statusLabel(value)}
                 </option>
               ))}
             </select>
+            <label className="sr-only" htmlFor="studio-domain-filter">
+              Filter Studio domain
+            </label>
+            <select
+              id="studio-domain-filter"
+              value={domain}
+              onChange={(event) => setDomain(event.target.value)}
+            >
+              <option value="all">All domains</option>
+              {["1", "2", "3", "4"].map((code) => (
+                <option key={code} value={code}>
+                  Domain {code}
+                </option>
+              ))}
+            </select>
+            <label className="sr-only" htmlFor="studio-objective-filter">
+              Filter Studio objective ID
+            </label>
+            <input
+              id="studio-objective-filter"
+              value={objective}
+              onChange={(event) => setObjective(event.target.value)}
+              placeholder="Exact objective ID"
+              maxLength={200}
+            />
+            <button className="button secondary" type="submit" disabled={busy}>
+              Apply library filters
+            </button>
             {canAuthor && (
               <>
                 <button
                   className="button primary"
+                  type="button"
                   onClick={() => create("question")}
                 >
                   <Plus size={16} />
@@ -379,6 +477,7 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
                 </button>
                 <button
                   className="button secondary"
+                  type="button"
                   onClick={() => create("lesson")}
                 >
                   <BookOpen size={16} />
@@ -386,7 +485,46 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
                 </button>
               </>
             )}
-          </div>
+          </form>
+          {snapshot.pagination && (
+            <nav
+              className="studio-pagination"
+              aria-label="Editorial library pages"
+            >
+              <span>
+                {snapshot.pagination.total} records · Page{" "}
+                {snapshot.pagination.page} of {snapshot.pagination.pages}
+              </span>
+              <button
+                className="button secondary"
+                disabled={busy || snapshot.pagination.page <= 1}
+                onClick={() => {
+                  activeFilters.current = {
+                    ...activeFilters.current,
+                    page: snapshot.pagination!.page - 1,
+                  };
+                  void reload().catch((caught) => setError(caught.message));
+                }}
+              >
+                Previous library page
+              </button>
+              <button
+                className="button secondary"
+                disabled={
+                  busy || snapshot.pagination.page >= snapshot.pagination.pages
+                }
+                onClick={() => {
+                  activeFilters.current = {
+                    ...activeFilters.current,
+                    page: snapshot.pagination!.page + 1,
+                  };
+                  void reload().catch((caught) => setError(caught.message));
+                }}
+              >
+                Next library page
+              </button>
+            </nav>
+          )}
           <div className="studio-layout">
             <aside
               className="card studio-sidebar"
@@ -394,7 +532,7 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
             >
               <div className="eyebrow">SAVED CONTENT</div>
               <p className="studio-help">
-                {filtered.length} records match your filters
+                {filtered.length} records on this page
               </p>
               <ul className="studio-list">
                 {filtered.map((item) => (
@@ -403,6 +541,7 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
                       aria-pressed={selectedId === item.id}
                       onClick={() => {
                         setSelected(item.id);
+                        setSelectedDetail(item);
                         setError("");
                         setNotice("");
                       }}
@@ -425,6 +564,13 @@ export function ContentStudio({ initial }: { initial: Snapshot }) {
               )}
             </aside>
             <div className="studio-main">
+              {selected &&
+                !snapshot.items.some((item) => item.id === selected.id) && (
+                  <p className="studio-help">
+                    The saved revision remains selected even though it is
+                    outside this library page’s filters.
+                  </p>
+                )}
               {selected ? (
                 <ItemDetails
                   item={selected}

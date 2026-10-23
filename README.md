@@ -1,15 +1,16 @@
-# CredBuilt Academy — connected learning development
+# CredBuilt Academy — CHST5 curriculum and content engine
 
 **BUILD KNOWLEDGE. EARN CREDENTIALS.**
 
-A Next.js learning platform under active development. The v0.6A/B work preserves
-the v0.5 academy, practice engine, exam rehearsals, analytics and study planner.
-It strengthens connected-account boundaries and adds a protected Content Studio
-with revision-specific review, publication and learner delivery. It is not a
-production-ready commercial CHST course. Instructor/video and flashcard releases
-are subsequent work, not delivered features of this checkpoint.
+A Next.js learning platform under active development. This v0.6 CHST milestone
+preserves the connected-account and Content Studio foundation, adds all 78
+statements from the supplied CHST5 blueprint, the 21-entry reference bibliography,
+100 original AI question drafts, separate source examination and technical review,
+objective practice/analytics and database-backed editorial coverage. It is not a
+production-ready commercial CHST course. No draft has been source-verified,
+technically approved or published by this work.
 
-Development branch: **`development/v0.6-connected-learning`**. `main` and the
+Development branch: **`development/stable-learning-foundation`**. `main` and the
 production demo remain unchanged until the product owner approves a merge or
 promotion. A pushed development branch may trigger a Vercel **Preview**.
 
@@ -24,10 +25,12 @@ Open this branch's deployment from **Vercel → project → Deployments → Prev
 Visit**. The generated URL must come from the dashboard; no new preview URL is
 assumed here. See [deployment instructions](DEPLOYMENT.md).
 
-Try **Learn → a lesson → knowledge checks**, **Practice → 10 questions → all
-domains**, **Exam Simulator → short rehearsal**, **Performance**, and **Study
-Planner → save study preferences**. The default 25-question request correctly
-reports a shortage: the demonstration bank contains only 12 distinct drafts.
+Try **Learn → CHST5 study map → an objective**, **Practice → CHST5 curriculum
+drafts → 25 questions**, **Exam Simulator → short rehearsal**, **Performance**,
+**Reference Library**, and **Study Planner → save study preferences**. The
+original 12-question demo bank is preserved separately; choose the curriculum
+draft bank to explore the new 100 unreviewed examples. Filtering may reduce the
+available count; shortages are reported without duplicating questions.
 
 Browser mode saves progress only on the current browser profile and website
 origin. It has no real account, cross-device sync or protected scoring. A new
@@ -64,8 +67,15 @@ or generated artifacts. The safe template is
 - Eight representative lessons support topics/subtopics, objectives, a reader,
   sections, checks, completion and related practice. Server mode records progress
   per owner and immutable lesson revision; browser mode keeps its local adapter.
+- The CHST5 study map preserves all 78 official statements, numbering and weights
+  from the supplied **2022.04.12** blueprint. Objective pages provide unreviewed
+  study outlines and related practice/reference connections; they are not 78
+  approved lessons. The supplied bibliography is **2021.06.09**. Whether newer
+  official documents exist remains unconfirmed; see
+  [document provenance](docs/chst-source-provenance.md).
 - Practice supports focused 1/3/5-question sets and 10/25/50/100/200 counts,
-  domain/topic filters, learning/adaptive/timed/exam modes, explanations,
+  domain/objective/topic/difficulty and answered/unanswered/history filters,
+  learning/adaptive/timed/exam modes, explanations,
   bookmarks, confidence, flags, resume, results and review. Insufficient pools
   are blocked. New sessions pin exact revisions; legacy records resolve v1.
 - Short exam rehearsals include countdowns, autosave and editable choices.
@@ -85,18 +95,30 @@ or generated artifacts. The safe template is
 - Settings can download activity as JSON. Server exports use a limited safe
   activity projection; import/restore and account deletion are not implemented.
 - Content Studio at `/studio` supports question/lesson drafts, structured editors,
-  exact-revision reviews, changes/rejections, publication/retirement, JSON import
+  separate source verification and exact-revision technical reviews,
+  changes/rejections, publication/retirement, JSON import
   preview and append-only audit. Trusted database roles control every action;
   the public `/admin` inspector remains read-only. Studio requires a connected
   authorized account and is unavailable in the browser-only Vercel demo.
+- Protected curriculum coverage reads actual database records, with domain/
+  objective/status/search filters, paginated editorial drill-downs and content
+  concern triage. It does not fabricate import counts or reference freshness.
 - Published instructional lessons and practice questions have a separate
   server-only delivery path. Unpublished drafts never enter learner selection.
   New attempts pin revisions; retirement preserves historical grading. No
   instructional material is published by the seed or this development work.
 
-All 12 questions and eight lessons are **unreviewed demonstrations**, with zero
-approved commercial questions or verified technical sources. CHST5 data remains
-user-supplied and provisional. No official questions, passing thresholds,
+The original 12 questions/eight lessons and the new 100 original AI drafts remain
+**unreviewed**. The new batch is distributed 37/20/22/21 across the four domains
+and maps to all 78 statements. Browser fixtures expose drafts as demonstrations;
+connected production starts accept only approved published content. Database
+ingestion of the 100 drafts is an explicit trusted operation, not automatic
+seeding. See [content-engine setup](docs/chst-content-engine.md).
+
+There are zero source-verified, technically approved or published questions
+supplied by this milestone. Exact attached blueprint transcription is distinct
+from human source verification or confirmation of the latest version. No
+official exam questions, passing thresholds,
 verified official duration, BCSP affiliation or passing prediction is claimed.
 
 Paid AI, billing, teams, video instruction and full flashcards/retention are not
@@ -125,7 +147,9 @@ provider exclusions.
 - [Feature status](FEATURE_STATUS.md) and [roadmap](PRODUCT_ROADMAP.md)
 - [Content policy](CONTENT_REVIEW_POLICY.md)
 - [Content Studio operations](docs/editorial-workflow.md)
-- [v0.6A/B release report](docs/v06-release-report.md)
+- [CHST content-engine setup](docs/chst-content-engine.md) and
+  [current curriculum release report](docs/chst-curriculum-release.md)
+- [Earlier v0.6A/B checkpoint](docs/v06-release-report.md)
 - [Deployment, migration and rollback](DEPLOYMENT.md)
 - [Testing](TESTING.md) and [security assumptions](SECURITY.md)
 

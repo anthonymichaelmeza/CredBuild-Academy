@@ -40,6 +40,20 @@ for unfinished launch requirements.
   SQL guards require exact reviewed canonical learner snapshots and matching
   pointers. Revisions/reviews/source records/audit are append-only. Edits create
   drafts rather than mutating published material.
+- Source verification is a separate immutable event from technical approval.
+  Evidence must match every cited edition/locator and URL or registered physical
+  publication. The latest monotonic source event and current reviewer role are
+  rechecked at approval/publication; timestamp ties cannot substitute older
+  evidence. Canonical objective/domain guards preserve all supplied statements.
+- New connected production sessions accept only the approved published bank;
+  the 100 AI drafts are explicitly public browser demonstrations. Connected
+  starts reject that bank even if a client forges the configuration. Legacy
+  demonstration history remains reviewable without admitting drafts to new
+  production selection.
+- Curriculum coverage/report triage requires a reviewer/administrator. Learner
+  reports are limited to current published or owned historical revisions, and
+  reporter identity comes from the server. Reports and triage/audit are
+  append-only; resolving a report does not silently change publication.
 - JSON imports use strict schemas, bounded bodies, duplicate checks,
   owner-bound expiring previews and single-use transactional confirmation.
   Imported questions remain drafts; client approval/role fields are rejected.
@@ -96,6 +110,31 @@ service exists. No claims of those protections are made. Account deletion,
 retention policy, operational monitoring, alerting, backup/restore drills,
 dependency-update policy and a broader accessibility/security assessment remain
 launch work. The deployment recovery runbook is not proof of a tested restore.
+
+## Public curriculum and original draft content
+
+The public catalog contains the exact supplied statement wording and printed
+document identity; copyright attribution and hashes are preserved without
+copying supplied PDFs or underlying book content into Git. These are neither
+official examination questions nor proof of BCSP affiliation. The separate
+100-item browser projection intentionally exposes AI draft answers and
+rationales; do not put licensed or approved paid-bank content in that module.
+
+Trusted batch ingestion requires an existing authorized subject and cannot
+bootstrap identities/roles, verify or publish. Database import counts and
+editorial dashboards reflect actual records, not public fixture totals. Source
+categories distinguish regulations, consensus standards, guidance and
+supplemental resources; neither category nor bibliography inclusion proves
+legal applicability or answer support. Latest-version/freshness checks remain
+unknown when access is blocked. The app does not fabricate link checks or fetch
+arbitrary references for verification.
+
+Full exam starts are also guarded server-side against unverified policy,
+incorrect duration, wrong bank and insufficient distinct per-domain questions.
+The configured official duration remains null, so the full exam is unavailable.
+Browser demonstrations and response times remain editable/untrusted. Objective
+recommendations use documented heuristics, not calibrated mastery or pass
+probabilities.
 
 ## Activity export
 

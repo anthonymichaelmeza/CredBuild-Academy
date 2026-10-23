@@ -23,6 +23,7 @@ import {
 const navigation = [
   ["/", "Dashboard", LayoutDashboard],
   ["/learn", "Learn", BookOpen],
+  ["/curriculum", "CHST5 Curriculum", Library],
   ["/programs", "Certification Programs", GraduationCap],
   ["/practice", "Practice", Crosshair],
   ["/exam", "Exam Simulator", Timer],

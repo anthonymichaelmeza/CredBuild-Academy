@@ -32,6 +32,7 @@ const source = {
   url: "https://example.test/fixture",
   edition: "QA fixture",
   section: "Fixture 1",
+  classification: "professional_guidance" as const,
 };
 const current = (item: StudioItem) => ({
   id: item.id,
@@ -52,7 +53,30 @@ async function act(who: typeof author, input: unknown) {
   return (await studioAction(who, input)) as StudioItem;
 }
 async function approve(item: StudioItem) {
-  const submitted = await act(author, { action: "submit", ...current(item) });
+  const pending = await act(author, {
+    action: "request_source_verification",
+    ...current(item),
+  });
+  const verified = await act(reviewer, {
+    action: "verify_sources",
+    ...current(pending),
+    decision: "verified",
+    findings:
+      "Isolated fictional source-examination fixture, not technical content verification.",
+    sourceChecks: item.data.sources.map((source) => ({
+      sourceId: source.id,
+      outcome: "supports",
+      notes: "Synthetic fixture examination only.",
+      edition: source.edition,
+      section: source.section,
+      url: source.url,
+    })),
+    humanAttestation: true,
+  });
+  const submitted = await act(author, {
+    action: "submit",
+    ...current(verified),
+  });
   return act(reviewer, {
     action: "review",
     ...current(submitted),

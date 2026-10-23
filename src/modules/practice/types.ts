@@ -1,4 +1,18 @@
 export type Confidence = "low" | "medium" | "high";
+export type PracticeBank = "demonstration" | "published" | "curriculum_drafts";
+export type QuestionReference = {
+  title: string;
+  url: string;
+  locator: string;
+  verifiedAt: string | null;
+  edition?: string;
+  classification?:
+    | "regulatory_requirement"
+    | "consensus_standard"
+    | "professional_guidance"
+    | "supplemental_resource";
+  verificationStatus?: "pending" | "verified";
+};
 export type Question = {
   id: string;
   version: number;
@@ -12,12 +26,8 @@ export type Question = {
   choices: { id: string; text: string; rationale: string }[];
   correctChoice: string;
   explanation: string;
-  reference: {
-    title: string;
-    url: string;
-    locator: string;
-    verifiedAt: string | null;
-  };
+  reference: QuestionReference;
+  references?: QuestionReference[];
   contentKind: "demonstration" | "instructional";
   origin: "ai_generated" | "human_authored" | "imported";
   reviewStatus: "draft" | "approved" | "published";
@@ -54,12 +64,17 @@ export type Session = {
   submissionReason?: "manual" | "expired";
   topic?: string;
   /** Absent on legacy attempts, which always use the demonstration bank. */
-  bank?: "demonstration" | "published";
+  bank?: PracticeBank;
   certification?: string;
 };
 export type SafeQuestion = Omit<
   Question,
-  "correctChoice" | "explanation" | "reference" | "choices" | "solutionSteps"
+  | "correctChoice"
+  | "explanation"
+  | "reference"
+  | "references"
+  | "choices"
+  | "solutionSteps"
 > & { choices: { id: string; text: string }[] };
 export type SessionView = Omit<Session, "ownerId" | "answers"> & {
   answers: Record<string, Omit<Answer, "correct"> & { correct?: boolean }>;
@@ -70,6 +85,7 @@ export type SessionView = Omit<Session, "ownerId" | "answers"> & {
       correctChoice: string;
       explanation: string;
       reference: Question["reference"];
+      references?: QuestionReference[];
       rationales: Question["choices"];
       solutionSteps?: string[];
     }

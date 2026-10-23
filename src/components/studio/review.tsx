@@ -7,6 +7,14 @@ import type {
   StudioItem,
 } from "@/modules/studio/model";
 import { Field, Status, statusLabel } from "./fields";
+import {
+  SourceVerificationForm,
+  SourceVerificationHistory,
+} from "./source-verification";
+import {
+  CHST_BLUEPRINT_ID,
+  chstObjectives,
+} from "@/modules/curriculum/catalog";
 function ReviewForm({
   item,
   busy,
@@ -77,14 +85,18 @@ function ReviewForm({
                 <p>
                   {source.edition} · {source.section}
                 </p>
-                <a
-                  className="text-link studio-wrap"
-                  href={source.url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Open cited source
-                </a>
+                {source.url ? (
+                  <a
+                    className="text-link studio-wrap"
+                    href={source.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open cited source
+                  </a>
+                ) : (
+                  <p className="studio-help">Source URL not established.</p>
+                )}
               </div>
               <Field label={`Source ${index + 1} finding`}>
                 <select
@@ -145,7 +157,18 @@ function ReviewForm({
         >
           <option value="changes_requested">Request revision</option>
           <option value="rejected">Reject this revision</option>
-          <option value="approved">Approve this revision</option>
+          <option
+            value="approved"
+            disabled={
+              !item.sourceVerifications?.some(
+                (record) =>
+                  record.revisionId === item.revisionId &&
+                  record.decision === "verified",
+              )
+            }
+          >
+            Approve this revision
+          </option>
         </select>
       </Field>
       <Field label="Technical findings and required changes">
@@ -303,7 +326,11 @@ export function ItemDetails({
   const canReview =
     access.roles.includes("reviewer") && item.ownerId !== access.actorId;
   const canSubmit =
-    canEdit && ["draft", "changes_requested"].includes(item.status);
+    canEdit &&
+    ["draft", "changes_requested", "source_verified"].includes(item.status);
+  const canRequestSources =
+    canEdit &&
+    ["draft", "changes_requested", "technical_review"].includes(item.status);
   const independent =
     item.ownerId !== access.actorId &&
     !item.versions.some((version) => version.authorId === access.actorId);
@@ -328,6 +355,8 @@ export function ItemDetails({
         <div className="studio-flow" aria-label="Content workflow">
           {[
             "draft",
+            "source_verification_pending",
+            "source_verified",
             "technical_review",
             "approved",
             "published",
@@ -376,6 +405,17 @@ export function ItemDetails({
               Submit for technical review
             </button>
           )}
+          {canRequestSources && (
+            <button
+              className="button primary"
+              disabled={busy}
+              onClick={() =>
+                void onAction("request_source_verification").catch(() => {})
+              }
+            >
+              Request source verification
+            </button>
+          )}
           {administrator && item.status === "approved" && (
             <button
               className="button primary"
@@ -414,14 +454,28 @@ export function ItemDetails({
               </button>
             )}
         </div>
-        {item.status === "technical_review" && !independent && (
-          <p className="studio-help">
-            You authored this revision. A different authorized reviewer must
-            record the technical decision.
-          </p>
-        )}
+        {["technical_review", "source_verification_pending"].includes(
+          item.status,
+        ) &&
+          !independent && (
+            <p className="studio-help">
+              You authored this revision. A different authorized reviewer must
+              record the technical decision.
+            </p>
+          )}
       </section>
       <ContentPreview item={item} />
+      {item.status === "source_verification_pending" &&
+        canReview &&
+        independent && (
+          <SourceVerificationForm
+            key={item.revisionId}
+            item={item}
+            busy={busy}
+            onRecord={(input) => onAction("verify_sources", input)}
+          />
+        )}
+      <SourceVerificationHistory item={item} />
       {item.status === "technical_review" && canReview && independent && (
         <ReviewForm
           key={item.revisionId}
@@ -506,6 +560,12 @@ export function BlueprintReview({
   const chosen = blueprints.find(
     (blueprint) => blueprint.id === blueprintRevisionId,
   );
+  const canonical = blueprintRevisionId === CHST_BLUEPRINT_ID;
+  const canonicalObjectives = chstObjectives.map((objective) => ({
+    code: objective.id,
+    domain: objective.domain,
+    title: objective.statement,
+  }));
   return (
     <form
       className="card studio-panel"
@@ -529,7 +589,7 @@ export function BlueprintReview({
             edition,
             section,
             notes,
-            objectives,
+            objectives: canonical ? canonicalObjectives : objectives,
             humanAttestation: true,
           });
           setAttestation(false);
@@ -546,13 +606,17 @@ export function BlueprintReview({
       <h2>Record a blueprint review.</h2>
       <p>
         Enter only the official document and objective mappings you actually
-        examined. Supplied CHST5 headings remain provisional until this review
-        is completed by an authorized person.
+        examined. The supplied CHST5 V.2022.04.12 map preserves all 78
+        statements; transcription does not establish that it is the latest
+        official version or independently verify instructional claims.
       </p>
       <Field label="Blueprint to review">
         <select
           value={blueprintRevisionId}
-          onChange={(event) => setBlueprint(event.target.value)}
+          onChange={(event) => {
+            setBlueprint(event.target.value);
+            setAttestation(false);
+          }}
           required
         >
           <option value="" disabled>
@@ -601,79 +665,107 @@ export function BlueprintReview({
       </div>
       <fieldset>
         <legend>Verified objective mappings</legend>
-        {objectives.map((objective, index) => (
-          <div className="studio-repeated" key={index}>
-            <div className="studio-field-grid">
-              <Field label={`Objective ${index + 1} code`}>
-                <input
-                  value={objective.code}
-                  onChange={(event) =>
-                    setObjectives(
-                      objectives.map((item, position) =>
-                        position === index
-                          ? { ...item, code: event.target.value }
-                          : item,
-                      ),
-                    )
-                  }
-                  required
-                />
-              </Field>
-              <Field label={`Objective ${index + 1} domain`}>
-                <input
-                  value={objective.domain}
-                  onChange={(event) =>
-                    setObjectives(
-                      objectives.map((item, position) =>
-                        position === index
-                          ? { ...item, domain: event.target.value }
-                          : item,
-                      ),
-                    )
-                  }
-                  required
-                />
-              </Field>
-            </div>
-            <Field label={`Objective ${index + 1} title`}>
-              <input
-                value={objective.title}
-                onChange={(event) =>
-                  setObjectives(
-                    objectives.map((item, position) =>
-                      position === index
-                        ? { ...item, title: event.target.value }
-                        : item,
-                    ),
-                  )
-                }
-                required
-              />
-            </Field>
-            {objectives.length > 1 && (
-              <button
-                type="button"
-                className="button secondary"
-                onClick={() =>
-                  setObjectives(
-                    objectives.filter((_, position) => position !== index),
-                  )
-                }
-              >
-                Remove objective {index + 1}
-              </button>
-            )}
-          </div>
-        ))}
-        <button
-          type="button"
-          className="button secondary"
-          onClick={() =>
-            setObjectives([...objectives, { code: "", domain: "", title: "" }])
-          }
-        >
-          Add objective mapping
-        </button>
+        {canonical ? (
+          <>
+            <p>
+              The canonical 78-statement map is read-only. Review every
+              statement against the supplied document; this action cannot
+              replace its wording or add invented objectives.
+            </p>
+            <details>
+              <summary>Inspect all 78 canonical mappings</summary>
+              <ol>
+                {canonicalObjectives.map((objective) => (
+                  <li key={objective.code}>
+                    <strong>
+                      {objective.code} · Domain {objective.domain}
+                    </strong>
+                    <p>{objective.title}</p>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          </>
+        ) : (
+          <>
+            {objectives.map((objective, index) => (
+              <div className="studio-repeated" key={index}>
+                <div className="studio-field-grid">
+                  <Field label={`Objective ${index + 1} code`}>
+                    <input
+                      value={objective.code}
+                      onChange={(event) =>
+                        setObjectives(
+                          objectives.map((item, position) =>
+                            position === index
+                              ? { ...item, code: event.target.value }
+                              : item,
+                          ),
+                        )
+                      }
+                      required
+                    />
+                  </Field>
+                  <Field label={`Objective ${index + 1} domain`}>
+                    <input
+                      value={objective.domain}
+                      onChange={(event) =>
+                        setObjectives(
+                          objectives.map((item, position) =>
+                            position === index
+                              ? { ...item, domain: event.target.value }
+                              : item,
+                          ),
+                        )
+                      }
+                      required
+                    />
+                  </Field>
+                </div>
+                <Field label={`Objective ${index + 1} title`}>
+                  <input
+                    value={objective.title}
+                    onChange={(event) =>
+                      setObjectives(
+                        objectives.map((item, position) =>
+                          position === index
+                            ? { ...item, title: event.target.value }
+                            : item,
+                        ),
+                      )
+                    }
+                    required
+                  />
+                </Field>
+                {objectives.length > 1 && (
+                  <button
+                    type="button"
+                    className="button secondary"
+                    onClick={() =>
+                      setObjectives(
+                        objectives.filter((_, position) => position !== index),
+                      )
+                    }
+                  >
+                    Remove objective {index + 1}
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="button secondary"
+              onClick={() =>
+                setObjectives([
+                  ...objectives,
+                  { code: "", domain: "", title: "" },
+                ])
+              }
+            >
+              Add objective mapping
+            </button>
+          </>
+        )}
       </fieldset>
       <Field label="Blueprint review findings">
         <textarea

@@ -34,7 +34,16 @@ export async function GET(request: Request) {
     }
     const id = url.searchParams.get("id");
     if (id) return privateJson(await readStudio(who, id.slice(0, 100)));
-    return privateJson(await studioSnapshot(who));
+    return privateJson(
+      await studioSnapshot(who, {
+        page: Number(url.searchParams.get("page")) || 1,
+        search: url.searchParams.get("search") || undefined,
+        status: url.searchParams.get("status") || undefined,
+        domain: url.searchParams.get("domain") || undefined,
+        objective: url.searchParams.get("objective") || undefined,
+        kind: url.searchParams.get("kind") || undefined,
+      }),
+    );
   } catch (error) {
     return apiError(error);
   }

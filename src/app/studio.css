@@ -104,6 +104,35 @@
   background: var(--accent-surface);
   border-color: var(--accent-border);
 }
+.studio-status[data-status="source_verification_pending"],
+.studio-status[data-status="source_verified"] {
+  color: var(--accent-text);
+  background: var(--accent-surface);
+  border-color: var(--accent-border);
+}
+.studio-toolbar > input {
+  min-height: 44px;
+  padding: 10px 12px;
+  width: 250px;
+  max-width: 100%;
+  border: 1px solid #71808e;
+  border-radius: 5px;
+  color: var(--text-primary);
+  background: var(--surface-control);
+  font-size: 12px;
+}
+.studio-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.studio-pagination > span {
+  flex: 1;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
 .studio-status[data-status="rejected"],
 .studio-status[data-status="changes_requested"] {
   color: var(--danger-text);

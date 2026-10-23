@@ -2,7 +2,7 @@ node_modules/
 .next/
 .local/
 .vercel/
-coverage/
+/coverage/
 playwright-report/
 test-results/
 .env*

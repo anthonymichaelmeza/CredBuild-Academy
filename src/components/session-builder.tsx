@@ -1,11 +1,27 @@
 "use client";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, SlidersHorizontal, Info, ShieldAlert } from "lucide-react";
 import { useHydrated } from "./use-hydrated";
 import { domains } from "@/modules/catalog/blueprint";
-import { sessionConfigSchema } from "@/modules/practice/engine";
-import type { PerformanceQuestion } from "@/modules/performance/dto";
+import {
+  eligibleQuestions,
+  selectionHistory,
+  sessionConfigSchema,
+} from "@/modules/practice/engine";
+import type {
+  PerformanceQuestion,
+  PerformanceSession,
+} from "@/modules/performance/dto";
+import type { PracticeBank } from "@/modules/practice/types";
+import {
+  browserSnapshot,
+  parseBrowserSnapshot,
+  subscribeBrowserDemo,
+} from "@/demo/browser-store";
+import { getChstObjective } from "@/modules/curriculum/catalog";
+const noSubscribe = () => () => {};
+const noSnapshot = () => null;
 export function SessionBuilder({
   available,
   inventory,
@@ -13,9 +29,15 @@ export function SessionBuilder({
   initialDomain = "all",
   initialTopic = "all",
   initialCount = 25,
+  initialObjective = "all",
+  initialDifficulty = "all",
+  initialAnswered = "all",
+  initialReview = "all",
   bank = "demonstration",
   certification = "chst",
   certificationOptions = ["chst"],
+  saved = [],
+  marked = [],
 }: {
   available: boolean;
   inventory: PerformanceQuestion[];
@@ -23,9 +45,15 @@ export function SessionBuilder({
   initialDomain?: string;
   initialTopic?: string;
   initialCount?: number;
-  bank?: "demonstration" | "published";
+  initialObjective?: string;
+  initialDifficulty?: string;
+  initialAnswered?: string;
+  initialReview?: string;
+  bank?: PracticeBank;
   certification?: string;
   certificationOptions?: string[];
+  saved?: PerformanceSession[];
+  marked?: string[];
 }) {
   const router = useRouter();
   const hydrated = useHydrated();
@@ -33,10 +61,35 @@ export function SessionBuilder({
   const [mode, setMode] = useState("adaptive");
   const [domain, setDomain] = useState(initialDomain);
   const [topic, setTopic] = useState(initialTopic);
+  const [objective, setObjective] = useState(initialObjective);
+  const [difficulty, setDifficulty] = useState(initialDifficulty);
+  const [answeredFilter, setAnsweredFilter] = useState(initialAnswered);
+  const [reviewFilter, setReviewFilter] = useState(initialReview);
   const [minutes, setMinutes] = useState(10);
   const [prioritizeMissed, setPrioritizeMissed] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const raw = useSyncExternalStore(
+    browserOnly ? subscribeBrowserDemo : noSubscribe,
+    browserOnly ? browserSnapshot : noSnapshot,
+    noSnapshot,
+  );
+  let learnerSessions = saved;
+  let learnerBookmarks = marked;
+  let historyError = "";
+  if (browserOnly) {
+    try {
+      const state = parseBrowserSnapshot(raw);
+      learnerSessions = state.sessions;
+      learnerBookmarks = state.bookmarks;
+    } catch (caught) {
+      historyError =
+        caught instanceof Error
+          ? caught.message
+          : "Saved history is unavailable.";
+    }
+  }
+  const history = selectionHistory(learnerSessions);
   const topics = [
     ...new Set(
       inventory
@@ -44,11 +97,36 @@ export function SessionBuilder({
         .map((q) => q.topic),
     ),
   ];
-  const eligible = inventory.filter(
-    (q) =>
-      (domain === "all" || q.domain === domain) &&
-      (topic === "all" || q.topic === topic),
+  const filterConfig = {
+    bank,
+    certification,
+    domain,
+    topic,
+    ...(objective !== "all" ? { objective } : {}),
+    ...(["introductory", "intermediate", "advanced"].includes(difficulty)
+      ? {
+          difficulty: difficulty as
+            "introductory" | "intermediate" | "advanced",
+        }
+      : {}),
+    answered: answeredFilter as "all" | "answered" | "unanswered",
+    review: reviewFilter as "all" | "missed" | "bookmarked",
+  };
+  const eligible = eligibleQuestions(
+    inventory,
+    filterConfig,
+    history,
+    learnerBookmarks,
   ).length;
+  const objectiveIds = [
+    ...new Set(
+      inventory
+        .filter((q) => domain === "all" || q.domain === domain)
+        .flatMap((q) =>
+          q.blueprint?.objective ? [q.blueprint.objective] : [],
+        ),
+    ),
+  ];
   const timed = mode === "timed" || mode === "exam";
   async function start() {
     setBusy(true);
@@ -60,7 +138,11 @@ export function SessionBuilder({
         domain,
         topic,
         prioritizeMissed,
-        ...(bank === "published" ? { bank, certification } : {}),
+        ...(bank !== "demonstration" ? { bank, certification } : {}),
+        ...(objective !== "all" ? { objective } : {}),
+        ...(difficulty !== "all" ? { difficulty } : {}),
+        ...(answeredFilter !== "all" ? { answered: answeredFilter } : {}),
+        ...(reviewFilter !== "all" ? { review: reviewFilter } : {}),
         ...(timed ? { durationSeconds: minutes * 60 } : {}),
       });
       let id: string;
@@ -102,12 +184,16 @@ export function SessionBuilder({
           <strong>
             {bank === "published"
               ? "Published instructional bank"
-              : "Demonstration question bank"}
+              : bank === "curriculum_drafts"
+                ? "CHST5 curriculum drafts · unreviewed demonstration"
+                : "Demonstration question bank"}
           </strong>
           <p>
             {bank === "published"
               ? `${inventory.length} distinct questions are currently published after independent source review. Availability is checked again when your session starts. This is independent preparation, not an official examination.`
-              : `${inventory.length} distinct original AI-generated drafts available here. Sources and CHST alignment have not been verified. Focused sets of 1, 3, or 5 help you explore the small bank; larger sets need more distinct content.`}
+              : bank === "curriculum_drafts"
+                ? `${inventory.length} original AI-generated drafts mapped to the supplied 2022.04.12 blueprint statements. Their answers, technical sources and instructional accuracy are unreviewed. This browser-only bank is excluded from connected production study. It is not a complete CHST examination.`
+                : `${inventory.length} distinct original AI-generated drafts available here. Sources and CHST alignment have not been verified. Focused sets of 1, 3, or 5 help you explore the small bank; larger sets need more distinct content.`}
           </p>
         </div>
       </div>
@@ -227,6 +313,7 @@ export function SessionBuilder({
                 onChange={(e) => {
                   setDomain(e.target.value);
                   setTopic("all");
+                  setObjective("all");
                 }}
               >
                 <option value="all">
@@ -260,6 +347,71 @@ export function SessionBuilder({
                 {topics.map((t) => (
                   <option key={t}>{t}</option>
                 ))}
+              </select>
+            </div>
+            <div>
+              <label className="field-label" htmlFor="objective">
+                Focus objective
+              </label>
+              <select
+                id="objective"
+                value={objective}
+                onChange={(event) => setObjective(event.target.value)}
+              >
+                <option value="all">All mapped objectives</option>
+                {objective !== "all" && !objectiveIds.includes(objective) && (
+                  <option value={objective}>
+                    {objective} · no eligible questions
+                  </option>
+                )}
+                {objectiveIds.map((id) => (
+                  <option key={id} value={id}>
+                    {getChstObjective(id)?.statement || id}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="field-label" htmlFor="difficulty">
+                Difficulty
+              </label>
+              <select
+                id="difficulty"
+                value={difficulty}
+                onChange={(event) => setDifficulty(event.target.value)}
+              >
+                <option value="all">All difficulties</option>
+                <option value="introductory">Foundational</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced reasoning</option>
+              </select>
+            </div>
+            <div>
+              <label className="field-label" htmlFor="answer-history">
+                Answer history
+              </label>
+              <select
+                id="answer-history"
+                value={answeredFilter}
+                onChange={(event) => setAnsweredFilter(event.target.value)}
+              >
+                <option value="all">All questions</option>
+                <option value="answered">Previously answered</option>
+                <option value="unanswered">Not answered before</option>
+              </select>
+            </div>
+            <div>
+              <label className="field-label" htmlFor="review-selection">
+                Review selection
+              </label>
+              <select
+                id="review-selection"
+                value={reviewFilter}
+                onChange={(event) => setReviewFilter(event.target.value)}
+              >
+                <option value="all">All eligible questions</option>
+                <option value="missed">Previously missed questions</option>
+                <option value="bookmarked">Bookmarked questions</option>
               </select>
             </div>
           </div>
@@ -301,15 +453,15 @@ export function SessionBuilder({
                 : "Instant explanations are on. Your first checked answer is final; start a new session to retry."}
             </span>
           </div>
-          {error && (
+          {(error || historyError) && (
             <p className="error" role="alert">
-              {error}
+              {error || historyError}
             </p>
           )}
           <button
             className="button primary"
             type="submit"
-            disabled={busy || !available || !hydrated}
+            disabled={busy || !available || !hydrated || Boolean(historyError)}
           >
             {busy ? "Preparing your session…" : "Start session"}
             <ArrowRight size={17} />

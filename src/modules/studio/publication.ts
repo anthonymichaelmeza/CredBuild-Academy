@@ -13,7 +13,7 @@ export async function listPublishedQuestions(
         "SELECT v.data FROM question_versions v WHERE v.content_kind='instructional' AND EXISTS(SELECT 1 FROM studio_audit a WHERE a.revision_id=v.id AND a.event='published') ORDER BY v.question_id,v.version",
       )
     : await query(
-        "SELECT v.data FROM published_questions p JOIN question_versions v ON v.id=p.question_version_id ORDER BY p.published_at DESC LIMIT 2000",
+        "SELECT v.data FROM published_questions p JOIN question_versions v ON v.id=p.question_version_id ORDER BY p.published_at DESC",
       );
   return result.rows.map((r) => r.data as Question);
 }

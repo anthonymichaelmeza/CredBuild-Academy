@@ -167,3 +167,72 @@ export const publishedLessons = pgTable("published_lessons", {
     .notNull()
     .defaultNow(),
 });
+export const curriculumDocuments = pgTable("curriculum_documents", {
+  id: text("id").primaryKey(),
+  kind: text("kind").notNull(),
+  version: text("version").notNull(),
+  filename: text("filename").notNull(),
+  sha256: text("sha256").notNull(),
+  pages: integer("pages").notNull(),
+  provenance: text("provenance").notNull(),
+  data: jsonb("data").notNull(),
+});
+export const curriculumObjectives = pgTable("curriculum_objectives", {
+  id: text("id").primaryKey(),
+  certificationId: text("certification_id")
+    .notNull()
+    .references(() => certifications.id),
+  blueprintRevisionId: text("blueprint_revision_id").notNull(),
+  documentId: text("document_id")
+    .notNull()
+    .references(() => curriculumDocuments.id),
+  domain: text("domain").notNull(),
+  kind: text("kind").notNull(),
+  officialNumber: integer("official_number").notNull(),
+  statement: text("statement").notNull(),
+  page: integer("page").notNull(),
+});
+export const referencePublications = pgTable("reference_publications", {
+  id: text("id").primaryKey(),
+  documentId: text("document_id").references(() => curriculumDocuments.id),
+  title: text("title").notNull(),
+  edition: text("edition").notNull(),
+  classification: text("classification").notNull(),
+  url: text("url"),
+  data: jsonb("data").notNull(),
+});
+export const studioSourceVerifications = pgTable(
+  "studio_source_verifications",
+  {
+    id: text("id").primaryKey(),
+    revisionId: text("revision_id")
+      .notNull()
+      .references(() => studioRevisions.id),
+    reviewerId: text("reviewer_id")
+      .notNull()
+      .references(() => users.id),
+    decision: text("decision").notNull(),
+    findings: text("findings").notNull(),
+    sourceChecks: jsonb("source_checks").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+);
+export const contentErrorReports = pgTable("content_error_reports", {
+  id: text("id").primaryKey(),
+  contentId: text("content_id")
+    .notNull()
+    .references(() => studioContent.id),
+  revisionId: text("revision_id")
+    .notNull()
+    .references(() => studioRevisions.id),
+  reporterId: text("reporter_id")
+    .notNull()
+    .references(() => users.id),
+  category: text("category").notNull(),
+  message: text("message").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

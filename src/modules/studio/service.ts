@@ -1,5 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
+import { isDeepStrictEqual } from "node:util";
 import { connection, type DatabaseQuery } from "@/db/client";
 import { seedDemo } from "@/db/seed";
 import { AccessError, type Actor } from "@/modules/identity/access";
@@ -10,6 +11,8 @@ import {
   type ContentDraft,
   type ImportPreview,
   type SourceCheck,
+  type SourceVerification,
+  type SourceVerificationCheck,
   type StudioAccess,
   type StudioItem,
   type StudioReview,
@@ -80,7 +83,7 @@ export async function blueprintSummaries(
 ): Promise<BlueprintSummary[]> {
   const rows = (
     await query(
-      "SELECT b.*,r.objectives FROM blueprint_revisions b LEFT JOIN LATERAL (SELECT objectives FROM studio_blueprint_reviews WHERE blueprint_revision_id=b.id ORDER BY created_at DESC,id DESC LIMIT 1) r ON true ORDER BY b.certification_id,b.version_label LIMIT 100",
+      "SELECT b.*,coalesce(r.objectives,(SELECT jsonb_agg(jsonb_build_object('code',o.id,'domain',o.domain,'title',o.statement) ORDER BY o.domain,o.kind,o.official_number) FROM curriculum_objectives o WHERE o.blueprint_revision_id=b.id)) AS objectives FROM blueprint_revisions b LEFT JOIN LATERAL (SELECT objectives FROM studio_blueprint_reviews WHERE blueprint_revision_id=b.id ORDER BY created_at DESC,id DESC LIMIT 1) r ON true ORDER BY b.certification_id,b.version_label LIMIT 100",
     )
   ).rows;
   return rows.map((r) => ({
@@ -119,6 +122,21 @@ async function mappingBlockers(query: DatabaseQuery, data: ContentDraft) {
   if (!data.sources.length)
     blockers.push(
       "Add authoritative references with edition and exact supporting section.",
+    );
+  if (data.sources.some((source) => !source.classification))
+    blockers.push(
+      "Classify each source as a regulatory requirement, consensus standard, professional guidance or supplemental resource before technical approval.",
+    );
+  if (
+    data.sources.some(
+      (source) =>
+        (!source.url && !source.bibliographyId) ||
+        !source.edition ||
+        !source.section,
+    )
+  )
+    blockers.push(
+      "Candidate references require an examined URL, publication edition and exact supporting locator before source verification.",
     );
   if (data.contentKind !== "instructional")
     blockers.push(
@@ -160,6 +178,12 @@ async function item(
       id,
     ])
   ).rows;
+  const sourceVerifications = (
+    await query(
+      "SELECT s.* FROM studio_source_verifications s JOIN studio_revisions r ON r.id=s.revision_id WHERE r.content_id=$1 ORDER BY s.event_number",
+      [id],
+    )
+  ).rows;
   const versions = (
     await query(
       "SELECT r.id,r.revision,r.author_id,w.status FROM studio_revisions r JOIN studio_workflow w ON w.revision_id=r.id WHERE r.content_id=$1 ORDER BY r.revision DESC",
@@ -188,6 +212,15 @@ async function item(
       sourceChecks: r.source_checks as SourceCheck[],
       createdAt: iso(r.created_at),
     })),
+    sourceVerifications: sourceVerifications.map((record) => ({
+      id: String(record.id),
+      revisionId: String(record.revision_id),
+      reviewerId: String(record.reviewer_id),
+      decision: record.decision as SourceVerification["decision"],
+      findings: String(record.findings),
+      sourceChecks: record.source_checks as SourceVerificationCheck[],
+      createdAt: iso(record.created_at),
+    })),
     events: events.map((e) => ({
       id: String(e.id),
       actorId: String(e.actor_id),
@@ -202,29 +235,163 @@ async function item(
       status: r.status as StudioStatus,
       authorId: String(r.author_id),
     })),
-    blockers: await mappingBlockers(query, data),
+    blockers: [
+      ...(await mappingBlockers(query, data)),
+      ...(sourceVerifications
+        .filter((record) => record.revision_id === row.revision_id)
+        .at(-1)?.decision === "verified"
+        ? []
+        : [
+            "Separate independent source verification of this exact revision is required before technical approval.",
+          ]),
+    ],
   };
 }
-export async function studioSnapshot(who: Actor): Promise<StudioSnapshot> {
+export type StudioFilters = {
+  page?: number;
+  search?: string;
+  status?: string;
+  domain?: string;
+  objective?: string;
+  kind?: string;
+};
+export async function studioSnapshot(
+  who: Actor,
+  filters: StudioFilters = {},
+): Promise<StudioSnapshot> {
   const access = await requireStudioAccess(who);
   await seedDemo();
   const query = (await connection()).query;
+  const params: unknown[] = [];
+  const predicates: string[] = [];
+  function condition(sql: string, value: unknown) {
+    params.push(value);
+    predicates.push(sql.replace("?", `$${params.length}`));
+  }
+  if (!access.roles.some((r) => r === "reviewer" || r === "administrator"))
+    condition("c.owner_id=?", who.id);
+  if (filters.domain && filters.domain !== "all")
+    condition("r.data->>'domain'=?", filters.domain.slice(0, 80));
+  if (filters.objective && filters.objective !== "all")
+    condition("r.data->>'objectiveCode'=?", filters.objective.slice(0, 200));
+  if (filters.status && filters.status !== "all")
+    condition("w.status=?", filters.status.slice(0, 40));
+  if (filters.kind && filters.kind !== "all")
+    condition("c.kind=?", filters.kind.slice(0, 20));
+  if (filters.search)
+    condition(
+      "concat_ws(' ',r.data->>'title',r.data->>'topic',c.id) ILIKE ?",
+      `%${filters.search.slice(0, 200)}%`,
+    );
+  const where = predicates.length ? ` WHERE ${predicates.join(" AND ")}` : "";
+  const base = `${headQuery}${where}`;
+  const total = Number(
+    (await query(`SELECT count(*) AS total FROM (${base}) counted`, params))
+      .rows[0].total,
+  );
+  const pageSize = 25,
+    pages = Math.max(1, Math.ceil(total / pageSize));
+  const page = Math.min(pages, Math.max(1, Math.floor(filters.page || 1)));
   const rows = (
     await query(
-      `${headQuery}${access.roles.some((r) => r === "reviewer" || r === "administrator") ? "" : " WHERE c.owner_id=$1"} ORDER BY c.created_at DESC LIMIT 50`,
-      access.roles.some((r) => r === "reviewer" || r === "administrator")
-        ? []
-        : [who.id],
+      `${base} ORDER BY c.created_at DESC,c.id LIMIT 25 OFFSET $${params.length + 1}`,
+      [...params, (page - 1) * pageSize],
     )
   ).rows;
   const items = await Promise.all(
     rows.map((r) => item(query, access, String(r.id))),
   );
-  return { access, items, blueprints: await blueprintSummaries(query) };
+  return {
+    access,
+    items,
+    blueprints: await blueprintSummaries(query),
+    pagination: { page, pageSize, total, pages },
+  };
 }
 export async function readStudio(who: Actor, id: string) {
   const access = await requireStudioAccess(who);
   return item((await connection()).query, access, id);
+}
+/** Trusted operator import only. This does not expose a role/owner selection API. */
+export async function importOriginalDraftBatch(
+  who: Actor,
+  records: {
+    id: string;
+    content: unknown;
+    category?:
+      | "foundational"
+      | "applied_technical"
+      | "scenario"
+      | "reasoning_calculation";
+  }[],
+) {
+  if (
+    !records.length ||
+    records.length > 2000 ||
+    new Set(records.map((record) => record.id)).size !== records.length
+  )
+    throw new AccessError(
+      "Supply a nonempty unique draft batch of at most 2,000 records.",
+      400,
+    );
+  const parsed = records.map((record) => ({
+    id: record.id,
+    content: contentDraftSchema.parse({
+      ...(record.content as object),
+      ...(record.category ? { instructionalCategory: record.category } : {}),
+      origin: "ai_generated",
+    }),
+  }));
+  if (
+    parsed.some(
+      (record) =>
+        !/^[-a-zA-Z0-9._]{3,100}$/.test(record.id) ||
+        record.content.kind !== "question",
+    )
+  )
+    throw new AccessError(
+      "Original batches require valid stable question IDs.",
+      400,
+    );
+  await requireStudioAccess(who);
+  await seedDemo();
+  return (await connection()).transaction(async (query) => {
+    const access = await requireStudioAccess(who, query);
+    requireStudioRole(access, ["author", "administrator"]);
+    await query("LOCK TABLE studio_content IN SHARE ROW EXCLUSIVE MODE");
+    let imported = 0,
+      skipped = 0;
+    for (const record of parsed) {
+      const [existing] = (
+        await query(`${headQuery} WHERE c.id=$1`, [record.id])
+      ).rows;
+      if (existing) {
+        if (
+          existing.owner_id !== who.id ||
+          Number(existing.current_revision) !== 1 ||
+          existing.status !== "draft" ||
+          !isDeepStrictEqual(existing.data, record.content)
+        )
+          throw new AccessError(
+            `Existing content ${record.id} differs from this draft batch; it will not be overwritten.`,
+            409,
+          );
+        skipped++;
+        continue;
+      }
+      await createDraft(query, access, record.content, record.id);
+      await audit(
+        query,
+        who.id,
+        "import_ingested",
+        record.id,
+        `${record.id}:v1`,
+        { batch: "chst5-original-drafts", declaredOrigin: "ai_generated" },
+      );
+      imported++;
+    }
+    return { imported, skipped, total: records.length, published: 0 };
+  });
 }
 async function validateMappingExists(query: DatabaseQuery, data: ContentDraft) {
   const [b] = (
@@ -245,15 +412,34 @@ async function validateMappingExists(query: DatabaseQuery, data: ContentDraft) {
       "Choose a matching existing certification, blueprint revision and domain.",
       400,
     );
+  const canonical = (
+    await query(
+      "SELECT id,domain FROM curriculum_objectives WHERE blueprint_revision_id=$1",
+      [data.blueprintRevisionId],
+    )
+  ).rows;
+  if (
+    canonical.length &&
+    data.objectiveCode &&
+    !canonical.some(
+      (objective) =>
+        objective.id === data.objectiveCode && objective.domain === data.domain,
+    )
+  )
+    throw new AccessError(
+      "Choose an objective actually listed in this attached blueprint domain.",
+      400,
+    );
 }
 async function createDraft(
   query: DatabaseQuery,
   access: StudioAccess,
   content: ContentDraft,
+  explicitId?: string,
 ) {
   requireStudioRole(access, ["author", "administrator"]);
   await validateMappingExists(query, content);
-  const id = randomUUID(),
+  const id = explicitId || randomUUID(),
     revisionId = `${id}:v1`;
   await query(
     "INSERT INTO studio_content(id,kind,certification_id,owner_id,current_revision) VALUES($1,$2,$3,$4,1)",
@@ -315,6 +501,72 @@ function exactSourceChecks(content: ContentDraft, checks: SourceCheck[]) {
       422,
     );
 }
+async function exactVerificationChecks(
+  query: DatabaseQuery,
+  content: ContentDraft,
+  checks: SourceVerificationCheck[],
+) {
+  exactSourceChecks(content, checks);
+  if (
+    !content.sources.length ||
+    content.sources.some((source) => {
+      const check = checks.find(
+        (candidate) => candidate.sourceId === source.id,
+      );
+      return (
+        (!source.url && !source.bibliographyId) ||
+        !source.edition ||
+        !source.section ||
+        !check ||
+        check.edition !== source.edition ||
+        check.section !== source.section ||
+        check.url !== source.url
+      );
+    })
+  )
+    throw new AccessError(
+      "Source verification must examine the exact cited URL, edition and supporting section. Revise incomplete candidate metadata before verification.",
+      422,
+    );
+  for (const source of content.sources.filter((source) => !source.url)) {
+    const [publication] = (
+      await query(
+        "SELECT id FROM reference_publications WHERE id=$1 AND title=$2 AND edition=$3",
+        [source.bibliographyId, source.title, source.edition],
+      )
+    ).rows;
+    if (!publication)
+      throw new AccessError(
+        "A physical source without a URL requires a registered bibliography identity matching its exact title and edition.",
+        422,
+      );
+  }
+}
+async function sourceProof(query: DatabaseQuery, revisionId: string) {
+  const [record] = (
+    await query(
+      "SELECT * FROM studio_source_verifications WHERE revision_id=$1 ORDER BY event_number DESC LIMIT 1",
+      [revisionId],
+    )
+  ).rows;
+  if (!record || record.decision !== "verified")
+    throw new AccessError(
+      "Separate independent source verification of this exact revision is required before technical approval.",
+      422,
+    );
+  const [role] = (
+    await query(
+      "SELECT subject_id FROM editorial_roles WHERE subject_id=$1 AND role='reviewer'",
+      [record.reviewer_id],
+    )
+  ).rows;
+  if (!role)
+    throw new AccessError(
+      "The source examiner no longer has an authorized reviewer role; independent re-review is required.",
+      422,
+    );
+  return record;
+}
 async function validatePrerequisites(
   query: DatabaseQuery,
   id: string,
@@ -372,6 +624,8 @@ async function materialize(
     revisionId = String(row.revision_id),
     version = Number(row.current_revision),
     reviewedAt = iso(review.created_at);
+  const evidence = await sourceProof(query, revisionId);
+  const sourceVerifiedAt = iso(evidence.created_at);
   const [blueprint] = (
     await query("SELECT version_label FROM blueprint_revisions WHERE id=$1", [
       data.blueprintRevisionId,
@@ -398,8 +652,24 @@ async function materialize(
         title: first.title,
         url: first.url,
         locator: first.section,
-        verifiedAt: reviewedAt,
+        verifiedAt: sourceVerifiedAt,
+        edition: first.edition,
+        ...(first.classification
+          ? { classification: first.classification }
+          : {}),
+        verificationStatus: "verified",
       },
+      references: data.sources.map((source) => ({
+        title: source.title,
+        url: source.url,
+        locator: source.section,
+        edition: source.edition,
+        verifiedAt: sourceVerifiedAt,
+        verificationStatus: "verified",
+        ...(source.classification
+          ? { classification: source.classification }
+          : {}),
+      })),
       contentKind: "instructional",
       origin: data.origin,
       reviewStatus: "approved",
@@ -434,15 +704,15 @@ async function materialize(
         [
           randomUUID(),
           revisionId,
-          review.reviewer_id,
+          evidence.reviewer_id,
           source.title,
           source.url,
           source.edition,
           source.section,
-          (review.source_checks as SourceCheck[]).find(
+          (evidence.source_checks as SourceVerificationCheck[]).find(
             (c) => c.sourceId === source.id,
           )!.notes,
-          reviewedAt,
+          sourceVerifiedAt,
         ],
       );
   } else {
@@ -463,7 +733,7 @@ async function materialize(
         url: s.url,
         section: s.section,
         edition: s.edition,
-        verifiedAt: reviewedAt,
+        verifiedAt: sourceVerifiedAt,
       })),
       checks: data.body.checks,
       questionIds: data.body.questionIds,
@@ -700,6 +970,29 @@ export async function studioAction(
           "Objectives need unique exact codes in existing blueprint domains.",
           400,
         );
+      const canonical = (
+        await query(
+          "SELECT id,domain,statement FROM curriculum_objectives WHERE blueprint_revision_id=$1",
+          [action.blueprintRevisionId],
+        )
+      ).rows;
+      if (
+        canonical.length &&
+        (canonical.length !== action.objectives.length ||
+          canonical.some(
+            (objective) =>
+              !action.objectives.some(
+                (candidate) =>
+                  candidate.code === objective.id &&
+                  candidate.domain === objective.domain &&
+                  candidate.title === objective.statement,
+              ),
+          ))
+      )
+        throw new AccessError(
+          "The supplied-document blueprint review must preserve every canonical objective ID, domain and exact statement. Do not add, omit or rewrite official objectives.",
+          422,
+        );
       await query(
         "INSERT INTO studio_blueprint_reviews(id,blueprint_revision_id,reviewer_id,source_url,edition,section,notes,objectives) VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb)",
         [
@@ -735,6 +1028,66 @@ export async function studioAction(
     const data = contentDraftSchema.parse(row.data),
       id = String(row.id),
       revisionId = String(row.revision_id);
+    if (action.action === "request_source_verification") {
+      requireStudioRole(access, ["author", "administrator"]);
+      if (row.owner_id !== who.id && !access.roles.includes("administrator"))
+        throw new AccessError(
+          "Only the author or an administrator may submit content.",
+          403,
+        );
+      if (!["draft", "technical_review"].includes(String(row.status)))
+        throw new AccessError(
+          "Create a new draft revision before requesting source examination.",
+          409,
+        );
+      await transition(query, row, "source_verification_pending");
+      await audit(
+        query,
+        who.id,
+        "source_verification_requested",
+        id,
+        revisionId,
+      );
+      return { id };
+    }
+    if (action.action === "verify_sources") {
+      requireStudioRole(access, ["reviewer"]);
+      await independent(query, id, who.id);
+      if (
+        !["source_verification_pending", "technical_review"].includes(
+          String(row.status),
+        )
+      )
+        throw new AccessError(
+          "This revision is not awaiting source examination.",
+          409,
+        );
+      if (action.decision === "verified")
+        await exactVerificationChecks(query, data, action.sourceChecks);
+      const verificationId = randomUUID();
+      await query(
+        "INSERT INTO studio_source_verifications(id,revision_id,reviewer_id,decision,findings,source_checks) VALUES($1,$2,$3,$4,$5,$6::jsonb)",
+        [
+          verificationId,
+          revisionId,
+          who.id,
+          action.decision,
+          action.findings,
+          json(action.sourceChecks),
+        ],
+      );
+      await transition(
+        query,
+        row,
+        action.decision === "verified"
+          ? "source_verified"
+          : "changes_requested",
+      );
+      await audit(query, who.id, `source_${action.decision}`, id, revisionId, {
+        verificationId,
+      });
+      return { id };
+    }
     if (action.action === "revise") {
       requireStudioRole(access, ["author", "administrator"]);
       if (row.owner_id !== who.id && !access.roles.includes("administrator"))
@@ -777,7 +1130,7 @@ export async function studioAction(
           "Only the author or an administrator may submit content.",
           403,
         );
-      if (row.status !== "draft")
+      if (!["draft", "source_verified"].includes(String(row.status)))
         throw new AccessError(
           "Create a new draft revision before resubmitting reviewed content.",
           409,
@@ -798,6 +1151,7 @@ export async function studioAction(
         const blockers = await mappingBlockers(query, data);
         if (blockers.length) throw new AccessError(blockers.join(" "), 422);
         exactSourceChecks(data, action.sourceChecks);
+        await sourceProof(query, revisionId);
         await validatePrerequisites(query, id, data);
       }
       await query(
@@ -826,6 +1180,7 @@ export async function studioAction(
         );
       const blockers = await mappingBlockers(query, data);
       if (blockers.length) throw new AccessError(blockers.join(" "), 422);
+      await sourceProof(query, revisionId);
       const [review] = (
         await query(
           "SELECT * FROM studio_reviews WHERE revision_id=$1 AND decision='approved' ORDER BY created_at DESC,id DESC LIMIT 1",

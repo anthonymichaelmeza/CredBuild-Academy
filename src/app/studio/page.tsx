@@ -33,7 +33,11 @@ function Unavailable({ message }: { message: string }) {
     </div>
   );
 }
-export default async function StudioPage() {
+export default async function StudioPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+} = {}) {
   if (browserDemoEnabled())
     return (
       <Unavailable message="The browser-only demonstration has no accounts or server database. Content Studio is unavailable in this mode; no editorial work is stored locally." />
@@ -43,11 +47,28 @@ export default async function StudioPage() {
     return (
       <Unavailable message="Sign in with a configured managed account that has an editorial role." />
     );
-  const snapshot = await studioSnapshot(who).catch((error: unknown) => {
-    if (error instanceof AccessError) return error;
-    throw error;
-  });
+  const parameters = (await searchParams) || {};
+  const text = (key: string) =>
+    typeof parameters[key] === "string"
+      ? String(parameters[key]).slice(0, 200)
+      : undefined;
+  const filters = {
+    page: Number(text("page")) || 1,
+    search: text("search"),
+    status: text("status"),
+    domain: text("domain"),
+    objective: text("objective"),
+    kind: text("kind"),
+  };
+  const snapshot = await studioSnapshot(who, filters).catch(
+    (error: unknown) => {
+      if (error instanceof AccessError) return error;
+      throw error;
+    },
+  );
   if (snapshot instanceof AccessError)
     return <Unavailable message={snapshot.message} />;
-  return <ContentStudio key={who.id} initial={snapshot} />;
+  return (
+    <ContentStudio key={who.id} initial={snapshot} initialFilters={filters} />
+  );
 }

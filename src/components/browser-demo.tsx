@@ -14,13 +14,13 @@ import {
   plannerSnapshot,
 } from "@/demo/planner-store";
 import { learningSnapshot, parseLearning } from "@/demo/learning-store";
-import { demoQuestions } from "@/demo/questions";
 import {
   browserSnapshot,
   subscribeBrowserDemo,
   parseBrowserSnapshot,
   browserSessionView,
   resetBrowserDemo,
+  allBrowserQuestions,
 } from "@/demo/browser-store";
 
 function useBrowserState() {
@@ -123,7 +123,7 @@ export function BrowserPerformance() {
   return (
     <Performance
       saved={state.sessions}
-      questions={demoQuestions}
+      questions={allBrowserQuestions}
       marked={state.bookmarks}
       completedLessonIds={
         learning.state

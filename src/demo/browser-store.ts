@@ -7,8 +7,11 @@ import {
   recordAnswer,
 } from "@/modules/practice/lifecycle";
 import { demoQuestions } from "./questions";
+import { browserDraftQuestions } from "@/content/chst/draft-bank";
+import { browserDemoEnabled } from "@/modules/runtime/mode";
 import {
   selectQuestions,
+  selectionHistory,
   sessionConfigSchema,
   sessionView,
 } from "@/modules/practice/engine";
@@ -18,11 +21,12 @@ import type { Session, SessionView } from "@/modules/practice/types";
 export const BROWSER_DEMO_STORAGE_KEY = "credbuilt.browser-demo.v1";
 export const BROWSER_DEMO_CHANGED = "credbuilt:browser-demo-changed";
 export const STORAGE_UNAVAILABLE = "storage-unavailable";
+export const allBrowserQuestions = [...demoQuestions, ...browserDraftQuestions];
 const questionId = z.enum(
-  demoQuestions.map((q) => q.id) as [string, ...string[]],
+  allBrowserQuestions.map((q) => q.id) as [string, ...string[]],
 );
 const answer = z.object({
-  choiceId: z.enum(["c0", "c1", "c2", "c3"]),
+  choiceId: z.string().min(1).max(20),
   confidence: z.enum(["low", "medium", "high"]),
   correct: z.boolean(),
   answeredAt: z.iso.datetime(),
@@ -46,6 +50,7 @@ const storedSession = z
     deadlineAt: z.iso.datetime().optional(),
     submissionReason: z.enum(["manual", "expired"]).optional(),
     topic: z.string().max(100).optional(),
+    bank: z.literal("curriculum_drafts").optional(),
   })
   .superRefine((s, ctx) => {
     if (
@@ -56,7 +61,27 @@ const storedSession = z
             (id) => s.questionVersions?.[id] === undefined,
           ))) ||
       s.flags.some((id) => !s.questionIds.includes(id)) ||
-      Object.keys(s.answers).some((id) => !s.questionIds.includes(id))
+      Object.keys(s.answers).some((id) => !s.questionIds.includes(id)) ||
+      s.questionIds.some(
+        (id) =>
+          !(
+            s.bank === "curriculum_drafts"
+              ? browserDraftQuestions
+              : demoQuestions
+          ).some(
+            (q) => q.id === id && q.version === (s.questionVersions?.[id] ?? 1),
+          ),
+      ) ||
+      Object.entries(s.answers).some(
+        ([id, answer]) =>
+          !answer ||
+          !allBrowserQuestions
+            .find(
+              (q) =>
+                q.id === id && q.version === (s.questionVersions?.[id] ?? 1),
+            )
+            ?.choices.some((choice) => choice.id === answer.choiceId),
+      )
     )
       ctx.addIssue({
         code: "custom",
@@ -66,7 +91,7 @@ const storedSession = z
 const stateSchema = z.object({
   version: z.literal(1),
   sessions: z.array(storedSession).max(100),
-  bookmarks: z.array(questionId).max(12),
+  bookmarks: z.array(questionId).max(allBrowserQuestions.length),
 });
 export type BrowserDemoState = {
   version: 1;
@@ -132,21 +157,29 @@ export function createBrowserSession(input: unknown): string {
     throw new Error(
       "Published instructional questions require a connected account; they are not included in the browser demonstration.",
     );
+  if (config.bank === "curriculum_drafts" && !browserDemoEnabled())
+    throw new Error(
+      "Curriculum draft practice requires the explicitly enabled browser demonstration.",
+    );
   const state = parseBrowserSnapshot(browserSnapshot());
   if (state.sessions.length >= 100)
     throw new Error(
       "This browser demo holds up to 100 sessions. Reset browser demo in Account Settings before starting more.",
     );
-  const history = [...state.sessions]
-    .reverse()
-    .filter((s) => s.mode !== "exam" || s.status === "submitted")
-    .flatMap((s) =>
-      Object.entries(s.answers).map(([questionId, a]) => ({
-        questionId,
-        ...a,
-      })),
+  const history = selectionHistory(state.sessions);
+  const bank =
+    config.bank === "curriculum_drafts" ? browserDraftQuestions : demoQuestions;
+  if (config.count === 200 && config.mode === "exam")
+    throw new Error(
+      `This browser demonstration has ${bank.length} unreviewed questions in the selected bank. A full 200-question examination requires distinct approved publications and verified official policy.`,
     );
-  const selected = selectQuestions(demoQuestions, config, history);
+  const selected = selectQuestions(
+    bank,
+    config,
+    history,
+    Math.random,
+    state.bookmarks,
+  );
   const session: Session = {
     id: crypto.randomUUID(),
     ownerId: "browser-demo",
@@ -161,6 +194,9 @@ export function createBrowserSession(input: unknown): string {
     createdAt: new Date().toISOString(),
     submittedAt: null,
     revision: 0,
+    ...(config.bank === "curriculum_drafts"
+      ? { bank: "curriculum_drafts" as const }
+      : {}),
     ...(config.topic && config.topic !== "all" ? { topic: config.topic } : {}),
     ...(["timed", "exam"].includes(config.mode)
       ? {
@@ -174,7 +210,12 @@ export function createBrowserSession(input: unknown): string {
   return session.id;
 }
 export function browserSessionView(session: Session) {
-  return sessionView(session, demoQuestions);
+  return sessionView(
+    session,
+    session.bank === "curriculum_drafts"
+      ? browserDraftQuestions
+      : demoQuestions,
+  );
 }
 export function browserPracticeAction(
   input: unknown,
@@ -218,7 +259,13 @@ export function browserPracticeAction(
         ? session.flags.filter((q) => q !== id)
         : [...session.flags, id];
     else {
-      const updated = recordAnswer(session, demoQuestions, action.input);
+      const updated = recordAnswer(
+        session,
+        session.bank === "curriculum_drafts"
+          ? browserDraftQuestions
+          : demoQuestions,
+        action.input,
+      );
       if (updated === session) return browserSessionView(session);
       session = updated;
     }

@@ -112,7 +112,7 @@ This creates disposable activity in a fresh browser context; it must not be used
 
 Independently reran the v0.5 baseline: 86 unit/integration tests and eight server-backed desktop/mobile browser cases passed before implementation. After connected-account reliability changes, 98 tests across 25 files and all eight server-backed browser cases passed. TypeScript, ESLint (after the ref cleanup), diff checks and a server-mode production build passed. New tests cover account switching/loading concealment, superseded requests, planner401/409 recovery, managed-subject ownership with isolated PGlite, initialization retry and PostgreSQL options. Live provider validation remains blocked; no claim of real Clerk registration or hosted cross-device testing is made.
 
-## Release 0.6B verification
+## Historical release 0.6B verification
 
 The Content Studio suite is separate from the original learner suites:
 
@@ -156,3 +156,61 @@ These checks establish local application behavior, not live Clerk registration,
 hosted PostgreSQL connectivity or cross-device recovery. Those remain
 **Blocked: Live Provider Validation**. See the
 [release report](docs/v06-release-report.md) for the checkpoint scope and limits.
+
+## Current CHST5 curriculum milestone
+
+The results above describe the preserved earlier checkpoint, not an assumed
+pass for changed curriculum code. Current confirmed local results:
+
+- **183/183 unit/integration tests passed across 43 files.**
+- **10/10 Studio desktop/Pixel 7 browser cases passed**, including the original
+  six cases and four new curriculum coverage/source-workflow cases.
+- TypeScript and ESLint passed.
+- **8/8 original server-backed desktop/mobile browser cases passed.**
+- **20/20 production browser-demo desktop/mobile cases passed:** the full
+  expanded 18-case suite plus two 100-question navigation/bookmark-review cases.
+  Together with Studio, this milestone passed **38 browser cases**.
+- Both server-mode (`NEXT_PUBLIC_BROWSER_DEMO=false`) and browser-demo
+  (`NEXT_PUBLIC_BROWSER_DEMO=true`) production builds passed. Browser-demo
+  validation used no provider credentials or server filesystem fallback.
+- Original attachment hashes and exact blueprint/bibliography transcription
+  checks passed. These establish source-data fidelity, not answer verification.
+- `npm audit --omit=dev --audit-level=high` passed; final owned documentation
+  formatting and diff checks passed.
+
+New coverage checks all 78 stable mappings/wording/domain weights, all 21
+bibliography listings, immutable seed drift rejection, unique AI draft identities
+and four-choice grading, all-objective mapping, explicit atomic/idempotent
+100-draft ingestion, separate exact source examination, independent technical
+approval, safe published eligibility, canonical domain guards, connected draft
+rejection, objective/history filters, shortage enforcement, full-exam policy and
+allocation, actual objective analytics, coverage pagination/report triage and
+browser draft persistence.
+
+The focused real PGlite import/coverage integration run passed nine cases,
+demonstrating 100 draft records, all 78 statements covered and **0 source-verified,
+0 technically approved, 0 published**. Fictional isolated approval fixtures
+exercise guards elsewhere; no real source was examined or approved by those
+tests. A successful draft import is not an instructional quality endorsement.
+
+Run the same commands at the top of this file; do not run Next builds or browser
+servers simultaneously in one checkout because they share generated files.
+The expanded browser suites exercise curriculum search/pages, public draft
+practice/feedback/reload and protected actual-data coverage/source-stage flows.
+Content Studio uses only the guarded isolated local QA database. No provider
+keys, source subscriptions or paid integrations are required for these checks.
+
+Actual current application screenshots are in `/workspace/artifacts/v06-chst/`:
+`curriculum-desktop.png`, `curriculum-mobile.png`, `objective-desktop.png`,
+`objective-mobile.png`, `draft-feedback-desktop.png`,
+`draft-feedback-mobile.png`, `coverage-desktop.png`, `coverage-mobile.png`,
+`source-review-desktop.png` and `source-review-mobile.png`. These show public
+draft demonstration or isolated QA editorial activity, not approved instruction
+or live hosted-provider validation. Generated screenshots remain outside Git.
+
+Current official-document checks were blocked by the environment CONNECT proxy
+before reaching BCSP/OSHA, so latest official version and technical source
+verification remain unconfirmed. Live Clerk/hosted PostgreSQL tests remain
+**Blocked: Live Provider Validation**. See
+[current release report](docs/chst-curriculum-release.md) and
+[source provenance](docs/chst-source-provenance.md).

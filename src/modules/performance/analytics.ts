@@ -4,7 +4,12 @@ import type { PerformanceQuestion, PerformanceSession } from "./dto";
 export function analyzeSessions(
   sessions: PerformanceSession[],
   questions: PerformanceQuestion[],
-  filter: { domain?: string; topic?: string; since?: number } = {},
+  filter: {
+    domain?: string;
+    topic?: string;
+    objective?: string;
+    since?: number;
+  } = {},
 ) {
   const eligible = sessions.filter(
     (s) => s.mode !== "exam" || s.status === "submitted",
@@ -19,22 +24,51 @@ export function analyzeSessions(
           filter.domain !== "all" &&
           q.domain !== filter.domain) ||
         (filter.topic && filter.topic !== "all" && q.topic !== filter.topic) ||
+        (filter.objective &&
+          filter.objective !== "all" &&
+          q.blueprint?.objective !== filter.objective) ||
         (filter.since && Date.parse(a.answeredAt) < filter.since)
       )
         return [];
-      return [{ ...a, question: q, sessionId: s.id }];
+      return [
+        { ...a, question: q, sessionId: s.id, bank: s.bank || "demonstration" },
+      ];
     }),
   );
-  function group(key: "domain" | "topic") {
-    return [...new Set(attempts.map((a) => a.question[key]))]
+  function group(key: "domain" | "topic" | "objective") {
+    const valueOf = (question: PerformanceQuestion) =>
+      key === "objective" ? question.blueprint?.objective : question[key];
+    return [
+      ...new Set(
+        attempts.flatMap((a) =>
+          valueOf(a.question) ? [valueOf(a.question)!] : [],
+        ),
+      ),
+    ]
       .map((value) => {
-        const items = attempts.filter((a) => a.question[key] === value);
+        const items = attempts.filter((a) => valueOf(a.question) === value);
         const correct = items.filter((a) => a.correct).length;
+        const lowConfidence = items.filter(
+          (a) => a.confidence === "low",
+        ).length;
+        const accuracy = Math.round((correct / items.length) * 100);
         return {
           value,
           correct,
           answered: items.length,
-          accuracy: Math.round((correct / items.length) * 100),
+          accuracy,
+          lowConfidence,
+          averageResponseMs: Math.round(
+            items.reduce((sum, item) => sum + item.responseMs, 0) /
+              items.length,
+          ),
+          evidence:
+            accuracy < 75 || lowConfidence / items.length >= 0.5
+              ? "Needs review"
+              : items.length < 5
+                ? "Limited sample"
+                : "Consistent sample",
+          banks: [...new Set(items.map((a) => a.bank))],
           sessionIds: [...new Set(items.map((a) => a.sessionId))],
         };
       })
@@ -72,6 +106,7 @@ export function analyzeSessions(
       : null,
     domains: group("domain"),
     topics: group("topic"),
+    objectives: group("objective"),
     repeated,
     activity,
     studyMinutes: Math.round(

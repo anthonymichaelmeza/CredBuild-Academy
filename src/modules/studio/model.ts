@@ -4,6 +4,8 @@ export const studioRoles = ["author", "reviewer", "administrator"] as const;
 export type StudioRole = (typeof studioRoles)[number];
 export const studioStatuses = [
   "draft",
+  "source_verification_pending",
+  "source_verified",
   "technical_review",
   "changes_requested",
   "rejected",
@@ -47,9 +49,25 @@ export const sourceReferenceSchema = z
   .object({
     id: text(80),
     title: text(300),
-    url: text(2000).refine(safeHttps, "Use a public HTTPS source URL."),
-    edition: text(200),
-    section: text(500),
+    url: z
+      .string()
+      .trim()
+      .max(2000)
+      .refine(
+        (value) => !value || safeHttps(value),
+        "Use a public HTTPS source URL or leave it unknown.",
+      ),
+    edition: z.string().trim().max(200),
+    section: z.string().trim().max(500),
+    classification: z
+      .enum([
+        "regulatory_requirement",
+        "consensus_standard",
+        "professional_guidance",
+        "supplemental_resource",
+      ])
+      .optional(),
+    bibliographyId: z.string().trim().max(100).optional(),
   })
   .strict();
 export type SourceReference = z.infer<typeof sourceReferenceSchema>;
@@ -164,6 +182,14 @@ const common = z.object({
   title: text(500),
   contentKind: z.enum(["instructional", "demonstration"]),
   origin: z.enum(["human_authored", "ai_generated", "imported"]),
+  instructionalCategory: z
+    .enum([
+      "foundational",
+      "applied_technical",
+      "scenario",
+      "reasoning_calculation",
+    ])
+    .optional(),
   sources: z
     .array(sourceReferenceSchema)
     .max(30)
@@ -184,6 +210,29 @@ export const sourceCheckSchema = z
   })
   .strict();
 export type SourceCheck = z.infer<typeof sourceCheckSchema>;
+export const sourceVerificationCheckSchema = sourceCheckSchema
+  .extend({
+    edition: z.string().trim().max(200),
+    section: z.string().trim().max(500),
+    url: z
+      .string()
+      .trim()
+      .max(2000)
+      .refine((value) => !value || safeHttps(value)),
+  })
+  .strict();
+export type SourceVerificationCheck = z.infer<
+  typeof sourceVerificationCheckSchema
+>;
+export type SourceVerification = {
+  id: string;
+  revisionId: string;
+  reviewerId: string;
+  decision: "verified" | "changes_requested";
+  findings: string;
+  sourceChecks: SourceVerificationCheck[];
+  createdAt: string;
+};
 export type StudioAccess = {
   actorId: string;
   roles: StudioRole[];
@@ -216,6 +265,7 @@ export type StudioItem = {
   status: StudioStatus;
   data: ContentDraft;
   reviews: StudioReview[];
+  sourceVerifications?: SourceVerification[];
   events: StudioEvent[];
   publishedRevisionId: string | null;
   blockers: string[];
@@ -250,6 +300,7 @@ export type StudioSnapshot = {
   access: StudioAccess;
   items: StudioItem[];
   blueprints: BlueprintSummary[];
+  pagination?: { page: number; pageSize: number; total: number; pages: number };
 };
 const expected = z.object({
   id: text(100),
@@ -263,9 +314,18 @@ export const studioActionSchema = z.discriminatedUnion("action", [
   expected
     .extend({ action: z.literal("revise"), content: contentDraftSchema })
     .strict(),
-  ...(["submit", "publish", "retire"] as const).map((action) =>
-    expected.extend({ action: z.literal(action) }).strict(),
-  ),
+  ...(
+    ["submit", "publish", "retire", "request_source_verification"] as const
+  ).map((action) => expected.extend({ action: z.literal(action) }).strict()),
+  expected
+    .extend({
+      action: z.literal("verify_sources"),
+      decision: z.enum(["verified", "changes_requested"]),
+      findings: text(10000),
+      sourceChecks: z.array(sourceVerificationCheckSchema).max(30),
+      humanAttestation: z.literal(true),
+    })
+    .strict(),
   expected
     .extend({
       action: z.literal("review"),

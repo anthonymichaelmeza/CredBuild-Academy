@@ -37,7 +37,7 @@ describe("incremental database upgrades", () => {
             "SELECT id FROM _credbuilt_migrations ORDER BY id",
           )
         ).rows.map((r) => r.id),
-      ).toEqual(["0001", "0002", "0003", "0004"]);
+      ).toEqual(["0001", "0002", "0003", "0004", "0005"]);
       expect(
         (
           await local.query<{ data: unknown }>(

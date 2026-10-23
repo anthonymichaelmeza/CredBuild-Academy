@@ -3,7 +3,13 @@ import type { Answer, Question, Session } from "@/modules/practice/types";
 /** Metadata only: analytics never needs answer keys or teaching explanations. */
 export type PerformanceQuestion = Pick<
   Question,
-  "id" | "version" | "domain" | "topic" | "difficulty"
+  | "id"
+  | "version"
+  | "domain"
+  | "topic"
+  | "difficulty"
+  | "certification"
+  | "blueprint"
 >;
 export type PerformanceAnswer = Pick<
   Answer,
@@ -59,6 +65,17 @@ export function performanceData(saved: Session[], questions: Question[]) {
       domain: question.domain,
       topic: question.topic,
       difficulty: question.difficulty,
+      ...(question.certification
+        ? { certification: question.certification }
+        : {}),
+      ...(question.blueprint
+        ? {
+            blueprint: {
+              version: question.blueprint.version,
+              objective: question.blueprint.objective,
+            },
+          }
+        : {}),
     })),
   };
 }

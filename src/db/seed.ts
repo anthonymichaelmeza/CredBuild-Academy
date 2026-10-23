@@ -1,6 +1,7 @@
 import { eq, sql } from "drizzle-orm";
 import { isDeepStrictEqual } from "node:util";
-import { db } from "./client";
+import { db, connection } from "./client";
+import { seedAttachedCurriculum } from "./curriculum-seed";
 import { certifications, questionVersions, lessonVersions } from "./schema";
 import { demoQuestions } from "@/demo/questions";
 import { blueprint, domains } from "@/modules/catalog/blueprint";
@@ -18,6 +19,7 @@ export async function seedDemo() {
   await orm.execute(
     sql`INSERT INTO blueprint_revisions(id, certification_id, version_label, source_url, provenance, data) VALUES ('chst5-unverified', 'chst', ${blueprint.version}, ${blueprint.source}, ${blueprint.provenance}, ${JSON.stringify(domains)}::jsonb) ON CONFLICT DO NOTHING`,
   );
+  await seedAttachedCurriculum((await connection()).query);
   for (const q of demoQuestions)
     await orm
       .insert(questionVersions)

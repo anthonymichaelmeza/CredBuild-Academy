@@ -70,6 +70,36 @@ afterEach(() => {
 });
 
 describe("protected Content Studio interface", () => {
+  it("retains the saved revision when its new review state moves it outside the filtered page", async () => {
+    const updated: StudioItem = {
+      ...item,
+      status: "source_verification_pending",
+      rowVersion: 1,
+    };
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(Response.json(updated))
+      .mockResolvedValueOnce(
+        Response.json({
+          ...initial,
+          items: [],
+          pagination: { page: 1, pageSize: 25, total: 0, pages: 1 },
+        }),
+      )
+      .mockResolvedValueOnce(Response.json(updated));
+    vi.stubGlobal("fetch", fetcher);
+    render(<ContentStudio initial={initial} />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Request source verification" }),
+    );
+    await screen.findByText(
+      "The saved revision remains selected even though it is outside this library page’s filters.",
+    );
+    expect(
+      screen.getByRole("heading", { name: item.data.title }),
+    ).toBeInTheDocument();
+    expect(fetcher.mock.calls[2][0]).toBe(`/api/studio?id=${item.id}`);
+  });
   it("saves structured changes as a new draft revision without sending identity or approval claims", async () => {
     const updated: StudioItem = {
       ...item,

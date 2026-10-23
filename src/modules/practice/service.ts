@@ -5,10 +5,19 @@ import { db } from "@/db/client";
 import { seedDemo } from "@/db/seed";
 import { users, sessions, questionVersions, bookmarks } from "@/db/schema";
 import { AccessError, type Actor } from "@/modules/identity/auth";
-import { selectQuestions, sessionView, type Config } from "./engine";
+import {
+  selectQuestions,
+  selectionHistory,
+  sessionView,
+  type Config,
+} from "./engine";
 import type { Confidence, Question, Session } from "./types";
 import { deadlinePassed, finalize, recordAnswer } from "./lifecycle";
 import { listPublishedQuestions } from "@/modules/studio/publication";
+import {
+  examPolicyBlockers,
+  selectFullLengthExam,
+} from "@/modules/exams/selection";
 let seeded: Promise<void> | undefined;
 async function ready() {
   await (seeded ??= seedDemo().catch((error) => {
@@ -82,23 +91,39 @@ export async function history(owner: string): Promise<Session[]> {
   ).map((r) => r.data);
 }
 export async function startSession(who: Actor, config: Config) {
+  if (
+    process.env.NODE_ENV === "production" &&
+    who.mode === "managed" &&
+    config.bank !== "published"
+  )
+    throw new AccessError(
+      "Connected production practice requires approved and published instructional questions. Unreviewed demonstrations are available only in browser-demo mode.",
+      403,
+    );
+  if (config.bank === "curriculum_drafts")
+    throw new AccessError(
+      "Unreviewed curriculum drafts are available only in the explicitly labeled browser demonstration. They cannot enter connected study sessions.",
+      403,
+    );
+  if (config.mode === "exam" && config.count === 200) {
+    const blockers = examPolicyBlockers();
+    if (blockers.length)
+      throw new AccessError(
+        `Full-length exam unavailable: ${blockers.join(" ")}`,
+        422,
+      );
+  }
   const orm = await ready();
   if (config.bank === "published") requirePublishedLearner(who);
   const previous = await history(who.id);
-  const attempts = [...previous]
-    .reverse()
-    .filter((s) => s.mode !== "exam" || s.status === "submitted")
-    .flatMap((s) =>
-      Object.entries(s.answers).map(([questionId, a]) => ({
-        questionId,
-        ...a,
-      })),
-    );
-  const selected = selectQuestions(
-    config.bank === "published" ? await publishedPool() : await pool(),
-    config,
-    attempts,
-  );
+  const attempts = selectionHistory(previous);
+  const available =
+    config.bank === "published" ? await publishedPool() : await pool();
+  const marked = await bookmarkList(who.id);
+  const selected =
+    config.mode === "exam" && config.count === 200
+      ? selectFullLengthExam(available, config, attempts, marked)
+      : selectQuestions(available, config, attempts, Math.random, marked);
   await orm
     .insert(users)
     .values({ id: who.id, identityMode: who.mode })

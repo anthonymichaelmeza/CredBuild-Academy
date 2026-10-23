@@ -12,6 +12,7 @@ import type {
   StudioItem,
 } from "@/modules/studio/model";
 import { Field, ListTextArea, uid } from "./fields";
+import { chstBibliography } from "@/modules/curriculum/catalog";
 function newQuestion(): QuestionBody {
   return {
     type: "multiple_choice",
@@ -209,7 +210,44 @@ function SourceEditor({
       <p className="studio-help">
         Draft citations are not verified evidence. An independent reviewer must
         examine the cited edition and exact supporting section before approval.
+        Leave an unknown edition, section, or URL blank; do not invent a
+        locator.
       </p>
+      <Field
+        label="Add a BCSP-listed bibliography candidate"
+        hint="This copies bibliographic metadata only. It does not verify support for an answer."
+      >
+        <select
+          value=""
+          onChange={(event) => {
+            const record = chstBibliography.find(
+              (entry) => entry.id === event.target.value,
+            );
+            if (record)
+              onChange([
+                ...value,
+                {
+                  id: uid("source"),
+                  title: record.title,
+                  url: record.listedUrl?.startsWith("https://")
+                    ? record.listedUrl
+                    : "",
+                  edition: record.edition || "",
+                  section: "",
+                  classification: "professional_guidance",
+                  bibliographyId: record.id,
+                },
+              ]);
+          }}
+        >
+          <option value="">Choose a listed publication…</option>
+          {chstBibliography.map((record) => (
+            <option value={record.id} key={record.id}>
+              {record.title}
+            </option>
+          ))}
+        </select>
+      </Field>
       {value.map((source, index) => (
         <div className="studio-repeated" key={source.id}>
           <div className="studio-field-heading">
@@ -231,28 +269,87 @@ function SourceEditor({
               required
             />
           </Field>
+          <Field
+            label={`Source ${index + 1} bibliography record`}
+            hint="A physical publication can have no URL. A registered bibliography ID, matching edition, exact examined section, and independent verification are still required."
+          >
+            <select
+              value={source.bibliographyId || ""}
+              onChange={(event) =>
+                onChange(
+                  value.map((entry, position) =>
+                    position === index
+                      ? {
+                          ...entry,
+                          bibliographyId: event.target.value || undefined,
+                        }
+                      : entry,
+                  ),
+                )
+              }
+            >
+              <option value="">Not linked to a listed publication</option>
+              {chstBibliography.map((record) => (
+                <option key={record.id} value={record.id}>
+                  {record.title}
+                </option>
+              ))}
+            </select>
+          </Field>
           <Field label={`Source ${index + 1} URL`}>
             <input
               type="url"
               value={source.url}
               onChange={(event) => edit(index, "url", event.target.value)}
               placeholder="https://publisher.example/…"
-              required
             />
+          </Field>
+          <Field
+            label={`Source ${index + 1} classification`}
+            hint="Distinguish an applicable legal requirement from a standard, recommendation, or learning aid."
+          >
+            <select
+              value={source.classification || ""}
+              onChange={(event) =>
+                onChange(
+                  value.map((entry, position) =>
+                    position === index
+                      ? {
+                          ...entry,
+                          classification: event.target.value
+                            ? (event.target
+                                .value as SourceReference["classification"])
+                            : undefined,
+                        }
+                      : entry,
+                  ),
+                )
+              }
+            >
+              <option value="">Classification pending</option>
+              <option value="regulatory_requirement">
+                Regulatory requirement
+              </option>
+              <option value="consensus_standard">Consensus standard</option>
+              <option value="professional_guidance">
+                Professional guidance
+              </option>
+              <option value="supplemental_resource">
+                Supplemental learning resource
+              </option>
+            </select>
           </Field>
           <div className="studio-field-grid">
             <Field label={`Source ${index + 1} edition`}>
               <input
                 value={source.edition}
                 onChange={(event) => edit(index, "edition", event.target.value)}
-                required
               />
             </Field>
             <Field label={`Source ${index + 1} exact section`}>
               <input
                 value={source.section}
                 onChange={(event) => edit(index, "section", event.target.value)}
-                required
               />
             </Field>
           </div>

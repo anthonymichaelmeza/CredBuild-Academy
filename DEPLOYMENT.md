@@ -1,7 +1,7 @@
 # Deployment, migrations and recovery
 
 Repository: `anthonymichaelmeza/CredBuild-Academy`. Current development branch:
-**`development/v0.6-connected-learning`**. Do not merge to `main`, promote a
+**`development/stable-learning-foundation`**. Do not merge to `main`, promote a
 deployment, delete a Vercel project or change production settings without product
 owner approval. Native Git pushes to a development branch may trigger previews.
 
@@ -15,9 +15,12 @@ owner approval. Native Git pushes to a development branch may trigger previews.
 3. Push/redeploy the development branch. In **Deployments**, select the
    **Preview** for that branch/commit, wait for Ready, then click **Visit**.
    Do not promote it to production.
-4. Confirm the browser-only banner and try a lesson, a 10-question all-domain
-   practice session, refresh/resume, a short exam rehearsal, results/analytics
-   and saved study preferences. Check mobile navigation and storage errors.
+4. Confirm the browser-only banner, open **Learn → CHST5 study map**, filter
+   objectives and visit a study outline. In Practice, choose the separate
+   **CHST5 curriculum drafts** bank to try 25 questions from the new 100-item
+   unreviewed batch. The original 12-item bank remains available. Try reference
+   panels, objective filters, refresh/resume, a short rehearsal, analytics and
+   saved preferences. Check mobile navigation and storage errors.
 
 Do not add Clerk/database/local filesystem variables to make this preview work.
 The public flag is compiled into client code: rebuild after changing it. The
@@ -81,7 +84,7 @@ remain in `FEATURE_STATUS.md`.
 
 The no-credentials browser demo deliberately cannot author/review/publish. To
 review the protected Studio, first configure the isolated connected preview
-above, migrate it through `0004`, and sign in with distinct author, reviewer and
+above, migrate it through `0005`, and sign in with distinct author, reviewer and
 administrator accounts. A trusted operator then grants the corresponding
 database roles through `npm run studio:role`; there is no self-service role
 selector. See [editorial workflow](docs/editorial-workflow.md) for exact commands.
@@ -89,8 +92,30 @@ selector. See [editorial workflow](docs/editorial-workflow.md) for exact command
 Do not set `ALLOW_LOCAL_STUDIO` on Vercel or publish fictional test approvals.
 The isolated local Studio browser suite provides reproducible interface evidence
 while live providers are unavailable. Studio UI availability is separate from
-actual instructional publication: the provisional blueprint and demo material
-must remain unapproved until independently reviewed.
+actual instructional publication: supplied/provisional blueprint records and
+demo/draft material must not acquire approval without actual independent review.
+
+## CHST curriculum seed and explicit draft ingestion
+
+After explicit migrations, `npm run db:seed` installs the supplied CHST5
+V.2022.04.12 objective catalog and V.2021.06.09 bibliography alongside the existing
+demonstrations. It never sets human verification, approval or publication.
+The new 100 AI drafts are not imported automatically. A trusted operator can
+ingest them into the selected non-production database only after the intended
+author has signed in, saved learner activity and received an editorial role:
+
+```bash
+npm run content:import-chst -- existing-author-subject
+```
+
+Use the actual existing provider subject, not this placeholder. This command
+does not create identities, grant roles or verify/approve/publish content.
+Identical repeats skip and conflicts reject; it never silently overwrites edits.
+Stop the app before CLI operations on the same PGlite directory. In connected
+Preview, open **Content Studio → Coverage** as a reviewer/administrator to see
+actual database counts. The public browser fixture count is not proof that the
+database imported 100 records. Full steps are in
+[CHST content-engine setup](docs/chst-content-engine.md).
 
 ## Migration rollout
 
@@ -104,7 +129,9 @@ The CLI accepts injected environment variables and optionally reads `.env.local`
 (`--env-file-if-exists`); no local secret file is required in a job. Migration
 `0001` is preserved; `0002` adds lessons/progress, `0003` adds learner profiles and
 `0004` adds trusted editorial roles, revision/review/audit workflow, import previews
-and guarded instructional publication.
+and guarded instructional publication. `0005` adds immutable supplied curriculum,
+reference records, separate source evidence, canonical mapping guards and
+append-only content reports/triage.
 The checksummed ledger rejects edited applied files. Managed migrations run in
 a transaction with an advisory lock. Application startup only verifies them;
 it refuses a missing/pending migration rather than applying schema changes.

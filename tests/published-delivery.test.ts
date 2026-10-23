@@ -34,6 +34,7 @@ const source = {
   url: "https://example.test/delivery-fixture",
   edition: "QA only",
   section: "Synthetic fixture",
+  classification: "professional_guidance" as const,
 };
 const common = {
   certificationId: certification,
@@ -51,6 +52,27 @@ const expected = (item: StudioItem) => ({
 async function act(who: typeof author, input: unknown) {
   return (await studioAction(who, input)) as StudioItem;
 }
+async function verifyFixture(item: StudioItem) {
+  const pending = await act(author, {
+    action: "request_source_verification",
+    ...expected(item),
+  });
+  return act(reviewer, {
+    action: "verify_sources",
+    ...expected(pending),
+    decision: "verified",
+    findings: "Fictional isolated source-examination fixture.",
+    sourceChecks: item.data.sources.map((source) => ({
+      sourceId: source.id,
+      outcome: "supports",
+      notes: "Synthetic source test only.",
+      edition: source.edition,
+      section: source.section,
+      url: source.url,
+    })),
+    humanAttestation: true,
+  });
+}
 async function publish(content: ContentDraft, previous?: StudioItem) {
   const draft = await act(
     author,
@@ -58,7 +80,11 @@ async function publish(content: ContentDraft, previous?: StudioItem) {
       ? { action: "revise", ...expected(previous), content }
       : { action: "create", content },
   );
-  const submitted = await act(author, { action: "submit", ...expected(draft) });
+  const verified = await verifyFixture(draft);
+  const submitted = await act(author, {
+    action: "submit",
+    ...expected(verified),
+  });
   const approved = await act(reviewer, {
     action: "review",
     ...expected(submitted),
@@ -134,9 +160,10 @@ describe("Studio publication feeds connected learner delivery", () => {
     await expect(practice.startSession(learner, config)).rejects.toThrow(
       "Only 0 eligible published",
     );
+    const verified = await verifyFixture(draft);
     const submitted = await act(author, {
       action: "submit",
-      ...expected(draft),
+      ...expected(verified),
     });
     const approved = await act(reviewer, {
       action: "review",

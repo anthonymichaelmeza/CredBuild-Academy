@@ -1,5 +1,11 @@
 import { z } from "zod";
-import type { Answer, Question, Session, SessionView } from "./types";
+import type {
+  Answer,
+  Question,
+  QuestionReference,
+  Session,
+  SessionView,
+} from "./types";
 export const sessionConfigSchema = z
   .object({
     count: z.union([
@@ -17,7 +23,13 @@ export const sessionConfigSchema = z
     prioritizeMissed: z.boolean().default(false),
     topic: z.string().max(100).optional(),
     durationSeconds: z.number().int().min(60).max(14400).optional(),
-    bank: z.enum(["demonstration", "published"]).optional(),
+    bank: z
+      .enum(["demonstration", "published", "curriculum_drafts"])
+      .optional(),
+    objective: z.string().min(1).max(150).optional(),
+    difficulty: z.enum(["introductory", "intermediate", "advanced"]).optional(),
+    answered: z.enum(["all", "answered", "unanswered"]).optional(),
+    review: z.enum(["all", "missed", "bookmarked"]).optional(),
     certification: z
       .string()
       .min(1)
@@ -50,7 +62,106 @@ export type PriorAttempt = {
   correct: boolean;
   confidence: string;
   answeredAt: string;
+  responseMs?: number;
 };
+/** Only completed exam answers may influence recommendations or history filters. */
+export function selectionHistory(
+  sessions: readonly {
+    mode: string;
+    status: string;
+    answers: Record<
+      string,
+      {
+        correct?: boolean;
+        confidence: string;
+        answeredAt: string;
+        responseMs?: number;
+      }
+    >;
+  }[],
+): PriorAttempt[] {
+  return sessions
+    .filter(
+      (session) => session.mode !== "exam" || session.status === "submitted",
+    )
+    .flatMap((session) =>
+      Object.entries(session.answers).flatMap(([questionId, answer]) =>
+        typeof answer.correct === "boolean"
+          ? [
+              {
+                questionId,
+                correct: answer.correct,
+                confidence: answer.confidence,
+                answeredAt: answer.answeredAt,
+                ...(answer.responseMs !== undefined
+                  ? { responseMs: answer.responseMs }
+                  : {}),
+              },
+            ]
+          : [],
+      ),
+    )
+    .sort((a, b) => Date.parse(a.answeredAt) - Date.parse(b.answeredAt));
+}
+
+type QuestionMetadata = Pick<
+  Question,
+  | "id"
+  | "version"
+  | "domain"
+  | "topic"
+  | "difficulty"
+  | "certification"
+  | "blueprint"
+>;
+/** The builder and selection engine share this predicate, including real saved history. */
+export function eligibleQuestions<T extends QuestionMetadata>(
+  pool: readonly T[],
+  config: Pick<
+    Config,
+    | "bank"
+    | "certification"
+    | "domain"
+    | "topic"
+    | "objective"
+    | "difficulty"
+    | "answered"
+    | "review"
+  >,
+  history: readonly PriorAttempt[] = [],
+  bookmarks: readonly string[] = [],
+): T[] {
+  const answered = new Set(history.map((attempt) => attempt.questionId));
+  const missed = new Set(
+    history
+      .filter((attempt) => !attempt.correct)
+      .map((attempt) => attempt.questionId),
+  );
+  const marked = new Set(bookmarks);
+  return currentQuestionVersions([...pool]).filter(
+    (question) =>
+      (config.bank !== "published" ||
+        question.certification === (config.certification || "chst")) &&
+      (config.domain === "all" || question.domain === config.domain) &&
+      (!config.topic ||
+        config.topic === "all" ||
+        question.topic === config.topic) &&
+      (!config.objective ||
+        config.objective === "all" ||
+        question.blueprint?.objective === config.objective) &&
+      (!config.difficulty || question.difficulty === config.difficulty) &&
+      (!config.answered ||
+        config.answered === "all" ||
+        (config.answered === "answered"
+          ? answered.has(question.id)
+          : !answered.has(question.id))) &&
+      (!config.review ||
+        config.review === "all" ||
+        (config.review === "missed"
+          ? missed.has(question.id)
+          : marked.has(question.id))),
+  );
+}
 // v1: transparent, deterministic ranking. No claim of psychometric validity.
 export function priority(
   questionId: string,
@@ -66,24 +177,22 @@ export function priority(
     (latest.correct ? 0 : 5) +
     Math.min(misses, 3) +
     (latest.confidence === "low" ? 2 : 0) +
+    (!latest.correct && (latest.responseMs || 0) >= 60_000 ? 1 : 0) +
     Math.min(days / 7, 3)
   );
 }
 export function selectQuestions(
   pool: Question[],
-  config: Config,
+  config: Omit<Config, "count"> & { count: number },
   history: PriorAttempt[],
   random: () => number = Math.random,
+  bookmarks: readonly string[] = [],
 ): Question[] {
+  if (!Number.isInteger(config.count) || config.count < 1 || config.count > 200)
+    throw new Error("Choose a valid question count between 1 and 200.");
   // A revision is not another question. Pick the latest eligible revision for
   // each identity before filtering so an obsolete topic cannot remain eligible.
-  const eligible = currentQuestionVersions(pool).filter(
-    (q) =>
-      (config.bank !== "published" ||
-        q.certification === (config.certification || "chst")) &&
-      (config.domain === "all" || q.domain === config.domain) &&
-      (!config.topic || config.topic === "all" || q.topic === config.topic),
-  );
+  const eligible = eligibleQuestions(pool, config, history, bookmarks);
   if (eligible.length < config.count)
     throw new Error(
       config.bank === "published"
@@ -142,6 +251,21 @@ export function grade(question: Question, choiceId: string) {
     throw new Error("Choose an available answer.");
   return choiceId === question.correctChoice;
 }
+function referenceView(reference: QuestionReference): QuestionReference {
+  return {
+    title: reference.title,
+    url: reference.url,
+    locator: reference.locator,
+    verifiedAt: reference.verifiedAt,
+    ...(reference.edition ? { edition: reference.edition } : {}),
+    ...(reference.classification
+      ? { classification: reference.classification }
+      : {}),
+    ...(reference.verificationStatus
+      ? { verificationStatus: reference.verificationStatus }
+      : {}),
+  };
+}
 export function sessionView(session: Session, pool: Question[]): SessionView {
   const { ownerId: _owner, ...safe } = session;
   void _owner;
@@ -191,7 +315,10 @@ export function sessionView(session: Session, pool: Question[]): SessionView {
       feedback[id] = {
         correctChoice: q.correctChoice,
         explanation: q.explanation,
-        reference: q.reference,
+        reference: referenceView(q.reference),
+        ...(q.references
+          ? { references: q.references.map(referenceView) }
+          : {}),
         rationales: q.choices,
         ...(q.solutionSteps ? { solutionSteps: [...q.solutionSteps] } : {}),
       };
