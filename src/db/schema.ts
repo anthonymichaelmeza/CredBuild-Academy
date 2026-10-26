@@ -7,6 +7,7 @@ import {
   timestamp,
   jsonb,
   primaryKey,
+  bigserial,
 } from "drizzle-orm/pg-core";
 import type { Question, Session } from "@/modules/practice/types";
 import type { Lesson } from "@/modules/learning/catalog";
@@ -258,3 +259,41 @@ export const contentErrorReports = pgTable("content_error_reports", {
     .defaultNow()
     .notNull(),
 });
+export const technicalReferenceRegistry = pgTable(
+  "technical_reference_registry",
+  {
+    id: text("id").primaryKey(),
+    revision: integer("revision").notNull().default(1),
+    data: jsonb("data").notNull(),
+    createdBy: text("created_by").references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+);
+export const technicalReferenceReviews = pgTable(
+  "technical_reference_reviews",
+  {
+    id: text("id").primaryKey(),
+    eventNumber: bigserial("event_number", { mode: "number" })
+      .notNull()
+      .unique(),
+    referenceId: text("reference_id")
+      .notNull()
+      .references(() => technicalReferenceRegistry.id),
+    revision: integer("revision").notNull(),
+    referenceSnapshot: jsonb("reference_snapshot").notNull(),
+    reviewerId: text("reviewer_id")
+      .notNull()
+      .references(() => users.id),
+    decision: text("decision").notNull(),
+    findings: text("findings").notNull(),
+    humanAttestation: boolean("human_attestation").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+);

@@ -139,14 +139,19 @@ test("200-question fixture autosaves, resumes on another browser context, submit
   const first = initial.questionIds[0];
   const correct = fixtureCorrectChoice(first);
   const wrong = correct === "a" ? "b" : "a";
+  const correctPosition = initial.questions[0].choices.findIndex(
+    (choice) => choice.id === correct,
+  );
+  const wrongPosition = initial.questions[0].choices.findIndex(
+    (choice) => choice.id === wrong,
+  );
+  expect(initial.questionChoiceOrders?.[first]).toEqual(
+    initial.questions[0].choices.map((choice) => choice.id),
+  );
   // Answers can change before submission; only the final selection is graded.
-  await page
-    .getByRole("radio", { name: new RegExp(`^${correct.toUpperCase()}\\.`) })
-    .check();
+  await page.getByRole("radio").nth(correctPosition).check();
   await saved(page);
-  await page
-    .getByRole("radio", { name: new RegExp(`^${wrong.toUpperCase()}\\.`) })
-    .check();
+  await page.getByRole("radio").nth(wrongPosition).check();
   await saved(page);
   await page
     .getByRole("button", { name: "Mark for review", exact: true })
@@ -170,6 +175,7 @@ test("200-question fixture autosaves, resumes on another browser context, submit
   ).toBeVisible();
   expect((await state(page, id)).deadlineAt).toBe(initial.deadlineAt);
   expect((await state(page, id)).questionIds).toEqual(initial.questionIds);
+  expect((await state(page, id)).questions).toEqual(initial.questions);
 
   const otherDevice = await browser.newContext({
     storageState: await page.context().storageState(),
@@ -183,11 +189,7 @@ test("200-question fixture autosaves, resumes on another browser context, submit
     ).toBeVisible();
     await second.getByRole("button", { name: /^Go to question 1,/ }).click();
     await saved(second);
-    await expect(
-      second.getByRole("radio", {
-        name: new RegExp(`^${wrong.toUpperCase()}\\.`),
-      }),
-    ).toBeChecked();
+    await expect(second.getByRole("radio").nth(wrongPosition)).toBeChecked();
     await expect(
       second.getByRole("button", { name: "Remove review flag", exact: true }),
     ).toHaveAttribute("aria-pressed", "true");
@@ -223,6 +225,7 @@ test("200-question fixture autosaves, resumes on another browser context, submit
   ).toBeVisible();
   const completed = await state(page, id);
   expect(completed.status).toBe("submitted");
+  expect(completed.questions).toEqual(initial.questions);
   expect(completed.answers[first].correct).toBe(false);
   expect(Object.keys(completed.answers)).toHaveLength(1);
   expect(Object.keys(completed.feedback)).toHaveLength(200);

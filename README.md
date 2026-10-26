@@ -23,6 +23,25 @@ questions**. Administrators gain a dedicated Question Bank with CSV/JSON import
 validation and persistent external-ID duplicate protection. See the
 [current activation and setup guide](docs/exam-activation.md).
 
+## Question-bank development
+
+The latest development work adds an administrator production dashboard at
+`/studio/questions/production`, a human-reviewed reference registry at
+`/studio/references`, and **50 additional original Domain 1 drafts** available
+from **Question Bank → AI drafting → Preview 50 Domain 1 drafts**. The previous
+100 drafts and all learner history remain separate and preserved. The new batch
+requires explicit draft-only import; loading the application does not insert it.
+
+The AI workspace prepares objective-specific briefs for an external AI tool;
+it does not claim an in-app model is connected. Candidate citations have not
+been examined because ordinary BCSP/OSHA/NIOSH source requests were blocked by
+the development network proxy. **Zero new approvals or publications** are
+created. Connected full exams now pin randomized answer order as well as question
+order, preserving grading and existing attempts. Apply additive migrations
+`0009`–`0010` before running connected mode. See the
+[question-bank development guide](docs/question-bank-development.md) for review,
+import and deployment instructions.
+
 ## Browser preview: no credentials required
 
 For a Vercel demonstration, set **`NEXT_PUBLIC_BROWSER_DEMO=true`** in the

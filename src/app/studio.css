@@ -4,6 +4,26 @@
 .studio-page p {
   line-height: 1.7;
 }
+.reference-registry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.reference-registry-entry {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-control);
+  overflow-wrap: anywhere;
+}
+.reference-registry-entry h3 {
+  line-height: 1.5;
+}
+.reference-registry-entry p {
+  margin: 12px 0;
+}
 .studio-toolbar,
 .studio-actions,
 .studio-heading,
@@ -456,4 +476,7 @@
   .studio-toolbar > select {
     width: 100%;
   }
+}
+.question-bank-summary {
+  display: block;
 }

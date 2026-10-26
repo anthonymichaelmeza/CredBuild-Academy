@@ -312,3 +312,38 @@ Completed activation validation:
 The separate short-timer command is `npm run test:e2e:exam:short`; CI includes
 that step after the standard full-exam suite. Both fixture suites use explicitly
 isolated local development storage and never approve real CHST content.
+
+## CHST question-bank development validation
+
+The latest integrated run passed **284/284 automated tests across 58 files**
+(129.33 seconds). TypeScript, ESLint and whole-tree formatting passed. This
+supersedes the preceding 260-test activation checkpoint for current changes.
+
+| Browser suite                                                  | Unique passing cases |
+| -------------------------------------------------------------- | -------------------: |
+| Content Studio, protected Question Bank and reference registry |                   18 |
+| Connected local-fixture full exam                              |                   12 |
+| Actual ten-second server expiry                                |                    2 |
+| Preserved server learner experience                            |                    8 |
+| Optimized credential-free browser demonstration                |                   26 |
+| **Total**                                                      |               **66** |
+
+The six newly added production-bank cases passed again after the final registry
+review-order and mobile-summary changes. Reruns are not counted twice. Public
+browser tests completed all 200 synthetic questions on desktop and mobile;
+administrative browser tests imported the actual 50 new drafts, rejected repeated
+imports and verified that production eligibility remained zero. The duplicated
+batch's confirmation correctly returns HTTP 422 for preview validation errors.
+
+Both connected-mode and browser-demo optimized production builds passed with no
+provider credentials or database fallback. Additive migrations 0009/0010 were
+exercised against fresh and upgraded PGlite databases; earlier migration checksums
+and existing source drafts remain intact. Registry tests include revoked-reviewer
+coverage in the production dashboard and deterministic ordering for reviews with
+the same timestamp. Existing full attempts retain original option order; new
+connected attempts pin randomized options and grade by immutable choice IDs.
+
+See [question-bank development](docs/question-bank-development.md) for exact
+access/import/review/deployment steps and actual screenshots. These are local
+engineering checks, not technical validation of the draft answers, live hosted
+provider validation, native Safari validation, or production content readiness.

@@ -1,0 +1,100 @@
+.production-page .studio-actions {
+  margin-bottom: 24px;
+}
+.production-targets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 24px;
+}
+.production-target > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.production-target progress {
+  display: block;
+  width: 100%;
+  height: 12px;
+  margin: 14px 0 10px;
+  accent-color: var(--orange);
+  border: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--surface-raised);
+}
+.production-target progress::-webkit-progress-bar {
+  background: var(--surface-raised);
+}
+.production-target progress::-webkit-progress-value {
+  background: var(--orange);
+}
+.production-target progress::-moz-progress-bar {
+  background: var(--orange);
+}
+.production-target small {
+  color: var(--text-secondary);
+}
+.production-readiness {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 16px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-surface);
+}
+.production-readiness strong {
+  color: var(--accent-text);
+}
+.production-readiness[data-ready="true"] {
+  border-color: var(--success-border);
+  background: var(--success-surface);
+}
+.production-readiness[data-ready="true"] strong {
+  color: var(--success-text);
+}
+.production-page th[scope="row"] {
+  text-align: left;
+  font-weight: 500;
+  max-width: 390px;
+}
+.production-details summary {
+  cursor: pointer;
+  padding: 12px 0;
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.production-details summary:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+.production-details li {
+  padding: 10px 0;
+  overflow-wrap: anywhere;
+}
+.production-details li p {
+  margin: 5px 0;
+}
+.production-duplicates {
+  padding-left: 24px;
+}
+.production-duplicates li {
+  margin: 18px 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .production-targets {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .production-page .studio-actions > a {
+    width: 100%;
+    justify-content: center;
+  }
+  .production-page .coverage-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .production-page .coverage-table th {
+    min-width: 85px;
+  }
+}

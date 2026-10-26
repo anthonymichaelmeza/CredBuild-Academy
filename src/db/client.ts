@@ -53,6 +53,14 @@ async function migrationSources() {
       ),
       "utf8",
     ),
+    readFile(
+      path.join(process.cwd(), "src/db/migrations/0009_reference_registry.sql"),
+      "utf8",
+    ),
+    readFile(
+      path.join(process.cwd(), "src/db/migrations/0010_exam_choice_orders.sql"),
+      "utf8",
+    ),
   ]);
   return sources.map((source, i) => ({
     id: String(i + 1).padStart(4, "0"),

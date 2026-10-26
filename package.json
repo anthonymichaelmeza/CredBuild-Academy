@@ -18,7 +18,8 @@
     "test:e2e:exam": "playwright test --config playwright.exam.config.ts",
     "test:e2e:exam:short": "playwright test --config playwright.exam-short.config.ts",
     "studio:role": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/studio-role.ts",
-    "content:import-chst": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/import-chst-drafts.ts"
+    "content:import-chst": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/import-chst-drafts.ts",
+    "content:import-domain1": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/import-domain1-batch.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "7.9.19",

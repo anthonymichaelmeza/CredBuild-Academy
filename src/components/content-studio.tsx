@@ -13,9 +13,10 @@ import { DraftEditor, newDraft } from "./studio/editor";
 import { ItemDetails, BlueprintReview } from "./studio/review";
 import { ImportQuestions } from "./studio/importer";
 import { QuestionBankImport } from "./studio/question-bank-import";
+import { QuestionDrafting } from "./studio/ai-drafting";
 import type { QuestionImportPreview } from "@/modules/studio/batch-import";
 import { Status, statusLabel, uid } from "./studio/fields";
-type Task = "library" | "editor" | "import" | "blueprint";
+type Task = "library" | "editor" | "import" | "blueprint" | "drafting";
 type LibraryFilters = {
   page?: number;
   search?: string;
@@ -49,6 +50,9 @@ export function ContentStudio({
   const [preview, setPreview] = useState<ImportPreview | null>(null);
   const [questionPreview, setQuestionPreview] =
     useState<QuestionImportPreview | null>(null);
+  const [draftImportInput, setDraftImportInput] = useState<
+    { format: "json"; text: string; previewId: string } | undefined
+  >();
   const [query, setQuery] = useState(initialFilters.search || "");
   const [kind, setKind] = useState(
     questionBank ? "question" : initialFilters.kind || "all",
@@ -73,6 +77,7 @@ export function ContentStudio({
     setEditor(null);
     setPreview(null);
     setQuestionPreview(null);
+    setDraftImportInput(undefined);
     setSelected(null);
     setSelectedDetail(null);
   }, []);
@@ -279,7 +284,7 @@ export function ContentStudio({
         </span>
       </div>
       {questionBank && (
-        <section className="notice compact-notice">
+        <section className="notice compact-notice question-bank-summary">
           <strong>
             {snapshot.pagination?.total ?? snapshot.items.length} questions
             match the current library filters.
@@ -287,6 +292,14 @@ export function ContentStudio({
           <p>
             Counts come from saved records. Draft quantity does not unlock a
             production exam.{" "}
+            <Link className="text-link" href="/studio/questions/production">
+              View production dashboard and bank targets
+            </Link>{" "}
+            ·{" "}
+            <Link className="text-link" href="/studio/references">
+              Open the reference registry
+            </Link>{" "}
+            ·{" "}
             <Link className="text-link" href="/studio/exams">
               View approved eligibility and exact domain shortages
             </Link>{" "}
@@ -331,6 +344,14 @@ export function ContentStudio({
             onClick={() => setTask("blueprint")}
           >
             Blueprint source review
+          </button>
+        )}
+        {questionBank && administrator && (
+          <button
+            aria-pressed={task === "drafting"}
+            onClick={() => setTask("drafting")}
+          >
+            AI drafting
           </button>
         )}
         {snapshot.access.roles.some(
@@ -398,8 +419,23 @@ export function ContentStudio({
             );
           }}
         />
+      ) : task === "drafting" && questionBank && administrator ? (
+        <QuestionDrafting
+          busy={busy}
+          onPrepareBatch={async (text) => {
+            const result = await request(
+              { action: "preview", format: "json", text },
+              "/api/studio/questions",
+            );
+            setQuestionPreview(result);
+            setDraftImportInput({ format: "json", text, previewId: result.id });
+            setTask("import");
+          }}
+        />
       ) : task === "import" && questionBank && administrator ? (
         <QuestionBankImport
+          key={draftImportInput?.previewId || "manual-import"}
+          initialInput={draftImportInput}
           busy={busy}
           preview={questionPreview}
           onPreview={async (format, text) => {

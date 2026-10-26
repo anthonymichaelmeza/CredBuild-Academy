@@ -46,6 +46,8 @@ describe("incremental database upgrades", () => {
         "0006",
         "0007",
         "0008",
+        "0009",
+        "0010",
       ]);
       expect(
         (

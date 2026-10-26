@@ -8,6 +8,7 @@ export function QuestionBankImport({
   preview,
   onPreview,
   onConfirm,
+  initialInput,
 }: {
   busy: boolean;
   preview: QuestionImportPreview | null;
@@ -16,16 +17,27 @@ export function QuestionBankImport({
     text: string,
   ) => Promise<QuestionImportPreview>;
   onConfirm: (id: string) => Promise<void>;
+  initialInput?: { format: "csv" | "json"; text: string; previewId: string };
 }) {
-  const [format, setFormat] = useState<"csv" | "json">("csv");
-  const [text, setText] = useState("");
+  const [format, setFormat] = useState<"csv" | "json">(
+    initialInput?.format || "csv",
+  );
+  const [text, setText] = useState(initialInput?.text || "");
   const [error, setError] = useState("");
   const [previewing, setPreviewing] = useState(false);
   const [previewedInput, setPreviewedInput] = useState<{
     id: string;
     format: "csv" | "json";
     text: string;
-  } | null>(null);
+  } | null>(
+    initialInput
+      ? {
+          id: initialInput.previewId,
+          format: initialInput.format,
+          text: initialInput.text,
+        }
+      : null,
+  );
   const requestInFlight = useRef(false);
   const previewMatchesInput = Boolean(
     preview &&

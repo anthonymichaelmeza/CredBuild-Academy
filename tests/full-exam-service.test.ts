@@ -94,6 +94,14 @@ describe("server-saved full-length examination lifecycle using explicit syntheti
     expect(session.questionVersions).toEqual(
       Object.fromEntries(session.questionIds.map((id) => [id, 1])),
     );
+    expect(Object.keys(session.questionChoiceOrders || {})).toHaveLength(200);
+    for (const question of session.questions)
+      expect(question.choices.map((choice) => choice.id)).toEqual(
+        session.questionChoiceOrders![question.id],
+      );
+    expect((await exams.view(id, learner.id)).questions).toEqual(
+      session.questions,
+    );
     expect(
       Date.parse(session.deadlineAt!) - Date.parse(session.createdAt),
     ).toBe(14_400_000);
@@ -112,6 +120,38 @@ describe("server-saved full-length examination lifecycle using explicit syntheti
         question.choices.every((choice) => !Object.hasOwn(choice, "rationale")),
       ).toBe(true);
     }
+  });
+  it("keeps answer presentation immutable and rejects forged SQL option identities", async () => {
+    const learner = who("choice-order-sql");
+    const id = await exams.start(learner);
+    const query = (await connection()).query;
+    const [saved] = (
+      await query("SELECT data FROM learning_sessions WHERE id=$1", [id])
+    ).rows;
+    const data = saved.data as import("@/modules/practice/types").Session;
+    const first = data.questionIds[0];
+    const altered = structuredClone(data);
+    altered.questionChoiceOrders![first].reverse();
+    await expect(
+      query("UPDATE learning_sessions SET data=$1::jsonb WHERE id=$2", [
+        JSON.stringify(altered),
+        id,
+      ]),
+    ).rejects.toThrow("immutable");
+    const invalid = {
+      ...data,
+      id: randomUUID(),
+      questionChoiceOrders: {
+        ...data.questionChoiceOrders,
+        [first]: ["a", "b", "c", "forged"],
+      },
+    };
+    await expect(
+      query(
+        "INSERT INTO learning_sessions(id,owner_id,status,data) VALUES($1,$2,'in_progress',$3::jsonb)",
+        [invalid.id, learner.id, JSON.stringify(invalid)],
+      ),
+    ).rejects.toThrow("pinned question choices");
   });
   it("serializes answer changes, set-flags and saved position without lost updates", async () => {
     const learner = who("save");

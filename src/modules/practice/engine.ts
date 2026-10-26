@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { sessionQuestionChoices } from "@/modules/exams/choice-order";
 import type {
   Answer,
   Question,
@@ -302,7 +303,10 @@ export function sessionView(session: Session, pool: Question[]): SessionView {
             })),
           }
         : {}),
-      choices: q.choices.map(({ id, text }) => ({ id, text })),
+      choices: sessionQuestionChoices(session, q).map(({ id, text }) => ({
+        id,
+        text,
+      })),
     };
   });
   const feedback: SessionView["feedback"] = {};

@@ -4,6 +4,13 @@ This is the implemented PostgreSQL schema, not the larger target model in the
 historical `docs/database-schema.md`. SQL migrations are authoritative; Drizzle
 maps the application-used subset in `src/db/schema.ts`.
 
+The current question-bank additions are `0009_reference_registry.sql`
+(candidate metadata and immutable human review snapshots) and
+`0010_exam_choice_orders.sql` (validated per-attempt option permutations).
+Registry verification never supplies question-specific review evidence. Existing
+full attempts without a choice-order map retain their original option order.
+Earlier migration checksums and learner records are preserved.
+
 ## Migrations
 
 | Migration                      | Additions                                                                                                                                             |

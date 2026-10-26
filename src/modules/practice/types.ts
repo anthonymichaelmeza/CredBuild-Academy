@@ -53,6 +53,8 @@ export type Session = {
   questionIds: string[];
   /** Immutable revision selected for each ID. Legacy snapshots mean version 1. */
   questionVersions?: Record<string, number>;
+  /** Per-attempt presentation order. Absent on preserved legacy snapshots. */
+  questionChoiceOrders?: Record<string, string[]>;
   answers: Record<string, Answer>;
   flags: string[];
   mode: "learning" | "adaptive" | "timed" | "exam";

@@ -49,6 +49,27 @@ test("demonstration availability is separate from the protected production exam 
   await expect(
     page.getByRole("heading", { name: /Exam management is protected/ }),
   ).toBeVisible();
+  for (const path of [
+    "/studio/questions",
+    "/studio/questions/production",
+    "/studio/references",
+  ]) {
+    await page.goto(path);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      /protected|access/i,
+    );
+    await expect(
+      page.getByRole("button", { name: "Preview 50 Domain 1 drafts" }),
+    ).toHaveCount(0);
+  }
+  for (const path of [
+    "/api/studio/questions/drafts",
+    "/api/studio/references",
+  ]) {
+    const response = await page.request.get(path);
+    expect([401, 403]).toContain(response.status());
+    expect(response.headers()["cache-control"]).toContain("no-store");
+  }
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

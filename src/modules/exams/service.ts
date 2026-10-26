@@ -9,6 +9,7 @@ import { recordAnswer } from "@/modules/practice/lifecycle";
 import type { Question, Session, SessionView } from "@/modules/practice/types";
 import { browserDemoEnabled } from "@/modules/runtime/mode";
 import { chstPracticeExamPolicy } from "./policy";
+import { createExamChoiceOrders } from "./choice-order";
 import {
   buildFullLengthPracticeExam,
   eligibleFullLengthQuestions,
@@ -203,6 +204,7 @@ function newSession(
     questionVersions: Object.fromEntries(
       selected.map((question) => [question.id, question.version]),
     ),
+    questionChoiceOrders: createExamChoiceOrders(selected),
     answers: {},
     flags: [],
     mode: "exam",
@@ -607,6 +609,14 @@ export async function studyMissed(id: string, who: Actor) {
     );
     return session.id;
   });
+}
+
+/** Content planning needs eligibility counts, not learner attempt statistics. */
+export async function productionExamAvailability(who: Actor) {
+  const access = await requireStudioAccess(who);
+  requireStudioRole(access, ["administrator"]);
+  const c = await ready();
+  return availabilityFrom(await publishedCandidates(c.query), true, false);
 }
 
 export async function adminSummary(who: Actor): Promise<ExamAdminSummary> {

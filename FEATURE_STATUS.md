@@ -1,9 +1,18 @@
 # Feature status
 
-Current milestone: **v0.6 full-length demonstration activation and Question Bank**, branch
+Current milestone: **v0.6 CHST question-bank development and exam integration**, branch
 `development/stable-learning-foundation`. Earlier curriculum, connected-account
 and Content Studio work is preserved; the historical A/B report is
 [here](docs/v06-release-report.md).
+
+The latest additions are an administrator production dashboard, five-candidate
+technical-reference registry with immutable human reviews, an AI drafting brief
+workspace, and 50 new unverified Domain 1 drafts. Connected full exams now save
+randomized answer order. These extend the existing editors, CSV/JSON imports,
+review/publication gates and exam engine. No source was verified and no question
+was approved or published. See the
+[current question-bank guide](docs/question-bank-development.md); the activation
+counts below describe the preceding checkpoint.
 
 Statuses: **Not Started**, **In Progress**, **Functional**, **Tested**, **Blocked**.
 Tested describes the explicitly documented local boundary; nothing is Production
