@@ -4,6 +4,7 @@ import { actor, AccessError } from "@/modules/identity/auth";
 import { browserDemoEnabled } from "@/modules/runtime/mode";
 import { studioSnapshot } from "@/modules/studio/service";
 import { ContentStudio } from "@/components/content-studio";
+import { lessonResearchBriefs } from "@/content/chst/lesson-briefs";
 export const dynamic = "force-dynamic";
 
 function Unavailable({ message }: { message: string }) {
@@ -68,7 +69,18 @@ export default async function StudioPage({
   );
   if (snapshot instanceof AccessError)
     return <Unavailable message={snapshot.message} />;
+  const briefId = text("lessonBrief");
+  if (briefId && !snapshot.access.roles.includes("administrator"))
+    return (
+      <Unavailable message="Research lesson briefs require an administrator account. General authoring permissions remain available in Content Studio." />
+    );
+  const brief = lessonResearchBriefs.find((item) => item.id === briefId);
   return (
-    <ContentStudio key={who.id} initial={snapshot} initialFilters={filters} />
+    <ContentStudio
+      key={`${who.id}:${brief?.id || "library"}`}
+      initial={snapshot}
+      initialFilters={filters}
+      initialDraft={brief?.draft}
+    />
   );
 }

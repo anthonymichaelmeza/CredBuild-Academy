@@ -64,11 +64,14 @@ async function publishedCandidates(query: DatabaseQuery, lock = false) {
       JOIN studio_publications sp ON sp.content_id=p.question_id AND sp.revision_id=v.id
       JOIN studio_workflow w ON w.revision_id=v.id AND w.status='published'
       JOIN LATERAL (SELECT decision,reviewer_id FROM studio_source_verifications WHERE revision_id=v.id ORDER BY event_number DESC LIMIT 1) evidence ON evidence.decision='verified'
+      LEFT JOIN LATERAL (SELECT decision,reviewer_id FROM studio_editorial_reviews WHERE revision_id=v.id ORDER BY event_number DESC LIMIT 1) editorial_evidence ON true
       WHERE v.certification_id='chst' AND v.content_kind='instructional' AND v.review_status='approved'
         AND b.id='chst5-2022.04.12' AND b.verified_at IS NOT NULL AND b.verified_by IS NOT NULL
         AND EXISTS(SELECT 1 FROM studio_reviews r WHERE r.revision_id=v.id AND r.decision='approved')
         AND EXISTS(SELECT 1 FROM editorial_roles role WHERE role.subject_id=evidence.reviewer_id AND role.role='reviewer')
         AND EXISTS(SELECT 1 FROM editorial_roles role WHERE role.subject_id=v.reviewer_id AND role.role='reviewer')
+        AND (editorial_evidence.decision IS NULL OR (editorial_evidence.decision='approved' AND
+          EXISTS(SELECT 1 FROM editorial_roles role WHERE role.subject_id=editorial_evidence.reviewer_id AND role.role='reviewer')))
         AND p.question_id>$1 ORDER BY p.question_id LIMIT 500${lock ? " FOR SHARE OF p,v" : ""}`,
         [after],
       )

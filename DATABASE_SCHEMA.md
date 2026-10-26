@@ -185,3 +185,18 @@ and external ID; confirmation persists it with the draft creation in one
 transaction. Duplicate existing IDs reject rather than overwriting an earlier
 question. Imported candidates remain drafts and must pass the existing separate
 source-verification, technical-review and administrator-publication gates.
+
+## Source research, editorial decisions and drafting requests
+
+Additive `0011_research_engine.sql` stores private source metadata, current and
+historical section evidence, bounded leased queue jobs, immutable retrieval
+attempts, canonical objective links, and metadata/checksum-bound human section and
+source reviews. Original parser warnings remain; invalidated or incomplete
+extraction cannot supply current verification evidence.
+
+`0012_editorial_quality.sql` requires separate independent human editorial sign-off
+for future publication and preserves existing release pointers. `0013_drafting_jobs.sql`
+stores owner-scoped source-pinned requests with immutable inputs, optimistic
+revisions and links to actual imported draft questions. No automatic source,
+technical or editorial approval backfill occurs. Earlier migrations and historical
+learner records remain unchanged. See [research setup](docs/chst-research-engine.md).

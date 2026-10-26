@@ -53,6 +53,9 @@ test("demonstration availability is separate from the protected production exam 
     "/studio/questions",
     "/studio/questions/production",
     "/studio/references",
+    "/studio/research",
+    "/studio/curriculum",
+    "/studio/questions/quality",
   ]) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
@@ -65,6 +68,10 @@ test("demonstration availability is separate from the protected production exam 
   for (const path of [
     "/api/studio/questions/drafts",
     "/api/studio/references",
+    "/api/studio/research",
+    "/api/studio/curriculum",
+    "/api/studio/questions/quality",
+    "/api/studio/drafting-jobs",
   ]) {
     const response = await page.request.get(path);
     expect([401, 403]).toContain(response.status());

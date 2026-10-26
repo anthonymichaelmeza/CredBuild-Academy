@@ -1,0 +1,1697 @@
+[
+  {
+    "auditId": "mandatory-bcsp-chst",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.bcsp.org/construction-health-and-safety-technician-chst",
+      "title": "BCSP CHST certification",
+      "publisher": "Board of Certified Safety Professionals",
+      "publicationDate": null,
+      "classification": "examination_blueprint",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-bcsp-blueprint",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.bcsp.org/wp-content/uploads/2024/04/CHST5-Blueprint.pdf",
+      "title": "CHST5 Examination Blueprint",
+      "publisher": "Board of Certified Safety Professionals",
+      "publicationDate": null,
+      "classification": "examination_blueprint",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-bcsp-reference-list",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.bcsp.org/hubfs/Website/Blueprints-References/CHST-References.pdf?hsLang=en",
+      "title": "BCSP CHST reference list",
+      "publisher": "Board of Certified Safety Professionals",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-bcsp-exam-collection",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://bcsphub.com/collections/exams",
+      "title": "BCSP examination resource collection",
+      "publisher": "Board of Certified Safety Professionals",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-osha-1926",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/",
+      "title": "Construction Standards: 29 CFR 1926",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "regulatory_requirement",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-osha-construction",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/construction",
+      "title": "OSHA Construction Resources",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-osha-etool",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/etools/construction/",
+      "title": "OSHA Construction eTool",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-osha-regulations",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs",
+      "title": "OSHA Regulations",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "regulatory_requirement",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-osha-publications",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/publications",
+      "title": "OSHA Publications",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-osha-topics",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/a-z",
+      "title": "OSHA Safety and Health Topics",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-osha-1910",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/",
+      "title": "OSHA General Industry: 29 CFR 1910",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-osha-interpretations",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/standardinterpretations",
+      "title": "OSHA Letters of Interpretation",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-niosh",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.cdc.gov/niosh/",
+      "title": "NIOSH",
+      "publisher": "National Institute for Occupational Safety and Health",
+      "publicationDate": null,
+      "classification": "technical_research",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "mandatory-cdc-stacks",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://stacks.cdc.gov/",
+      "title": "CDC Stacks",
+      "publisher": "Centers for Disease Control and Prevention",
+      "publicationDate": null,
+      "classification": "technical_research",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "explicit_user_url. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "supplement-fema",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.fema.gov/",
+      "title": "FEMA",
+      "publisher": "Federal Emergency Management Agency",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "operator_selected_official_seed. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "supplement-nfpa",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.nfpa.org/",
+      "title": "NFPA",
+      "publisher": "National Fire Protection Association",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "operator_selected_official_seed. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "supplement-ansi",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.ansi.org/",
+      "title": "ANSI",
+      "publisher": "American National Standards Institute",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "operator_selected_official_seed. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "supplement-assp",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.assp.org/",
+      "title": "ASSP",
+      "publisher": "American Society of Safety Professionals",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "operator_selected_official_seed. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "supplement-epa",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.epa.gov/",
+      "title": "EPA",
+      "publisher": "United States Environmental Protection Agency",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "operator_selected_official_seed. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "supplement-niosh-face",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.cdc.gov/niosh/face/",
+      "title": "NIOSH FACE",
+      "publisher": "National Institute for Occupational Safety and Health",
+      "publicationDate": null,
+      "classification": "technical_research",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "operator_selected_official_seed. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "supplement-cpwr",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.cpwr.com/",
+      "title": "CPWR",
+      "publisher": "The Center for Construction Research and Training",
+      "publicationDate": null,
+      "classification": "technical_research",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "operator_selected_official_seed. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "supplement-ccohs",
+    "entityKind": "remote_url",
+    "source": {
+      "originalUrl": "https://www.ccohs.ca/",
+      "title": "CCOHS",
+      "publisher": "Canadian Centre for Occupational Health and Safety",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "operator_selected_official_seed. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-01",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.assp.org/search?searchQuery=Accident+Investigation+Techniques++2nd+Edition",
+      "title": "Accident Investigation Techniques; 2nd Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-02",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.nsc.org/search?query=Accident+Prevention+Manual+for+Business+%26+Industry%3A+Administration+%26+Programs++14th+Edition",
+      "title": "Accident Prevention Manual for Business & Industry: Administration & Programs; 14th Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-03",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.nsc.org/search?query=Accident+Prevention+Manual+for+Business+%26+Industry%3A+Engineering+and+Technology++14th+Edition",
+      "title": "Accident Prevention Manual for Business & Industry: Engineering and Technology; 14th Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-04",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.nsc.org/search?query=Accident+Prevention+Manual+for+Business+%26+Industry%3A+Environmental+Management++2nd+Edition",
+      "title": "Accident Prevention Manual for Business & Industry: Environmental Management; 2nd Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-05",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.wiley.com/en-us/search?pq=Advanced+Safety+Management%3A+Focusing+on+Z10+%26+Serious+Injury+Prevention",
+      "title": "Advanced Safety Management: Focusing on Z10 & Serious Injury Prevention",
+      "publisher": "John Wiley & Sons, Inc",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-06",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.bcsp.org/?s=BCSP+Code+of+Ethics",
+      "title": "BCSP Code of Ethics",
+      "publisher": "Board of Certified Safety Professionals",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-07",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.assp.org/search?searchQuery=Construction+Safety+Management+and+Engineering++2nd+Edition",
+      "title": "Construction Safety Management and Engineering; 2nd Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-08",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.wiley.com/en-us/search?pq=Construction+Safety+Planning",
+      "title": "Construction Safety Planning",
+      "publisher": "John Wiley & Sons, Inc",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-09",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.wiley.com/en-us/search?pq=Emergency+Incident+Management+Systems%3A+Fundamentals+and+Applications",
+      "title": "Emergency Incident Management Systems: Fundamentals and Applications",
+      "publisher": "John Wiley & Sons, Inc",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-10",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.nsc.org/search?query=Fundamentals+of+Industrial+Hygiene++6th+Edition",
+      "title": "Fundamentals of Industrial Hygiene; 6th Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-11",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.wiley.com/en-us/search?pq=Handbook+of+Occupational+Safety+%26+Health++2nd+Edition",
+      "title": "Handbook of Occupational Safety & Health; 2nd Edition",
+      "publisher": "John Wiley & Sons, Inc",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-12",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.mheducation.com/search.html?searchQuery=Handbook+of+Rigging%3A+Lifting%2C+Hoisting%2C+and+Scaffolding+for+Construction+and+Industrial+Operations++5th+Edition",
+      "title": "Handbook of Rigging: Lifting, Hoisting, and Scaffolding for Construction and Industrial Operations; 5th Edition",
+      "publisher": "The McGraw-Hill Companies, Inc",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-13",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.routledge.com/search?kw=Incidental+Trainer%3A+A+Reference+Guide+for+Training+Design%2C+Development+and+Delivery",
+      "title": "Incidental Trainer: A Reference Guide for Training Design, Development and Delivery",
+      "publisher": "Taylor & Francis Group, LLC",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-14",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.assp.org/search?searchQuery=Introduction+to+Fall+Protection++4th+Edition",
+      "title": "Introduction to Fall Protection; 4th Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-15",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.nsc.org/search?query=Occupational+Health+%26+Safety++3rd+Edition",
+      "title": "Occupational Health & Safety; 3rd Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-16",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.routledge.com/search?kw=Occupational+Health+and+Safety+Management%3A+A+Practical+Approach++3rd+Edition",
+      "title": "Occupational Health and Safety Management: A Practical Approach; 3rd Edition",
+      "publisher": "Taylor & Francis Group, LLC",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-17",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.pearson.com/en-us/search.html?aq=Occupational+Safety+and+Health+for+Technologists%2C+Engineers%2C+%26+Managers++7th+Edition",
+      "title": "Occupational Safety and Health for Technologists, Engineers, & Managers; 7th Edition",
+      "publisher": "Pearson Education, Inc",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-18",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.assp.org/search?searchQuery=Safety+Professionals+Handbook%2C+The%3A+Technical+Applications++2nd+Edition",
+      "title": "Safety Professionals Handbook, The: Technical Applications; 2nd Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-19",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.assp.org/search?searchQuery=Safety+Professionals+Handbook%2C+The%3A+Management+Applications++2nd+Edition",
+      "title": "Safety Professionals Handbook, The: Management Applications; 2nd Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-20",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.routledge.com/search?kw=Safety+Professional%E2%80%99s+Reference+%26+Study+Guide++3rd+Edition",
+      "title": "Safety Professional’s Reference & Study Guide; 3rd Edition",
+      "publisher": "Taylor & Francis Group, LLC",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "publisher-search-chst-reference-2021.06.09-21",
+    "entityKind": "publisher_lookup",
+    "source": {
+      "originalUrl": "https://www.nsc.org/search?query=Supervisors%E2%80%99+Safety+Manual++11th+Edition",
+      "title": "Supervisors’ Safety Manual; 11th Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "publisher_metadata",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "constructed_official_site_title_query_not_a_discovered_product_link. Access attempt blocked by workspace CONNECT proxy; no publisher response, source text, current edition or distribution rights confirmed."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-01",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Accident Investigation Techniques; 2nd Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-01",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-02",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Accident Prevention Manual for Business & Industry: Administration & Programs; 14th Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-02",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-03",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Accident Prevention Manual for Business & Industry: Engineering and Technology; 14th Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-03",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-04",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Accident Prevention Manual for Business & Industry: Environmental Management; 2nd Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-04",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-05",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Advanced Safety Management: Focusing on Z10 & Serious Injury Prevention",
+      "publisher": "John Wiley & Sons, Inc",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-05",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-06",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "BCSP Code of Ethics",
+      "publisher": "Publisher not printed in supplied listing",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-06",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-07",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Construction Safety Management and Engineering; 2nd Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-07",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-08",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Construction Safety Planning",
+      "publisher": "John Wiley & Sons, Inc",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-08",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-09",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Emergency Incident Management Systems: Fundamentals and Applications",
+      "publisher": "John Wiley & Sons, Inc",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-09",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-10",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Fundamentals of Industrial Hygiene; 6th Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-10",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-11",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Handbook of Occupational Safety & Health; 2nd Edition",
+      "publisher": "John Wiley & Sons, Inc",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-11",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-12",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Handbook of Rigging: Lifting, Hoisting, and Scaffolding for Construction and Industrial Operations; 5th Edition",
+      "publisher": "The McGraw-Hill Companies, Inc",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-12",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-13",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Incidental Trainer: A Reference Guide for Training Design, Development and Delivery",
+      "publisher": "Taylor & Francis Group, LLC",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-13",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-14",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Introduction to Fall Protection; 4th Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-14",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-15",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Occupational Health & Safety; 3rd Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-15",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-16",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Occupational Health and Safety Management: A Practical Approach; 3rd Edition",
+      "publisher": "Taylor & Francis Group, LLC",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-16",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-17",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Occupational Safety and Health for Technologists, Engineers, & Managers; 7th Edition",
+      "publisher": "Pearson Education, Inc",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-17",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-18",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Safety Professionals Handbook, The: Technical Applications; 2nd Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-18",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-19",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Safety Professionals Handbook, The: Management Applications; 2nd Edition",
+      "publisher": "American Society of Safety Engineers",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-19",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-20",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Safety Professional’s Reference & Study Guide; 3rd Edition",
+      "publisher": "Taylor & Francis Group, LLC",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-20",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "chst-reference-2021.06.09-21",
+    "entityKind": "bibliographic_publication",
+    "source": {
+      "originalUrl": "",
+      "title": "Supervisors’ Safety Manual; 11th Edition",
+      "publisher": "National Safety Council",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "licensed_reference",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "chst-reference-2021.06.09-21",
+      "rightsNotes": "Bibliographic metadata only. Licensed access has NOT been obtained. Edition and year are the supplied listing, not current publisher confirmation. Obtain authorized text and processing rights before analysis."
+    }
+  },
+  {
+    "auditId": "attachment-blueprint",
+    "entityKind": "uploaded_document",
+    "source": {
+      "originalUrl": "",
+      "title": "CHST-Blueprint.pdf",
+      "publisher": "Board of Certified Safety Professionals",
+      "publicationDate": null,
+      "classification": "examination_blueprint",
+      "access": "user_supplied",
+      "license": "permission_required",
+      "licensedIdentifier": "9d2b0beb74202507f44feba9996f71a5222d4edaf35fc0f44091145ba90bc3d7",
+      "rightsNotes": "Supplied CHST-Blueprint.pdf, printed version 2022.04.12, SHA-256 9d2b0beb74202507f44feba9996f71a5222d4edaf35fc0f44091145ba90bc3d7. Authorized private analysis only; copyright and distribution rights remain with publisher. Transcription is not current-version confirmation or human question-source verification."
+    }
+  },
+  {
+    "auditId": "attachment-bibliography",
+    "entityKind": "uploaded_document",
+    "source": {
+      "originalUrl": "",
+      "title": "CHST-References.pdf",
+      "publisher": "Board of Certified Safety Professionals",
+      "publicationDate": null,
+      "classification": "bibliography",
+      "access": "user_supplied",
+      "license": "permission_required",
+      "licensedIdentifier": "f070a80bd1ea472ac1b0046bf35747c147dd3c6cb034358f9f5a579b00379d93",
+      "rightsNotes": "Supplied CHST-References.pdf, printed version 2021.06.09, SHA-256 f070a80bd1ea472ac1b0046bf35747c147dd3c6cb034358f9f5a579b00379d93. Authorized private analysis only; copyright and distribution rights remain with publisher. Transcription is not current-version confirmation or human question-source verification."
+    }
+  },
+  {
+    "auditId": "existing-candidate-a749347165bcc5a5",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.352",
+      "title": "Candidate OSHA construction fire-prevention requirements for welding and cutting",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-158f85e08eacb0d7",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.416",
+      "title": "Candidate OSHA construction electrical safety requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-ab87eea71553ab61",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.651",
+      "title": "Candidate OSHA construction excavation requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-1ec291ece89c7d53",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.501",
+      "title": "Candidate OSHA construction fall-protection duty requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-a8823808b4625406",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.502",
+      "title": "Candidate OSHA construction fall-protection system criteria",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-b608fb27e56f5138",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1203",
+      "title": "Candidate OSHA construction confined-space general requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-a4b2dc51ca43fb67",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.601",
+      "title": "Candidate OSHA construction motor-vehicle requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-04d69f75bc9a2646",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.602",
+      "title": "Candidate OSHA construction material-handling equipment requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-eace16d61a388d1c",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.251",
+      "title": "Candidate OSHA construction rigging-equipment requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-102632def9686a00",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1417",
+      "title": "Candidate OSHA construction crane operation requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-36f411b7af71064f",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.250",
+      "title": "Candidate OSHA construction material-handling and storage requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-613404b9db1668b5",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.25",
+      "title": "Candidate OSHA construction housekeeping requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-71490645c027d018",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.302",
+      "title": "Candidate OSHA construction power-operated hand-tool requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-ad2ebda0d022a7ed",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.300",
+      "title": "Candidate OSHA construction hand- and power-tool general requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-25d159c5b21c3140",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1101",
+      "title": "Candidate OSHA construction asbestos requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-ffab19a80940c2f7",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.62",
+      "title": "Candidate OSHA construction lead requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-f1783d654037f8a0",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.52",
+      "title": "Candidate OSHA construction occupational-noise requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-e8304ca4c28c8b2d",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.53",
+      "title": "Candidate OSHA construction ionizing-radiation requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-96e0c18c4bde2821",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1153",
+      "title": "Candidate OSHA construction respirable-crystalline-silica requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-0541f835ab1a1b66",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.55",
+      "title": "Candidate OSHA construction gases, vapors, fumes, dusts and mists requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-db742b82278312c5",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.cdc.gov/niosh/heat-stress/about/",
+      "title": "Candidate NIOSH occupational heat-stress guidance",
+      "publisher": "CDC / NIOSH",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-c5c8acef3ad38c7d",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.cdc.gov/niosh/ergonomics/",
+      "title": "Candidate NIOSH ergonomics and exposure-prevention resources",
+      "publisher": "CDC / NIOSH",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-32478767a6b78e12",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200",
+      "title": "Candidate OSHA hazard-communication standard referenced by construction requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-d9f6223fb95c4a60",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.cdc.gov/niosh/ptd/",
+      "title": "Candidate NIOSH Prevention through Design guidance",
+      "publisher": "CDC / NIOSH",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-6c5978549a7b5271",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/safety-management/communication",
+      "title": "Candidate OSHA recommended practices for multiemployer construction coordination",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-96d01302f339e406",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.95",
+      "title": "Candidate OSHA construction personal-protective-equipment requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-2830aecdb06850f5",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.700",
+      "title": "Candidate OSHA concrete and masonry construction requirements",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-634391878be55a73",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.cdc.gov/niosh/hierarchy-of-controls/about/",
+      "title": "Candidate NIOSH hierarchy-of-controls guidance",
+      "publisher": "CDC / NIOSH",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-6b89f9d34d9602f3",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/publications/osha3071",
+      "title": "Candidate OSHA job-hazard-analysis guidance",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-68df8a13890fcc9f",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/safety-management/hazard-identification",
+      "title": "Candidate OSHA hazard-identification and assessment guidance",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-1fc191c9e33d62d7",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.150",
+      "title": "OSHA construction fire protection — candidate regulation",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-d4aa2027bb94e1c1",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.35",
+      "title": "OSHA construction emergency action plans — candidate regulation",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-ce3e04ac7d816c80",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.50",
+      "title": "OSHA construction medical services and first aid — candidate regulation",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-cce8c3462434aee7",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926",
+      "title": "OSHA construction standards — candidate regulatory collection",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-a98fbb3df34adbba",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/recordkeeping",
+      "title": "OSHA injury and illness recordkeeping resources — candidate entry point",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-94a1b14477564429",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.bcsp.org/",
+      "title": "BCSP official website — candidate location for version checks",
+      "publisher": "Publisher requires confirmation",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-875de994fca900aa",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.cdc.gov/niosh/twh/",
+      "title": "NIOSH Total Worker Health resources — candidate guidance entry point",
+      "publisher": "CDC / NIOSH",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-2f9e15c04df78dc9",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.20",
+      "title": "CANDIDATE — NOT REVIEWED: OSHA 29 CFR 1926.20 — General safety and health provisions",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-3e9fb58f606864f6",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/sites/default/files/publications/osha3071.pdf",
+      "title": "CANDIDATE — NOT REVIEWED: OSHA — Job Hazard Analysis",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-9f65a8eb494a4cfe",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.cdc.gov/niosh/hierarchy-of-controls/about/index.html",
+      "title": "CANDIDATE — NOT REVIEWED: NIOSH — Hierarchy of Controls",
+      "publisher": "CDC / NIOSH",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-e9bc9c50a1b86b3c",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.652",
+      "title": "CANDIDATE — NOT REVIEWED: OSHA 29 CFR 1926.652 — Requirements for protective systems",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-5e97807ac2359607",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1402",
+      "title": "CANDIDATE — NOT REVIEWED: OSHA 29 CFR 1926.1402 — Ground conditions",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-2c5216261e4c3055",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1425",
+      "title": "CANDIDATE — NOT REVIEWED: OSHA 29 CFR 1926.1425 — Keeping clear of the load",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-e4fdbc13f18e66e4",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1204",
+      "title": "CANDIDATE — NOT REVIEWED: OSHA 29 CFR 1926.1204 — Permit-required confined space program",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-a0e66540b32ddad6",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1211",
+      "title": "CANDIDATE — NOT REVIEWED: OSHA 29 CFR 1926.1211 — Rescue and emergency services",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-c1f489d26302d3c5",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.600",
+      "title": "CANDIDATE — NOT REVIEWED: OSHA 29 CFR 1926.600 — Equipment",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  },
+  {
+    "auditId": "existing-candidate-a0d0fcf6095b7400",
+    "entityKind": "existing_candidate_url",
+    "source": {
+      "originalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.417",
+      "title": "CANDIDATE — NOT REVIEWED: OSHA 29 CFR 1926.417 — Lockout and tagging of circuits",
+      "publisher": "Occupational Safety and Health Administration",
+      "publicationDate": null,
+      "classification": "professional_guidance",
+      "access": "public_link",
+      "license": "public_metadata_only",
+      "licensedIdentifier": "",
+      "rightsNotes": "Existing draft candidate citation only; no text, edition, applicability or publication rights examined. Classification must be checked against the actual source before supporting claims."
+    }
+  }
+]

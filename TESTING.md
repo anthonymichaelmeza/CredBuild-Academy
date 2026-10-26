@@ -347,3 +347,49 @@ See [question-bank development](docs/question-bank-development.md) for exact
 access/import/review/deployment steps and actual screenshots. These are local
 engineering checks, not technical validation of the draft answers, live hosted
 provider validation, native Safari validation, or production content readiness.
+
+## CHST source research and curriculum evidence validation
+
+Final whole-repository result: **347/347 tests across 70 files**, 174.21 seconds.
+TypeScript, ESLint, Prettier and whitespace checks passed. The production dependency
+audit reported **0 vulnerabilities** after adding pinned Node24-compatible HTML
+and proxy-aware HTTP libraries.
+
+| Browser suite                                                                             | Unique passing cases |
+| ----------------------------------------------------------------------------------------- | -------------------: |
+| Connected Content Studio, source research, curriculum, drafting jobs and editorial review |                   30 |
+| Connected full-exam fixtures (desktop/mobile/tablet-sized Chromium)                       |                   12 |
+| Actual ten-second server expiry                                                           |                    2 |
+| Preserved connected learner flows                                                         |                    8 |
+| Optimized credential-free browser demonstration                                           |                   26 |
+| **Total**                                                                                 |               **78** |
+
+Both optimized production modes passed with provider credentials empty and local
+database fallback disabled. Public desktop/mobile runs answered all 200 synthetic
+questions and preserved actual results. New administrator browser cases saved
+real source/section relationships, parsed authorized synthetic HTML, preserved
+original manual-review flags, corrected source metadata, saved source-blocked
+lesson briefs, and created/resumed/cancelled actual blocked drafting jobs. Source
+and publication approval remained absent for unreviewed instructional content.
+
+Focused and complete tests also cover real synthetic-PDF extraction/blank pages,
+robots/redirect/public-DNS/proxy/size guards, copyright permission boundaries,
+conditional caching, lease recovery, immutable evidence, exact hash/metadata and
+role revocation, human section/global review, separate editorial publication
+proof and current final-approval counts. Tests use explicit synthetic identities
+and sources; they do not represent actual technical reviews of the CHST content.
+
+The original supplied PDFs were separately processed by the real parser: 3+2
+page texts and five private sections, with matching original hashes. The original
+transcription checker passed 78 statements and 21 bibliography entries. The
+recorded **43 real network attempts all failed at the CONNECT proxy**; synthetic
+network tests are not added to actual research counts. No online download or
+textbook analysis is inferred from mock tests or a passing build.
+
+The first integrated run failed old migration-count and parent-unit fetch-mock
+assumptions; both were corrected before the final347-test run. Final validation
+has no remaining test failures or unhandled errors. See the
+[completion report](research/chst5/COMPLETION_REPORT.md),
+[research setup](docs/chst-research-engine.md), and
+[research limitations](research/chst5/RESEARCH_LIMITATIONS.md). Live provider,
+native Safari and production-content validation remain outstanding.

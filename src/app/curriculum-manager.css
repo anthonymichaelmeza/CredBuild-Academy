@@ -1,0 +1,94 @@
+.curriculum-manager .curriculum-domain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.curriculum-manager .curriculum-domain-grid h2 {
+  font-size: 19px;
+}
+.curriculum-manager .curriculum-objectives {
+  display: grid;
+  gap: 14px;
+}
+.curriculum-manager .curriculum-objective {
+  padding: 22px;
+  overflow-wrap: anywhere;
+}
+.curriculum-manager .curriculum-objective summary {
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.curriculum-manager .curriculum-objective summary:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 5px;
+}
+.curriculum-manager .curriculum-objective summary small {
+  display: block;
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-top: 6px;
+}
+.curriculum-manager .curriculum-objective h3 {
+  margin-top: 24px;
+}
+.curriculum-manager .curriculum-objective h4 {
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+.curriculum-manager .curriculum-evidence {
+  border-left: 3px solid var(--orange);
+  padding-left: 15px;
+  margin: 14px 0;
+}
+.curriculum-manager .curriculum-evidence p {
+  margin: 7px 0;
+}
+.curriculum-manager .curriculum-meta {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.curriculum-manager .curriculum-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+.curriculum-manager .curriculum-filter {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 14px;
+  margin: 24px 0;
+}
+.curriculum-manager .curriculum-filter input,
+.curriculum-manager .curriculum-filter select {
+  width: 100%;
+}
+.curriculum-manager .curriculum-levels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding-left: 0;
+  list-style: none;
+}
+.curriculum-manager .curriculum-levels li {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+@media (max-width: 700px) {
+  .curriculum-manager .curriculum-domain-grid,
+  .curriculum-manager .curriculum-filter,
+  .curriculum-manager .curriculum-levels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .curriculum-manager .curriculum-objective {
+    padding: 16px;
+  }
+  .curriculum-manager .curriculum-actions > a {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -19,7 +19,10 @@
     "test:e2e:exam:short": "playwright test --config playwright.exam-short.config.ts",
     "studio:role": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/studio-role.ts",
     "content:import-chst": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/import-chst-drafts.ts",
-    "content:import-domain1": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/import-domain1-batch.ts"
+    "content:import-domain1": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/import-domain1-batch.ts",
+    "research:worker": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/research-worker.ts",
+    "research:reports": "tsx scripts/build-chst-research-reports.ts",
+    "research:import-audit": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/import-research-audit.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "7.9.19",
@@ -28,10 +31,12 @@
     "drizzle-orm": "0.45.4",
     "lucide-react": "^0.577.0",
     "next": "16.4.2",
+    "parse5": "8.0.1",
     "pg": "^8.16.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "server-only": "^0.0.1",
+    "undici": "8.12.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 # Feature status
 
-Current milestone: **v0.6 CHST question-bank development and exam integration**, branch
+Current milestone: **v0.6 source research, master curriculum and editorial evidence**, branch
 `development/stable-learning-foundation`. Earlier curriculum, connected-account
 and Content Studio work is preserved; the historical A/B report is
 [here](docs/v06-release-report.md).
@@ -13,6 +13,16 @@ review/publication gates and exam engine. No source was verified and no question
 was approved or published. See the
 [current question-bank guide](docs/question-bank-development.md); the activation
 counts below describe the preceding checkpoint.
+
+The source-research additions are working private inventory/queue/search/import,
+human section/source examination, the 78-statement Curriculum Manager, mechanical
+question quality analysis, separate editorial publication gates and source-gated
+persistent drafting requests. Actual online research is **Blocked** by CONNECT
+proxy denial for all 43 attempts; current source/edition verification, new technical
+lessons and reference-supported question development remain blocked. The three
+new lesson records are authoring briefs, not completed instructional modules.
+See [the current completion report](research/chst5/COMPLETION_REPORT.md) for exact
+evidence and validation; earlier counts below are historical checkpoints.
 
 Statuses: **Not Started**, **In Progress**, **Functional**, **Tested**, **Blocked**.
 Tested describes the explicitly documented local boundary; nothing is Production

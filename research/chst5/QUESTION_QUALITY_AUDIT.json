@@ -1,0 +1,3374 @@
+{
+  "inspected": 150,
+  "validQuestions": 150,
+  "results": [
+    {
+      "id": "chst5-draft-001",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-002",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-003",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-004",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-005",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-006",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-007",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-008",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-009",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-010",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-011",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-012",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-013",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-014",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-015",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-016",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-017",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-018",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-019",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-020",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-021",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-022",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-023",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-024",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-025",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-026",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-027",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-028",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-029",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-030",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-031",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-032",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-033",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-034",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-035",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-036",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-037",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-038",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-039",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-040",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-041",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-042",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-043",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-044",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-045",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-046",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-047",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-048",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-049",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-050",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-051",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-052",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-053",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-054",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-055",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-056",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-057",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-058",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-059",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-060",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-061",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-062",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-063",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-064",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-065",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-066",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-067",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-068",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-069",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-070",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "absolute_wording",
+          "severity": "warning",
+          "message": "Absolute wording or an all/none option may create a clue; review in context."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-071",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-072",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "absolute_wording",
+          "severity": "warning",
+          "message": "Absolute wording or an all/none option may create a clue; review in context."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-073",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-074",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-075",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-076",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-077",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "absolute_wording",
+          "severity": "warning",
+          "message": "Absolute wording or an all/none option may create a clue; review in context."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-078",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-079",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-080",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-081",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-082",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-083",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-084",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-085",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-086",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-087",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-088",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-089",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-090",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-091",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-092",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-093",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-094",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-095",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-096",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-097",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-098",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-099",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst5-draft-100",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-001",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-002",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-003",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-004",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-005",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-006",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-007",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-008",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-009",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-010",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-011",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-012",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-013",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-014",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-015",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-016",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-017",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-018",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-019",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-020",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-021",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-022",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-023",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-024",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-025",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-026",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-027",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-028",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-029",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-030",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-031",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-032",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-033",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "answer_length_clue",
+          "severity": "warning",
+          "message": "The keyed option is substantially longer than its distractors; examine possible answer-length clues."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-034",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-035",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-036",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-037",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-038",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-039",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-040",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-041",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-042",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-043",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-044",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        },
+        {
+          "code": "negative_stem",
+          "severity": "warning",
+          "message": "Review negative wording for avoidable ambiguity; a match is not proof of a defect."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-045",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-046",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-047",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-048",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-049",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    },
+    {
+      "id": "chst-d1-b001-050",
+      "revisionId": null,
+      "issues": [
+        {
+          "code": "citation_incomplete",
+          "severity": "warning",
+          "message": "At least one citation lacks an established edition, locator or source identifier."
+        },
+        {
+          "code": "source_unverified",
+          "severity": "warning",
+          "message": "No currently authorized source-verification evidence was supplied for this exact revision."
+        },
+        {
+          "code": "citation_currency_unknown",
+          "severity": "warning",
+          "message": "Regulatory currency and applicability require examination of the actual current source; this checker does not infer obsolescence from a URL."
+        }
+      ]
+    }
+  ],
+  "duplicates": [],
+  "comparisons": 11175,
+  "comparisonLimitReached": false,
+  "answerPositions": {
+    "a": 41,
+    "b": 35,
+    "c": 38,
+    "d": 36
+  },
+  "longestCorrect": 120,
+  "errorCount": 0,
+  "warningCount": 491,
+  "notice": "Mechanical writing checks only. No source was fetched, no answer was technically verified, and no approval or publication was created."
+}

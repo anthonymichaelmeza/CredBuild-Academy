@@ -15,6 +15,7 @@ import {
 } from "@/modules/curriculum/catalog";
 import { grantStudioRole, revokeStudioRole } from "@/modules/studio/roles";
 import { studioAction } from "@/modules/studio/service";
+import { recordEditorialDecision } from "@/modules/studio/editorial";
 import { questionProductionSummary } from "@/modules/studio/production";
 import {
   normalizedQuestionStem,
@@ -44,6 +45,7 @@ const learner = {
   id: "production-dashboard-learner",
   mode: "managed" as const,
 };
+const editor = { id: "production-dashboard-editor", mode: "managed" as const };
 const exam: ExamAvailability = {
   count: 200,
   durationSeconds: 14400,
@@ -83,19 +85,22 @@ function head(
     data: content(id),
     status: "draft",
     sourceVerified: false,
+    technicalApproved: false,
+    editorialApproved: false,
     ...overrides,
   };
 }
 beforeAll(async () => {
   await seedDemo();
   const query = (await connection()).query;
-  for (const who of [admin, author, reviewer, learner])
+  for (const who of [admin, author, reviewer, learner, editor])
     await query("INSERT INTO users(id,identity_mode) VALUES($1,'managed')", [
       who.id,
     ]);
   await grantStudioRole(admin.id, "administrator", "isolated-dashboard-test");
   await grantStudioRole(author.id, "author", "isolated-dashboard-test");
   await grantStudioRole(reviewer.id, "reviewer", "isolated-dashboard-test");
+  await grantStudioRole(editor.id, "reviewer", "isolated-dashboard-test");
 });
 afterEach(() => vi.unstubAllEnvs());
 afterAll(async () => (await connection()).close());
@@ -113,7 +118,12 @@ describe("actual Question Bank production dashboard", () => {
       [
         head("edited", { data: old }),
         head("edited", { revisionId: "edited:v2", data: current }),
-        head("approved", { status: "approved", sourceVerified: true }),
+        head("approved", {
+          status: "approved",
+          sourceVerified: true,
+          technicalApproved: true,
+          editorialApproved: true,
+        }),
         head("pending", { status: "technical_review", sourceVerified: true }),
         head("retired", { status: "retired" }),
         head("demo", { data: { ...content(), contentKind: "demonstration" } }),
@@ -141,6 +151,46 @@ describe("actual Question Bank production dashboard", () => {
     expect(
       Object.values(questionBankTargets.domains).reduce((a, b) => a + b, 0),
     ).toBe(2000);
+  });
+
+  it("does not label technical approval as final approval before current source, technical and editorial proofs are present", () => {
+    const technical = head("technical-only", {
+      status: "approved",
+      sourceVerified: true,
+      technicalApproved: true,
+    });
+    const final = head("final", {
+      status: "approved",
+      sourceVerified: true,
+      technicalApproved: true,
+      editorialApproved: true,
+    });
+    const missingTechnical = head("missing-technical", {
+      status: "approved",
+      sourceVerified: true,
+      editorialApproved: true,
+      technicalApproved: undefined,
+    });
+    const missingSource = head("missing-source", {
+      status: "approved",
+      technicalApproved: true,
+      editorialApproved: true,
+    });
+    const summary = summarizeQuestionProduction(
+      [technical, final, missingTechnical, missingSource],
+      [{ id: technical.id, data: technical.data }],
+      exam,
+    );
+    expect(summary.totals.approved).toBe(1);
+    expect(summary.totals.awaitingEditorial).toBe(1);
+    expect(summary.totals.awaitingReview).toBe(3);
+    expect(summary.domains[0].approved).toBe(1);
+    expect(
+      summary.topics.find((topic) => topic.topic === final.data.topic)
+        ?.approved,
+    ).toBe(1);
+    expect(summary.totals.published).toBe(1);
+    expect(summary.domains[0].published).toBe(1);
   });
 
   it("flags punctuation, case and spacing matches across active content without treating history as a second question", () => {
@@ -268,6 +318,9 @@ describe("actual Question Bank production dashboard", () => {
       expect(after.totals.needsSourceVerification).toBe(
         before.totals.needsSourceVerification + 1,
       );
+      expect(after.totals.sourceVerifiedAwaitingSubmission).toBe(
+        before.totals.sourceVerifiedAwaitingSubmission - 1,
+      );
       expect(after.exam.productionEligibleTotal).toBe(0);
       expect(after.totals.approved).toBe(0);
       expect(after.totals.published).toBe(0);
@@ -283,5 +336,160 @@ describe("actual Question Bank production dashboard", () => {
     } finally {
       await grantStudioRole(reviewer.id, "reviewer", "isolated-dashboard-test");
     }
+  });
+  it("keeps final approvals out of the dashboard until independent editorial sign-off and removes revoked or superseded proofs", async () => {
+    await studioAction(admin, {
+      action: "verify_blueprint",
+      blueprintRevisionId: CHST_BLUEPRINT_ID,
+      sourceUrl: "https://example.test/dashboard-blueprint-fixture",
+      edition: "Synthetic software fixture only",
+      section: "All canonical statements; no actual technical review claimed",
+      notes:
+        "Isolated in-memory software test only; does not verify any supplied educational content.",
+      objectives: chstObjectives.map((objective) => ({
+        code: objective.id,
+        domain: objective.domain,
+        title: objective.statement,
+      })),
+      humanAttestation: true,
+    });
+    const source = {
+      id: "synthetic-final-approval-source",
+      title: "Fictional source used only for approval-accounting QA",
+      url: "https://example.test/dashboard-final-approval",
+      edition: "Fictional QA edition",
+      section: "Fictional QA section",
+      classification: "professional_guidance" as const,
+    };
+    const expected = (item: StudioItem) => ({
+      id: item.id,
+      revision: item.revision,
+      rowVersion: item.rowVersion,
+    });
+    let item = (await studioAction(author, {
+      action: "create",
+      content: {
+        ...content("Final approval accounting software QA"),
+        sources: [source],
+      },
+    })) as StudioItem;
+    item = (await studioAction(author, {
+      action: "request_source_verification",
+      ...expected(item),
+    })) as StudioItem;
+    item = (await studioAction(reviewer, {
+      action: "verify_sources",
+      ...expected(item),
+      decision: "verified",
+      findings:
+        "Synthetic software source-check fixture; no actual source support claimed.",
+      sourceChecks: [
+        {
+          sourceId: source.id,
+          outcome: "supports",
+          notes: "Fictional evidence for workflow tests only.",
+          edition: source.edition,
+          section: source.section,
+          url: source.url,
+        },
+      ],
+      humanAttestation: true,
+    })) as StudioItem;
+    item = (await studioAction(author, {
+      action: "submit",
+      ...expected(item),
+    })) as StudioItem;
+    item = (await studioAction(reviewer, {
+      action: "review",
+      ...expected(item),
+      decision: "approved",
+      findings: "Synthetic technical approval for software tests only.",
+      sourceChecks: [
+        {
+          sourceId: source.id,
+          outcome: "supports",
+          notes: "Fictional software evidence; no real educational approval.",
+        },
+      ],
+      humanAttestation: true,
+    })) as StudioItem;
+    const pending = await questionProductionSummary(admin);
+    expect(pending.totals.approved).toBe(0);
+    expect(pending.totals.awaitingEditorial).toBe(1);
+    expect(pending.domains[0].approved).toBe(0);
+    await recordEditorialDecision(editor, {
+      ...expected(item),
+      editorialEvent: null,
+      decision: "approved",
+      findings: "Synthetic editorial sign-off for software tests only.",
+      checks: {
+        clarity: true,
+        originality: true,
+        distractors: true,
+        answerClues: true,
+        rights: true,
+      },
+      humanAttestation: true,
+    });
+    const approved = await questionProductionSummary(admin);
+    expect(approved.totals.approved).toBe(1);
+    expect(approved.totals.awaitingEditorial).toBe(0);
+    expect(approved.domains[0].approved).toBe(1);
+    expect(
+      approved.topics.find((topic) => topic.topic === item.data.topic)
+        ?.approved,
+    ).toBe(1);
+    try {
+      await revokeStudioRole(editor.id, "reviewer", "isolated-dashboard-test");
+      const revoked = await questionProductionSummary(admin);
+      expect(revoked.totals.approved).toBe(0);
+      expect(revoked.totals.awaitingEditorial).toBe(1);
+      expect(revoked.totals.needsSourceVerification).toBe(
+        approved.totals.needsSourceVerification,
+      );
+      expect(revoked.totals.published).toBe(approved.totals.published);
+      const [{ count }] = (
+        await (
+          await connection()
+        ).query(
+          "SELECT count(*) FROM studio_editorial_reviews WHERE revision_id=$1",
+          [item.revisionId],
+        )
+      ).rows;
+      expect(Number(count)).toBe(1);
+    } finally {
+      await grantStudioRole(editor.id, "reviewer", "isolated-dashboard-test");
+    }
+    const [event] = (
+      await (
+        await connection()
+      ).query(
+        "SELECT id FROM studio_editorial_reviews WHERE revision_id=$1 ORDER BY event_number DESC LIMIT 1",
+        [item.revisionId],
+      )
+    ).rows;
+    await recordEditorialDecision(editor, {
+      ...expected(item),
+      editorialEvent: String(event.id),
+      decision: "changes_requested",
+      findings:
+        "Synthetic later editorial decision supersedes the earlier approval for this test.",
+      checks: {
+        clarity: false,
+        originality: true,
+        distractors: true,
+        answerClues: true,
+        rights: true,
+      },
+      humanAttestation: true,
+    });
+    const superseded = await questionProductionSummary(admin);
+    expect(superseded.totals.approved).toBe(0);
+    expect(superseded.totals.awaitingEditorial).toBe(1);
+    expect(superseded.domains[0].approved).toBe(0);
+    expect(
+      superseded.topics.find((topic) => topic.topic === item.data.topic)
+        ?.approved,
+    ).toBe(0);
   });
 });

@@ -9,6 +9,11 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { QuestionDrafting } from "@/components/studio/ai-drafting";
+// This unit covers brief and batch controls. Persistent job behavior has its own
+// integration and browser tests; its independent inventory reads are isolated.
+vi.mock("@/components/studio/drafting-jobs", () => ({
+  QuestionDraftingJobs: () => null,
+}));
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();

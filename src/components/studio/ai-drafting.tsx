@@ -3,6 +3,7 @@ import { useState } from "react";
 import { chstDomains, chstObjectives } from "@/modules/curriculum/catalog";
 import { buildQuestionDraftingBrief } from "@/modules/studio/ai-drafting";
 import { Field } from "./fields";
+import { QuestionDraftingJobs } from "./drafting-jobs";
 
 export function QuestionDrafting({
   busy,
@@ -241,6 +242,7 @@ export function QuestionDrafting({
           questions and reviews are preserved.
         </p>
       </section>
+      <QuestionDraftingJobs />
       {error && (
         <p role="alert" className="error">
           {error}

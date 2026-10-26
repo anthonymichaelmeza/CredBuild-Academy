@@ -22,3 +22,6 @@ next-env.d.ts
 *.p12
 *.pfx
 .DS_Store
+
+__pycache__/
+*.py[cod]

@@ -19,10 +19,10 @@ export function QuestionProduction({
     ["draft", "Draft questions", totals.draft],
     [
       "awaiting-review",
-      "Awaiting source or technical review",
+      "Awaiting source, technical or editorial review",
       totals.awaitingReview,
     ],
-    ["approved", "Approved, awaiting publication", totals.approved],
+    ["approved", "Final approval, awaiting publication", totals.approved],
     ["published", "Published questions", totals.published],
     [
       "source-gaps",
@@ -186,8 +186,10 @@ export function QuestionProduction({
         <h2>Domain production goals</h2>
         <p>
           Targets preserve the supplied blueprint weights across the eventual
-          2,000-question bank. Approved counts below mean current revisions
-          awaiting publication.
+          2,000-question bank. Approved counts below require current source,
+          technical and independent editorial approval of the exact revision,
+          awaiting administrator publication. Technical approval alone does not
+          count as final approval.
         </p>
         <div className="coverage-table-wrap">
           <table className="coverage-table">
@@ -324,6 +326,8 @@ export function QuestionProduction({
       <section className="card coverage-panel">
         <h2>Review queue details</h2>
         <p>
+          {totals.awaitingEditorial} technically approved revisions still need
+          independent editorial approval ·{" "}
           {totals.sourceVerifiedAwaitingSubmission} source-verified revisions
           await technical submission · {totals.changesRequested} need changes ·{" "}
           {totals.rejected} rejected · {totals.retired} retired questions
@@ -331,11 +335,16 @@ export function QuestionProduction({
         </p>
         <p>
           Use the Question Bank to examine an exact revision, request
-          independent source verification, submit technical review, and publish
-          only after authorized human approval.
+          independent source verification, submit technical review, obtain
+          separate independent editorial sign-off, and publish only after all
+          required authorized human approvals.
         </p>
         <Link className="text-link" href="/studio/questions">
           Open the review workflow
+        </Link>
+        {" · "}
+        <Link className="text-link" href="/studio/questions/quality">
+          Open editorial review
         </Link>
       </section>
     </div>

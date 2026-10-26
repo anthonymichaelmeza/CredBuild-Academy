@@ -1,3 +1,4 @@
+import { approveEditorialFixture } from "./shared/editorial-fixture";
 import {
   afterAll,
   afterEach,
@@ -561,12 +562,40 @@ it("counts genuinely workflow-published canonical questions rather than rejectin
     ],
     humanAttestation: true,
   });
+  const editor = who("independent-editorial-reviewer");
+  await query("INSERT INTO users(id,identity_mode) VALUES($1,'managed')", [
+    editor.id,
+  ]);
+  await grantStudioRole(editor.id, "reviewer", "isolated-QA");
+  await approveEditorialFixture(editor, item);
   await act(admin, { action: "publish", ...expected(item) });
   vi.mocked(developmentExamFixturesEnabled).mockReturnValue(false);
   const available = await exams.availability(who("published-bank"));
   expect(available.domains[0]).toMatchObject({ eligible: 1, shortfall: 72 });
   expect(available.canStart).toBe(false);
   expect((await exams.adminSummary(admin)).publishedTotal).toBe(1);
+  await query(
+    "DELETE FROM editorial_roles WHERE subject_id=$1 AND role='reviewer'",
+    [editor.id],
+  );
+  expect(
+    (await exams.availability(who("revoked-editorial-reviewer"))).eligibleTotal,
+  ).toBe(0);
+  expect((await exams.adminSummary(admin)).invalidPublished).toBe(1);
+  // The technical/source reviewer is still authorized: editorial proof is independently checked.
+  expect(
+    (
+      await query(
+        "SELECT 1 FROM editorial_roles WHERE subject_id=$1 AND role='reviewer'",
+        [reviewer.id],
+      )
+    ).rows,
+  ).toHaveLength(1);
+  await grantStudioRole(editor.id, "reviewer", "isolated-QA");
+  expect(
+    (await exams.availability(who("restored-editorial-reviewer")))
+      .eligibleTotal,
+  ).toBe(1);
   await query(
     "DELETE FROM editorial_roles WHERE subject_id=$1 AND role='reviewer'",
     [reviewer.id],

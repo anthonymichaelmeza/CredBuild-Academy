@@ -17,6 +17,8 @@ export type ProductionHead = {
   revisionId: string;
   status: StudioStatus;
   sourceVerified: boolean;
+  technicalApproved?: boolean;
+  editorialApproved: boolean;
   data: ContentDraft;
 };
 export type ProductionPublication = { id: string; data: ContentDraft };
@@ -80,6 +82,13 @@ export function summarizeQuestionProduction(
   );
   const count = (status: StudioStatus) =>
     active.filter((row) => row.status === status).length;
+  const finallyApproved = (row: ProductionHead) =>
+    row.status === "approved" &&
+    row.sourceVerified &&
+    row.technicalApproved === true &&
+    row.editorialApproved;
+  const awaitingEditorial = (row: ProductionHead) =>
+    row.status === "approved" && !row.editorialApproved;
   const domains = chstDomains.map((domain) => {
     const matching = active.filter((row) => row.data.domain === domain.code);
     return {
@@ -91,7 +100,7 @@ export function summarizeQuestionProduction(
           domain.code as keyof typeof questionBankTargets.domains
         ],
       total: matching.length,
-      approved: matching.filter((row) => row.status === "approved").length,
+      approved: matching.filter(finallyApproved).length,
       published: released.filter((row) => row.data.domain === domain.code)
         .length,
       needsSourceVerification: matching.filter((row) => !row.sourceVerified)
@@ -114,7 +123,7 @@ export function summarizeQuestionProduction(
       domain,
       topic,
       total: matching.length,
-      approved: matching.filter((row) => row.status === "approved").length,
+      approved: matching.filter(finallyApproved).length,
       published: released.filter(
         (row) => row.data.domain === domain && row.data.topic === topic,
       ).length,
@@ -124,12 +133,22 @@ export function summarizeQuestionProduction(
     totals: {
       total: active.length,
       draft: count("draft"),
-      awaitingReview:
-        count("source_verification_pending") + count("technical_review"),
-      sourceVerifiedAwaitingSubmission: count("source_verified"),
+      awaitingReview: active.filter(
+        (row) =>
+          [
+            "source_verification_pending",
+            "source_verified",
+            "technical_review",
+          ].includes(row.status) ||
+          (row.status === "approved" && !finallyApproved(row)),
+      ).length,
+      awaitingEditorial: active.filter(awaitingEditorial).length,
+      sourceVerifiedAwaitingSubmission: active.filter(
+        (row) => row.status === "source_verified" && row.sourceVerified,
+      ).length,
       changesRequested: count("changes_requested"),
       rejected: count("rejected"),
-      approved: count("approved"),
+      approved: active.filter(finallyApproved).length,
       published: released.length,
       retired: current.filter((row) => row.status === "retired").length,
       needsSourceVerification: active.filter((row) => !row.sourceVerified)

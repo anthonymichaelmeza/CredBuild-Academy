@@ -193,3 +193,20 @@ Do not publish logs containing credentials or learner data.
   Settings can download browser activity as JSON, but import/restore and cloud
   recovery are not implemented. Server export is an activity snapshot, not a
   complete database backup.
+
+## Source research milestone
+
+Connected deployments need additive migrations **0011–0013** before server
+startup. Run `NEXT_PUBLIC_BROWSER_DEMO=false npm run db:migrate` through the
+existing trusted operator workflow for the intended Preview database. The new
+private administrator pages reuse existing authentication/roles; no new paid
+service or model credential is required. Keep `NEXT_PUBLIC_BROWSER_DEMO=true`
+for the credential-free public demonstration; it cannot index private sources.
+
+Research crawling runs only through the explicit bounded maintenance command,
+not on server boot or an HTTP request. PDF extraction requires `pdfinfo` and
+`pdftotext` in that maintenance environment; Vercel is not assumed to contain them.
+Do not expose private indexed source text, uploaded publications or worker
+credentials through public routes. See [research setup](docs/chst-research-engine.md)
+and [actual limitations](research/chst5/RESEARCH_LIMITATIONS.md). No automatic
+production promotion or merge is part of this development change.

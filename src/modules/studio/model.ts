@@ -263,6 +263,8 @@ export type StudioItem = {
   revisionId: string;
   rowVersion: number;
   status: StudioStatus;
+  /** Technical workflow status is separate from this exact editorial proof. */
+  editorialApproved?: boolean;
   data: ContentDraft;
   reviews: StudioReview[];
   sourceVerifications?: SourceVerification[];
@@ -383,6 +385,8 @@ export const questionTemplate: Extract<ContentDraft, { kind: "question" }> = {
     choices: [
       { id: "a", text: "First choice", rationale: "Explain this choice." },
       { id: "b", text: "Second choice", rationale: "Explain this choice." },
+      { id: "c", text: "Third choice", rationale: "Explain this choice." },
+      { id: "d", text: "Fourth choice", rationale: "Explain this choice." },
     ],
     correctChoice: "a",
     explanation: "Provide a source-supported explanation.",

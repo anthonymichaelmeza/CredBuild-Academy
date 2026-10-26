@@ -25,6 +25,7 @@ import {
   type QuestionImportRecord,
   type QuestionImportPreview,
 } from "./batch-import";
+import { requireEditorialApproval } from "./editorial";
 export { requireStudioAccess } from "./roles";
 
 type Row = Record<string, unknown>;
@@ -196,6 +197,15 @@ async function item(
     )
   ).rows;
   const data = contentDraftSchema.parse(row.data);
+  const [editorial] = (
+    await query(
+      "SELECT e.decision,EXISTS(SELECT 1 FROM editorial_roles role WHERE role.subject_id=e.reviewer_id AND role.role='reviewer') AS authorized FROM studio_editorial_reviews e WHERE e.revision_id=$1 ORDER BY e.event_number DESC LIMIT 1",
+      [row.revision_id],
+    )
+  ).rows;
+  const editorialApproved = Boolean(
+    editorial?.decision === "approved" && editorial.authorized,
+  );
   return {
     id,
     kind: data.kind,
@@ -204,6 +214,7 @@ async function item(
     revisionId: String(row.revision_id),
     rowVersion: Number(row.row_version),
     status: row.status as StudioStatus,
+    editorialApproved,
     data,
     publishedRevisionId: row.published_revision_id
       ? String(row.published_revision_id)
@@ -242,6 +253,11 @@ async function item(
     })),
     blockers: [
       ...(await mappingBlockers(query, data)),
+      ...(row.status === "approved" && !editorialApproved
+        ? [
+            "Separate independent human editorial approval of this exact revision is required before final approval and publication.",
+          ]
+        : []),
       ...(sourceVerifications
         .filter((record) => record.revision_id === row.revision_id)
         .at(-1)?.decision === "verified"
@@ -1383,6 +1399,7 @@ export async function studioAction(
       await independent(query, id, String(review.reviewer_id));
       exactSourceChecks(data, review.source_checks as SourceCheck[]);
       await validatePrerequisites(query, id, data);
+      await requireEditorialApproval(query, revisionId);
       await materialize(query, row, data, review, who.id);
       await transition(query, row, "published");
       await audit(query, who.id, "published", id, revisionId);

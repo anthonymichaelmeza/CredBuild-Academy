@@ -1,0 +1,87 @@
+{
+  "origin": "actual_private_attachment_processing",
+  "notice": "Page extraction evidence only; no underlying textbook text, latest-version confirmation or human technical verification.",
+  "documents": [
+    {
+      "id": "attachment-blueprint",
+      "fileName": "CHST-Blueprint.pdf",
+      "version": "2022.04.12",
+      "origin": "user_supplied_attachment",
+      "processedAt": "2026-10-26T22:17:05.432Z",
+      "contentHash": "9d2b0beb74202507f44feba9996f71a5222d4edaf35fc0f44091145ba90bc3d7",
+      "pageCount": 3,
+      "pagesProcessed": [1, 2, 3],
+      "status": "partially_parsed",
+      "sections": [
+        {
+          "locator": "page-1",
+          "page": 1,
+          "characters": 3018,
+          "textSha256": "19160b0e1bfedac07b8a160dc6bcac8851a2c3c9552c57a791de86d18d190a15",
+          "needsManualReview": true,
+          "notes": [
+            "Extracted page text requires visual/layout examination before technical citation; vector figures and formulas were not interpreted.",
+            "Possible table or multi-column layout: extracted spacing is retained but cell relationships require manual review."
+          ]
+        },
+        {
+          "locator": "page-2",
+          "page": 2,
+          "characters": 2495,
+          "textSha256": "42b6db0fd72c68baa4b9700f59c02fca003dccafbdea946d3d0637dc078ab883",
+          "needsManualReview": true,
+          "notes": [
+            "Extracted page text requires visual/layout examination before technical citation; vector figures and formulas were not interpreted.",
+            "Possible table or multi-column layout: extracted spacing is retained but cell relationships require manual review."
+          ]
+        },
+        {
+          "locator": "page-3",
+          "page": 3,
+          "characters": 1366,
+          "textSha256": "c4dedaa458bfe89ef99d899a8d883fd0cffd3651df23c8931fe0736c3823eaad",
+          "needsManualReview": true,
+          "notes": [
+            "Extracted page text requires visual/layout examination before technical citation; vector figures and formulas were not interpreted.",
+            "Possible table or multi-column layout: extracted spacing is retained but cell relationships require manual review."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "attachment-bibliography",
+      "fileName": "CHST-References.pdf",
+      "version": "2021.06.09",
+      "origin": "user_supplied_attachment",
+      "processedAt": "2026-10-26T22:17:05.487Z",
+      "contentHash": "f070a80bd1ea472ac1b0046bf35747c147dd3c6cb034358f9f5a579b00379d93",
+      "pageCount": 2,
+      "pagesProcessed": [1, 2],
+      "status": "partially_parsed",
+      "sections": [
+        {
+          "locator": "page-1",
+          "page": 1,
+          "characters": 4065,
+          "textSha256": "09bd8e2c2a4b7aedd23b398e3e2aa044b621a4b8beed20e4b2393ecb204e2fcc",
+          "needsManualReview": true,
+          "notes": [
+            "Extracted page text requires visual/layout examination before technical citation; vector figures and formulas were not interpreted.",
+            "Possible table or multi-column layout: extracted spacing is retained but cell relationships require manual review."
+          ]
+        },
+        {
+          "locator": "page-2",
+          "page": 2,
+          "characters": 730,
+          "textSha256": "908a1676593e5a9e338ecaa9baf472165758cc8106c983855afb36fd23b6a559",
+          "needsManualReview": true,
+          "notes": [
+            "Extracted page text requires visual/layout examination before technical citation; vector figures and formulas were not interpreted.",
+            "Possible table or multi-column layout: extracted spacing is retained but cell relationships require manual review."
+          ]
+        }
+      ]
+    }
+  ]
+}

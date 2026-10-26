@@ -1,3 +1,4 @@
+import { approveEditorialFixture } from "./shared/editorial-fixture";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { connection } from "@/db/client";
 import { seedDemo } from "@/db/seed";
@@ -99,6 +100,7 @@ async function publish(content: ContentDraft, previous?: StudioItem) {
     ],
     humanAttestation: true,
   });
+  await approveEditorialFixture(reviewer, approved);
   return act(admin, { action: "publish", ...expected(approved) });
 }
 const config = {
@@ -179,6 +181,7 @@ describe("Studio publication feeds connected learner delivery", () => {
       ],
       humanAttestation: true,
     });
+    await approveEditorialFixture(reviewer, approved);
     const published = await act(admin, {
       action: "publish",
       ...expected(approved),

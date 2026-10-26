@@ -1,5 +1,6 @@
 "use client";
 import { useId, useState } from "react";
+import Link from "next/link";
 import { FileCheck2 } from "lucide-react";
 import type {
   BlueprintSummary,
@@ -320,6 +321,10 @@ export function ItemDetails({
   onEdit: () => void;
 }) {
   const administrator = access.roles.includes("administrator");
+  const displayStatus =
+    item.status === "approved" && item.editorialApproved !== true
+      ? "editorial_review"
+      : item.status;
   const canEdit =
     administrator ||
     (access.roles.includes("author") && item.ownerId === access.actorId);
@@ -339,7 +344,7 @@ export function ItemDetails({
       <section className="card studio-panel">
         <div className="studio-item-heading">
           <h2>{item.data.title}</h2>
-          <Status value={item.status} />
+          <Status value={displayStatus} />
         </div>
         <div className="studio-meta">
           <span>
@@ -358,18 +363,29 @@ export function ItemDetails({
             "source_verification_pending",
             "source_verified",
             "technical_review",
+            "editorial_review",
             "approved",
             "published",
             "retired",
           ].map((status) => (
             <span
               key={status}
-              aria-current={item.status === status ? "step" : undefined}
+              aria-current={displayStatus === status ? "step" : undefined}
             >
               {statusLabel(status)}
             </span>
           ))}
         </div>
+        {item.status === "approved" && (
+          <p className="notice compact-notice">
+            {item.editorialApproved
+              ? "Separate technical and human editorial approval are recorded for this exact revision. An administrator may publish it."
+              : "Technical approval is recorded. A separate human editorial sign-off on this exact revision is required before final approval and publication."}{" "}
+            <Link className="text-link" href="/studio/questions/quality">
+              Open editorial review
+            </Link>
+          </p>
+        )}
         {item.publishedRevisionId && (
           <p className="studio-help">
             A published revision is retained while a newer draft is reviewed.
@@ -419,7 +435,7 @@ export function ItemDetails({
           {administrator && item.status === "approved" && (
             <button
               className="button primary"
-              disabled={busy}
+              disabled={busy || item.editorialApproved !== true}
               onClick={() => {
                 if (
                   confirm(

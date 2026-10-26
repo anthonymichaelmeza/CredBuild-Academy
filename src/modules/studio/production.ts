@@ -26,7 +26,14 @@ export async function questionProductionSummary(
         coalesce((SELECT s.decision='verified' AND EXISTS(
           SELECT 1 FROM editorial_roles er WHERE er.subject_id=s.reviewer_id
           AND er.role='reviewer') FROM studio_source_verifications s
-          WHERE s.revision_id=r.id ORDER BY s.event_number DESC LIMIT 1),false) AS source_verified
+          WHERE s.revision_id=r.id ORDER BY s.event_number DESC LIMIT 1),false) AS source_verified,
+        coalesce((SELECT t.decision='approved' AND t.reviewer_id<>c.owner_id AND
+          NOT EXISTS(SELECT 1 FROM studio_revisions contribution WHERE contribution.content_id=c.id AND contribution.author_id=t.reviewer_id) AND
+          EXISTS(SELECT 1 FROM editorial_roles er WHERE er.subject_id=t.reviewer_id AND er.role='reviewer')
+          FROM studio_reviews t WHERE t.revision_id=r.id ORDER BY t.created_at DESC,t.id DESC LIMIT 1),false) AS technical_approved,
+        coalesce((SELECT e.decision='approved' AND EXISTS(
+          SELECT 1 FROM editorial_roles er WHERE er.subject_id=e.reviewer_id AND er.role='reviewer')
+          FROM studio_editorial_reviews e WHERE e.revision_id=r.id ORDER BY e.event_number DESC LIMIT 1),false) AS editorial_approved
       FROM studio_content c
       JOIN studio_revisions r ON r.content_id=c.id AND r.revision=c.current_revision
       JOIN studio_workflow w ON w.revision_id=r.id
@@ -53,6 +60,8 @@ export async function questionProductionSummary(
         revisionId: String(row.revision_id),
         status: row.status as StudioStatus,
         sourceVerified: Boolean(row.source_verified),
+        technicalApproved: Boolean(row.technical_approved),
+        editorialApproved: Boolean(row.editorial_approved),
         data: contentDraftSchema.parse(row.data),
       })),
       publications.rows.map((row) => ({

@@ -1,3 +1,4 @@
+import { approveEditorialFixture } from "./shared/editorial-fixture";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { connection } from "@/db/client";
 import { seedDemo } from "@/db/seed";
@@ -78,7 +79,7 @@ async function verify(item: StudioItem) {
 }
 async function approve(item: StudioItem) {
   const submitted = await act(author, { action: "submit", ...expected(item) });
-  return act(reviewer, {
+  const approved = await act(reviewer, {
     action: "review",
     ...expected(submitted),
     decision: "approved",
@@ -90,6 +91,7 @@ async function approve(item: StudioItem) {
     })),
     humanAttestation: true,
   });
+  return approveEditorialFixture(reviewer, approved);
 }
 beforeAll(async () => {
   await seedDemo();

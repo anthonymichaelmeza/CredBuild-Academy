@@ -42,6 +42,28 @@ order, preserving grading and existing attempts. Apply additive migrations
 [question-bank development guide](docs/question-bank-development.md) for review,
 import and deployment instructions.
 
+## Source research and master curriculum
+
+The latest development milestone adds protected **Source research**,
+**Curriculum manager**, **Question quality and editorial review**, and persistent
+source-gated drafting requests. All 78 supplied statements have separate CredBuilt
+learning outcomes and evidence gaps; three prioritized lesson briefs open in the
+existing editor. Future publication requires independent editorial sign-off as
+well as the existing source and technical review.
+
+Actual research is recorded in [the complete report](research/chst5/COMPLETION_REPORT.md)
+and the [seven requested audit files](research/chst5). All 43 attempted URLs were
+blocked by the workspace proxy; zero remote technical documents or textbooks were
+retrieved. Two supplied PDFs yielded five extracted page sections. The existing
+150 drafts remain unverified, and no additional unsupported questions or technical
+lessons were fabricated. A successful extraction or mapped objective is not
+verified instructional coverage.
+
+Apply additive migrations **0011–0013** before connected startup. See the
+[research-engine setup guide](docs/chst-research-engine.md) for private imports,
+maintenance workers, human section review, source acquisition and deployment.
+No model provider is connected and no paid source text is distributed publicly.
+
 ## Browser preview: no credentials required
 
 For a Vercel demonstration, set **`NEXT_PUBLIC_BROWSER_DEMO=true`** in the

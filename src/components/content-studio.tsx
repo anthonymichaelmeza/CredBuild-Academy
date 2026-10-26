@@ -29,13 +29,15 @@ export function ContentStudio({
   initial,
   initialFilters = {},
   questionBank = false,
+  initialDraft,
 }: {
   initial: Snapshot;
   initialFilters?: LibraryFilters;
   questionBank?: boolean;
+  initialDraft?: ContentDraft;
 }) {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(initial);
-  const [task, setTask] = useState<Task>("library");
+  const [task, setTask] = useState<Task>(initialDraft ? "editor" : "library");
   const [selectedId, setSelected] = useState<string | null>(
     initial.items[0]?.id || null,
   );
@@ -46,7 +48,15 @@ export function ContentStudio({
     draft: ContentDraft;
     original: StudioItem | null;
     key: string;
-  } | null>(null);
+  } | null>(
+    initialDraft
+      ? {
+          draft: structuredClone(initialDraft),
+          original: null,
+          key: "research-lesson-brief",
+        }
+      : null,
+  );
   const [preview, setPreview] = useState<ImportPreview | null>(null);
   const [questionPreview, setQuestionPreview] =
     useState<QuestionImportPreview | null>(null);
@@ -64,7 +74,11 @@ export function ContentStudio({
   const [busy, setBusy] = useState(false);
   const pending = useRef(false);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [notice, setNotice] = useState(
+    initialDraft
+      ? "Source-blocked lesson planning draft. Technical explanations and assessment content require source examination and human review before publication."
+      : "",
+  );
   const mounted = useRef(false);
   const reads = useRef({
     epoch: 0,
@@ -365,6 +379,19 @@ export function ContentStudio({
           <Link className="button secondary" href="/studio/exams">
             Examination management
           </Link>
+        )}
+        {administrator && (
+          <>
+            <Link className="button secondary" href="/studio/research">
+              Source research
+            </Link>
+            <Link className="button secondary" href="/studio/curriculum">
+              Curriculum manager
+            </Link>
+            <Link className="button secondary" href="/studio/questions/quality">
+              Question quality and editorial review
+            </Link>
+          </>
         )}
         {administrator && (
           <Link
