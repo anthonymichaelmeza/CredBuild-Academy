@@ -3,17 +3,15 @@ import type { SessionView } from "../../src/modules/practice/types";
 
 const origin = "http://127.0.0.1:3450";
 async function identify(page: Page, id: string) {
-  await page
-    .context()
-    .addCookies([
-      {
-        name: "credbuilt_demo",
-        value: id,
-        url: origin,
-        httpOnly: true,
-        sameSite: "Lax",
-      },
-    ]);
+  await page.context().addCookies([
+    {
+      name: "credbuilt_demo",
+      value: id,
+      url: origin,
+      httpOnly: true,
+      sameSite: "Lax",
+    },
+  ]);
 }
 
 test("explicit local ten-second fixture mode finalizes from the server deadline", async ({
