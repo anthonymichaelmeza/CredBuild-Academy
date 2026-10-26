@@ -2,6 +2,8 @@ import {
   pgTable,
   text,
   integer,
+  boolean,
+  unique,
   timestamp,
   jsonb,
   primaryKey,
@@ -54,6 +56,26 @@ export const sessions = pgTable("learning_sessions", {
     .defaultNow()
     .notNull(),
 });
+/** Trusted provenance and idempotency for full exams, sharing learner session history. */
+export const fullExamAttempts = pgTable(
+  "full_exam_attempts",
+  {
+    sessionId: text("session_id")
+      .primaryKey()
+      .references(() => sessions.id),
+    ownerId: text("owner_id")
+      .notNull()
+      .references(() => users.id),
+    requestKey: text("request_key").notNull(),
+    policyVersion: text("policy_version").notNull(),
+    developmentFixture: boolean("development_fixture").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [unique().on(table.ownerId, table.requestKey)],
+);
+
 export const bookmarks = pgTable(
   "bookmarks",
   {

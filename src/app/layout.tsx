@@ -11,6 +11,7 @@ import "./planner.css";
 import "./studio.css";
 import "./curriculum.css";
 import "./practice.css";
+import "./exam.css";
 import "./dark-theme.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";

@@ -214,3 +214,46 @@ verification remain unconfirmed. Live Clerk/hosted PostgreSQL tests remain
 **Blocked: Live Provider Validation**. See
 [current release report](docs/chst-curriculum-release.md) and
 [source provenance](docs/chst-source-provenance.md).
+
+## Full-length exam engine verification
+
+The preserved curriculum results above predate the dedicated full-exam changes.
+Run its isolated desktop/tablet/mobile suite after stopping other Next servers:
+
+```bash
+npm run test:e2e:exam
+```
+
+The configuration uses the exact guarded `.local/exam-e2e` disposable database,
+development-only synthetic arithmetic items and explicit local-only fixture
+flags. It never claims that fixtures are approved CHST questions or points at
+a managed database. Tests cover a complete 200-question interface, private
+active payloads, answers/flags/position, refresh and same-owner second-context
+resume, early/expired submission, results/review/history, shortages and access.
+See [the exam guide](docs/full-length-exam.md) for policy, exact content counts,
+local/Vercel setup and final executed evidence. Live-provider validation and
+reviewed technical content remain separate gates.
+
+Completed full-exam milestone validation:
+
+- **229/229 unit/integration tests passed across 49 files** (136 seconds).
+- **12/12 dedicated full-exam browser cases passed** (53.6 seconds), covering
+  desktop, mobile and iPad-sized **Chromium**, not native Safari.
+- **8/8 preserved server-backed desktop/mobile cases passed**: six initial
+  cases and two original rehearsal cases rerun after the interface retained its
+  truthful unavailable-state heading. The original tests were not weakened.
+- **10/10 Content Studio desktop/mobile cases passed** (1.2 minutes).
+- **22/22 production browser-demo desktop/mobile cases passed** (55 seconds).
+  Together the four suites passed **52 browser cases**.
+- Both server-mode (`NEXT_PUBLIC_BROWSER_DEMO=false`) and browser-demo
+  (`NEXT_PUBLIC_BROWSER_DEMO=true`) production builds passed without warnings.
+- TypeScript and whole-tree ESLint passed. After tightening the fixture guard
+  to require the literal `.local/exam-e2e` path, all **10/10 fixture-boundary
+  tests passed** and both production modes were rebuilt successfully. These
+  focused reruns do not add duplicate cases to the 229-test total above.
+- Formatting and diff checks passed; the production dependency audit reports
+  **0 vulnerabilities**.
+
+Live-provider validation and actual technical source approval remain outside
+these local results. The CI quality workflow now includes `test:e2e:exam`;
+local success does not assert the status of a remote CI or Vercel deployment.

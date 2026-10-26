@@ -30,6 +30,8 @@ export function Performance({
   const [objective, setObjective] = useState("all");
   const [days, setDays] = useState("all");
   const [now] = useState(() => Date.now());
+  const sessionHref = (id: string) =>
+    `${saved.find((session) => session.id === id)?.examKind === "chst_full_length" ? "/exam" : "/practice"}/${id}`;
   const stats = analyzeSessions(saved, questions, {
     domain,
     topic,
@@ -229,7 +231,7 @@ export function Performance({
                   </Link>
                   <Link
                     className="text-link"
-                    href={`/practice/${t.sessionIds[0]}`}
+                    href={sessionHref(t.sessionIds[0])}
                   >
                     Underlying session
                   </Link>
@@ -284,7 +286,7 @@ export function Performance({
                   </Link>
                   <Link
                     className="text-link"
-                    href={`/practice/${item.sessionIds[0]}`}
+                    href={sessionHref(item.sessionIds[0])}
                   >
                     Underlying session
                   </Link>
@@ -319,7 +321,7 @@ export function Performance({
                 </p>
                 <Link
                   className="text-link"
-                  href={`/practice/${item.sessionIds[0]}`}
+                  href={sessionHref(item.sessionIds[0])}
                 >
                   Review a contributing session
                   <ArrowRight size={14} />
@@ -372,17 +374,19 @@ export function Performance({
         <h2>Session history</h2>
         {visibleHistory.length ? (
           visibleHistory.map((s) => (
-            <Link className="history-row" key={s.id} href={`/practice/${s.id}`}>
+            <Link className="history-row" key={s.id} href={sessionHref(s.id)}>
               <span>
                 <strong>
-                  {s.mode === "adaptive"
-                    ? "Adaptive"
-                    : s.mode === "exam"
-                      ? "Exam rehearsal"
-                      : s.mode === "timed"
-                        ? "Timed"
-                        : "Learning"}{" "}
-                  practice ·{" "}
+                  {s.examKind === "chst_full_length"
+                    ? "Full-length exam"
+                    : s.mode === "adaptive"
+                      ? "Adaptive"
+                      : s.mode === "exam"
+                        ? "Exam rehearsal"
+                        : s.mode === "timed"
+                          ? "Timed"
+                          : "Learning"}{" "}
+                  {s.examKind === "chst_full_length" ? " · " : "practice · "}
                   {s.bank === "published"
                     ? "reviewed bank"
                     : s.bank === "curriculum_drafts"

@@ -172,6 +172,11 @@ export async function ownedSession(id: string, owner: string) {
     .from(sessions)
     .where(and(eq(sessions.id, id), eq(sessions.ownerId, owner)));
   if (!row) throw new AccessError("Session not found.", 404);
+  if (row.data.examKind === "chst_full_length")
+    throw new AccessError(
+      "Use the full-length examination workspace to resume or change this attempt.",
+      403,
+    );
   return row.data;
 }
 async function save(session: Session) {

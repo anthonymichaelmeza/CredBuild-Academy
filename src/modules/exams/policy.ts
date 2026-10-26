@@ -3,6 +3,28 @@ import {
   blueprint,
   domains,
 } from "@/modules/catalog/blueprint";
+import { CHST_BLUEPRINT_VERSION } from "@/modules/curriculum/catalog";
+
+/** A CredBuilt practice configuration requested by the product owner. This
+ * does not attest that the latest BCSP blueprint or official duration was read. */
+export const chstPracticeExamPolicy = {
+  version: "chst5-practice-2022.04.12-240m-v1",
+  certification: "chst",
+  count: 200,
+  durationSeconds: 14_400,
+  durationBasis: "credbuilt_practice_configuration",
+  blueprintVersion: CHST_BLUEPRINT_VERSION,
+  latestOfficialVersionConfirmed: false,
+  recentWindowDays: 30,
+  domains: domains.map((domain, index) => ({
+    code: domain.code,
+    title: domain.title,
+    required: allocateDomains(
+      200,
+      domains.map((item) => item.weight),
+    )[index],
+  })),
+} as const;
 export const fullExamPolicy = {
   certification: "chst",
   version: "chst-demo-policy-0.4",

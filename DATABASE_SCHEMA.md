@@ -13,6 +13,7 @@ maps the application-used subset in `src/db/schema.ts`.
 | `0003_learner_profiles.sql`   | Owner-scoped goals/planner profile with optimistic revision                                                                                           |
 | `0004_content_studio.sql`     | Trusted editorial roles, immutable revisions/reviews/audit, guarded workflow/publication, JSON import previews and lesson publication                 |
 | `0005_curriculum_sources.sql` | Supplied-document/objective/publication catalog, separate source verification, canonical mapping guards, content reports/triage and editorial indexes |
+| `0006_full_length_exams.sql`  | Full-exam metadata/owner request-key uniqueness, domain/history/deadline indexes and immutable full-session validation                                |
 
 `_credbuilt_migrations(id, sha256)` records applied source hashes. Never rewrite
 an applied file; add a numbered migration and register its literal path in
@@ -33,6 +34,7 @@ initialize/update automatically. See [DEPLOYMENT.md](DEPLOYMENT.md).
 | `published_questions`         | One pointer per logical question to a unique approved version; publisher/time. Trigger validates instructional content, matching verified blueprint/objective and supporting review.                                                                                    |
 | `content_audit_events`        | Identity sequence, question-version ID, actor, event and timestamp. Legacy publication audit; append-only after `0004`. Full Studio workflow events are in `studio_audit`.                                                                                              |
 | `learning_sessions`           | UUID-valued text ID, owner FK, status, optimistic revision, typed JSONB session snapshot and created timestamp; owner/created index.                                                                                                                                    |
+| `full_exam_attempts`          | Existing session FK, owner FK, trusted policy version, development-fixture marker, creation timestamp and unique owner/request key; replay-safe creation identity.                                                                                                      |
 | `bookmarks`                   | Composite owner/question ID key, created timestamp. Question identity is logical; it is not a question-version FK.                                                                                                                                                      |
 | `lesson_versions`             | Unique lesson ID/version, certification/blueprint FKs, domain/topic, subtopic/objective-code arrays, content/review state, structured lesson JSONB and created timestamp. All revisions are immutable by trigger; demo revisions must be draft.                         |
 | `lesson_progress`             | Composite owner/lesson-version FK key, optimistic revision, typed section/check/completion JSONB and updated timestamp; owner/updated index.                                                                                                                            |
@@ -66,6 +68,16 @@ answers/confidence/response time, flags, mode/status, creation/submission times
 and optional deadline/reason/topic. Legacy records without pins mean version 1;
 missing pinned content fails rather than substituting a newer key. Selection
 deduplicates logical identities before applying filters/counts.
+
+Full attempts reuse session snapshots with `examKind='chst_full_length'`, saved
+current position, policy/duration and an optional development-fixture marker.
+Migration `0006` enforces 200 distinct IDs with explicit revision pins, a valid
+0–199 position, matching owner/status/mode, answers/flags belonging to that
+attempt and a 14,400-second deadline. Identity, pins, policy/deadline and submitted
+snapshots cannot be edited. The dedicated service serializes owner-scoped
+updates and finalizes expired attempts on access using the fixed deadline;
+there is no independent background-expiry worker. See
+[full-exam lifecycle and setup](docs/full-length-exam.md).
 
 Question data contains choice rationales, answer key, explanation and reference;
 it stays server-side on server grading paths. `SessionView` and performance DTOs
@@ -135,8 +147,10 @@ Objective/domain indexes and certification/kind indexes support editorial
 filtering; the Studio list paginates 25 rows with a true total, including records
 beyond the first page. Coverage derives current draft/review totals and active
 publication counts separately. This schema has no 100-question cap and targets
-2,000+ records per certification; large-bank performance/load tests, query-level
-published selection pagination and normalized session items remain scale work.
+2,000+ records per certification. The dedicated full-exam candidate loader now
+uses keyset pagination across active publication pointers. Large-bank load
+tests, broader practice-query scaling, normalized session items and operations
+remain separate scale work.
 
 Source verification records exact URL/edition/section and per-source findings.
 A source without a URL must match a registered physical publication's title

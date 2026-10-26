@@ -14,6 +14,13 @@ Development branch: **`development/stable-learning-foundation`**. `main` and the
 production demo remain unchanged until the product owner approves a merge or
 promotion. A pushed development branch may trigger a Vercel **Preview**.
 
+The full-length exam milestone adds a dedicated 200-question reader, configured
+four-hour server deadline, autosave/resume, filtered review, results/history and
+administrator eligibility management. A real full exam remains locked because
+the shipped bank has **0 eligible approved/published questions**. Development-only
+arithmetic fixtures exercise the engine without promoting any CHST drafts.
+See [full-length exam setup and limits](docs/full-length-exam.md).
+
 ## Browser preview: no credentials required
 
 For a Vercel demonstration, set **`NEXT_PUBLIC_BROWSER_DEMO=true`** in the
@@ -81,6 +88,13 @@ or generated artifacts. The safe template is
 - Short exam rehearsals include countdowns, autosave and editable choices.
   Server deadlines are checked on requests; browser mode uses the visitor's
   clock. The full 200-question CHST exam remains unavailable.
+- **CHST Full-Length Exam Simulation** is accessible from the dashboard and
+  `/exam`; `/exam/history` stores owner-scoped full attempts. Connected full
+  attempts pin 200 distinct revisions and use a fixed 240-minute CredBuilt
+  practice configuration, with canonical domain allocation 73/40/45/42.
+  `/studio/exams` reports actual approval/publication shortfalls to trusted
+  administrators. Latest official duration/version verification remains
+  unavailable; no official pass threshold is claimed.
 - Analytics derive accuracy, repeated misses, history and recommendations from
   saved activity. Client analytics receive metadata, not the server question
   bank or active-exam correctness.
@@ -136,6 +150,7 @@ npm test
 npm run build
 npm run test:e2e
 npm run test:e2e:studio
+npm run test:e2e:exam
 ```
 
 Browser production tests require a browser-mode build first; modes are checked
@@ -149,6 +164,7 @@ provider exclusions.
 - [Content Studio operations](docs/editorial-workflow.md)
 - [CHST content-engine setup](docs/chst-content-engine.md) and
   [current curriculum release report](docs/chst-curriculum-release.md)
+- [Full-length exam engine, development verification and content gates](docs/full-length-exam.md)
 - [Earlier v0.6A/B checkpoint](docs/v06-release-report.md)
 - [Deployment, migration and rollback](DEPLOYMENT.md)
 - [Testing](TESTING.md) and [security assumptions](SECURITY.md)

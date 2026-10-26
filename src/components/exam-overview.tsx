@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, LockKeyhole, Timer } from "lucide-react";
-import { fullExamBlockers, fullExamPolicy } from "@/modules/exams/policy";
+import { ArrowRight, Timer } from "lucide-react";
+import { FullExamOverview } from "@/components/full-exam-overview";
 export function ExamOverview({ browserOnly }: { browserOnly: boolean }) {
   const router = useRouter();
   const [minutes, setMinutes] = useState(10);
@@ -40,12 +40,13 @@ export function ExamOverview({ browserOnly }: { browserOnly: boolean }) {
             Get comfortable with exam day<span className="orange">.</span>
           </h1>
           <p>
-            A short rehearsal today. A complete simulation when the reviewed
-            bank is ready.
+            Build your exam routine with a short rehearsal, or prepare for a
+            blueprint-balanced full-length attempt.
           </p>
         </div>
       </div>
       <div className="exam-overview-grid">
+        <FullExamOverview browserOnly={browserOnly} />
         <section className="card rehearsal-card">
           <Timer size={29} />
           <h2>A short demo rehearsal</h2>
@@ -110,40 +111,6 @@ export function ExamOverview({ browserOnly }: { browserOnly: boolean }) {
               <ArrowRight size={17} />
             </Link>
           )}
-        </section>
-        <section className="card full-exam-gate">
-          <LockKeyhole size={28} />
-          <span className="eyebrow">FULL-LENGTH CHST PREPARATION</span>
-          <h2>Not available yet</h2>
-          <p>
-            The architecture supports a 200-question policy, versioned domain
-            allocation, pinned session questions, deadlines, autosave,
-            submission, and results. The full exam cannot start until its
-            content and timing gates pass.
-          </p>
-          <div className="result-domain">
-            <span>Reviewed production pool</span>
-            <strong>0 / 200</strong>
-          </div>
-          {fullExamPolicy.allocation.map((n, i) => (
-            <div className="result-domain" key={i}>
-              <span>Domain {i + 1} · provisional allocation</span>
-              <strong>{n} questions</strong>
-            </div>
-          ))}
-          <details>
-            <summary>What is still required?</summary>
-            <ul>
-              {fullExamBlockers([0, 0, 0, 0], null).map((b) => (
-                <li key={b}>{b}</li>
-              ))}
-            </ul>
-          </details>
-          <p className="fine-print">
-            Current domain headings/weights are user-supplied CHST5 data, not
-            independently verified. No passing score or official duration is
-            fabricated.
-          </p>
         </section>
       </div>
     </div>

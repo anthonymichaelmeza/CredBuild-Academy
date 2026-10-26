@@ -301,6 +301,11 @@ export function ContentStudio({
             Curriculum coverage and reports
           </Link>
         )}
+        {administrator && (
+          <Link className="button secondary" href="/studio/exams">
+            Examination management
+          </Link>
+        )}
       </div>
       {error && (
         <p className="error" role="alert">

@@ -66,6 +66,13 @@ export type Session = {
   /** Absent on legacy attempts, which always use the demonstration bank. */
   bank?: PracticeBank;
   certification?: string;
+  /** Dedicated full-length attempts keep the existing owner/revision history. */
+  examKind?: "chst_full_length";
+  currentQuestionIndex?: number;
+  examPolicyVersion?: string;
+  durationSeconds?: number;
+  /** Synthetic local QA only; never a reviewed CHST examination. */
+  developmentFixture?: boolean;
 };
 export type SafeQuestion = Omit<
   Question,
@@ -77,6 +84,8 @@ export type SafeQuestion = Omit<
   | "solutionSteps"
 > & { choices: { id: string; text: string }[] };
 export type SessionView = Omit<Session, "ownerId" | "answers"> & {
+  /** Authoritative response time used to calibrate the examination countdown. */
+  serverNow?: string;
   answers: Record<string, Omit<Answer, "correct"> & { correct?: boolean }>;
   questions: SafeQuestion[];
   feedback: Record<

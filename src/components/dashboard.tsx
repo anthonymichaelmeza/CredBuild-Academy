@@ -59,7 +59,11 @@ export function Dashboard({
           <div className="hero-actions">
             <Link
               className="button primary"
-              href={resume ? `/practice/${resume.id}` : "/practice"}
+              href={
+                resume
+                  ? `${resume.examKind === "chst_full_length" ? "/exam" : "/practice"}/${resume.id}`
+                  : "/practice"
+              }
             >
               {resume ? "Resume your session" : "Start practicing"}
               <ArrowRight size={17} />
@@ -82,6 +86,34 @@ export function Dashboard({
             <small>BUILD WHAT’S NEXT</small>
           </div>
           <span className="art-coordinate">01 / FOUNDATION</span>
+        </div>
+      </section>
+      <section className="card full-exam-dashboard-callout">
+        <span className="action-icon">
+          <Timer size={26} />
+        </span>
+        <div>
+          <div className="eyebrow">YOUR EXAM-DAY PREPARATION</div>
+          <h2>CHST Full-Length Exam Simulation</h2>
+          <p>
+            200 unique questions · 240-minute practice configuration · Saved
+            server deadline
+          </p>
+          <small>
+            {browserOnly
+              ? "Full exams stay locked in this browser demo; short rehearsals remain available."
+              : "Check approved question coverage, resume an attempt, or review your examination record."}
+          </small>
+        </div>
+        <div className="full-exam-dashboard-actions">
+          <Link className="button primary" href="/exam">
+            Open Exam Simulator
+            <ArrowRight size={16} />
+          </Link>
+          <Link className="text-link" href="/exam/history">
+            Exam History
+            <ArrowUpRight size={15} />
+          </Link>
         </div>
       </section>
       <div className="section-heading">
@@ -209,9 +241,9 @@ export function Dashboard({
             {
               href: "/exam",
               title: "Prepare for exam day",
-              text: "Try a short rehearsal and see full-exam requirements.",
+              text: "Full-length exam coverage, history and short rehearsals.",
               icon: Timer,
-              tag: "DEMO REHEARSAL",
+              tag: "EXAM SIMULATOR",
             },
           ].map(({ href, title, text, icon: Icon, tag }) => (
             <Link href={href} key={href} className="next-action">
@@ -241,21 +273,30 @@ export function Dashboard({
         {sessions.length ? (
           <div className="activity-list">
             {sessions.slice(0, 3).map((s) => (
-              <Link key={s.id} href={`/practice/${s.id}`}>
+              <Link
+                key={s.id}
+                href={`${s.examKind === "chst_full_length" ? "/exam" : "/practice"}/${s.id}`}
+              >
                 <span className="action-icon">
                   <Crosshair size={19} />
                 </span>
                 <span>
                   <strong>
-                    {
-                      {
-                        adaptive: "Adaptive",
-                        learning: "Learning",
-                        timed: "Timed",
-                        exam: "Exam rehearsal",
-                      }[s.mode]
-                    }{" "}
-                    practice · demo
+                    {s.examKind === "chst_full_length" ? (
+                      "CHST full-length examination"
+                    ) : (
+                      <>
+                        {
+                          {
+                            adaptive: "Adaptive",
+                            learning: "Learning",
+                            timed: "Timed",
+                            exam: "Exam rehearsal",
+                          }[s.mode]
+                        }{" "}
+                        practice · demo
+                      </>
+                    )}
                   </strong>
                   <small>
                     {Object.keys(s.answers).length} of {s.questionIds.length}{" "}
