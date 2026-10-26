@@ -42,6 +42,17 @@ async function migrationSources() {
       path.join(process.cwd(), "src/db/migrations/0006_full_length_exams.sql"),
       "utf8",
     ),
+    readFile(
+      path.join(process.cwd(), "src/db/migrations/0007_exam_demo_timing.sql"),
+      "utf8",
+    ),
+    readFile(
+      path.join(
+        process.cwd(),
+        "src/db/migrations/0008_question_import_ids.sql",
+      ),
+      "utf8",
+    ),
   ]);
   return sources.map((source, i) => ({
     id: String(i + 1).padStart(4, "0"),

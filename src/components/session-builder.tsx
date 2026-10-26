@@ -430,8 +430,9 @@ export function SessionBuilder({
                 required
               />
               <small>
-                Your choice, not a verified BCSP exam duration. Expired sessions
-                submit on the open page or when reopened.
+                Choose a duration for this practice session. Full-length exams
+                use the standard four-hour setting. Expired sessions submit on
+                the open page or when reopened.
               </small>
             </label>
           )}

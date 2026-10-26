@@ -16,6 +16,7 @@ import {
 } from "./selection";
 import {
   developmentExamFixturesEnabled,
+  developmentExamDurationSeconds,
   developmentExamQuestions,
 } from "./development-fixtures";
 import type {
@@ -82,8 +83,12 @@ function availabilityFrom(
   signedIn: boolean,
   developmentFixture = false,
   bankConnected = true,
+  productionPool?: Question[],
 ): ExamAvailability {
   const counts = fullLengthAvailability(pool, { developmentFixture });
+  const production = fullLengthAvailability(
+    productionPool || (developmentFixture ? [] : pool),
+  );
   const blockers = counts.domains
     .filter((domain) => domain.shortfall > 0)
     .map(
@@ -100,7 +105,16 @@ function availabilityFrom(
     );
   return {
     count: 200,
-    durationSeconds: 14400,
+    durationSeconds: developmentFixture
+      ? developmentExamDurationSeconds()
+      : 14400,
+    standardDurationSeconds: 14400,
+    developmentSimulatorAvailable: developmentExamFixturesEnabled(),
+    productionReady:
+      bankConnected &&
+      production.domains.every((domain) => domain.shortfall === 0),
+    productionEligibleTotal: production.eligibleTotal,
+    productionDomains: production.domains,
     blueprintVersion: chstPracticeExamPolicy.blueprintVersion,
     latestOfficialVersionConfirmed: false,
     durationBasis: "credbuilt_practice_configuration",
@@ -121,7 +135,13 @@ export async function availability(
   assertLearner(who);
   const c = await ready();
   if (developmentExamFixturesEnabled())
-    return availabilityFrom(developmentExamQuestions(), true, true);
+    return availabilityFrom(
+      developmentExamQuestions(),
+      true,
+      true,
+      true,
+      await publishedCandidates(c.query),
+    );
   return availabilityFrom(await publishedCandidates(c.query), true);
 }
 
@@ -173,6 +193,9 @@ function newSession(
   now: number,
   id: string = randomUUID(),
 ): Session {
+  const duration = developmentFixture
+    ? developmentExamDurationSeconds()
+    : 14_400;
   return {
     id,
     ownerId: owner,
@@ -187,13 +210,16 @@ function newSession(
     createdAt: new Date(now).toISOString(),
     submittedAt: null,
     revision: 0,
-    deadlineAt: new Date(now + 14_400_000).toISOString(),
+    deadlineAt: new Date(now + duration * 1000).toISOString(),
     bank: developmentFixture ? "demonstration" : "published",
     certification: "chst",
     examKind: "chst_full_length",
     currentQuestionIndex: 0,
-    examPolicyVersion: chstPracticeExamPolicy.version,
-    durationSeconds: 14400,
+    examPolicyVersion:
+      developmentFixture && duration !== 14400
+        ? `${chstPracticeExamPolicy.version}-development-${duration}s`
+        : chstPracticeExamPolicy.version,
+    durationSeconds: duration,
     developmentFixture,
   };
 }
@@ -218,7 +244,7 @@ async function insertAttempt(
       session.id,
       session.ownerId,
       requestKey,
-      chstPracticeExamPolicy.version,
+      session.examPolicyVersion!,
       Boolean(session.developmentFixture),
     ],
   );

@@ -42,6 +42,9 @@ export function ExamAdmin({
         <Link className="text-link" href="/studio/coverage">
           Curriculum coverage
         </Link>
+        <Link className="text-link" href="/studio/questions">
+          Question Bank
+        </Link>
         <Link className="text-link" href="/exam">
           Learner exam overview
         </Link>
@@ -63,10 +66,10 @@ export function ExamAdmin({
           {availability.blueprintVersion}.
         </p>
         <p className="fine-print">
-          Four hours is the CredBuilt practice configuration. The latest
-          official blueprint and official duration have not been confirmed.
-          Existing supplied domain numbering is preserved. No official passing
-          score or exam-readiness prediction is applied.
+          Standard examination setting: four hours. Supplied CHST5 domain
+          numbering is preserved. Current document-version checks are recorded
+          in the source provenance documentation. No official passing score or
+          exam-readiness prediction is applied.
         </p>
         {availability.blockers.length > 0 && (
           <ul>
@@ -82,6 +85,41 @@ export function ExamAdmin({
             production-ready bank.
           </p>
         )}
+      </section>
+
+      <section
+        className="card coverage-panel"
+        aria-label="Independent examination readiness"
+      >
+        <h2>Production and demonstration readiness</h2>
+        <dl className="result-domain">
+          <dt>Approved eligible questions</dt>
+          <dd>
+            {availability.productionEligibleTotal ?? availability.eligibleTotal}{" "}
+            / 200
+          </dd>
+        </dl>
+        <dl className="result-domain">
+          <dt>Production exam</dt>
+          <dd>
+            {(availability.productionReady ?? availability.canStart)
+              ? "Ready"
+              : "Not ready"}
+          </dd>
+        </dl>
+        <dl className="result-domain">
+          <dt>Development simulator</dt>
+          <dd>
+            {availability.developmentSimulatorAvailable
+              ? "Available locally"
+              : "Not enabled in this environment"}
+          </dd>
+        </dl>
+        <p className="fine-print">
+          A demonstration provider never contributes approved questions or makes
+          the production exam ready. Browser demonstrations use their own
+          explicitly labeled sample bank and local history.
+        </p>
       </section>
 
       <p className="fine-print">

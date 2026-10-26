@@ -1,5 +1,10 @@
 # Full-length CHST practice examinations
 
+> Historical engine checkpoint at `b6890e2`. For the current browser-demonstration
+> launch path, shortened local QA timing and admin Question Bank, read
+> [exam activation](exam-activation.md). The validation below is preserved as
+> checkpoint evidence; its browser-demo launch restriction is superseded.
+
 This extends the existing CredBuilt Academy on
 `development/stable-learning-foundation`. It preserves the original practice,
 lessons, browser demonstrations and curriculum/content-review foundation.

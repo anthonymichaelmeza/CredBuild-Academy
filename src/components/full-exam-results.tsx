@@ -59,10 +59,12 @@ export function FullExamResults({
   session,
   history = [],
   comparisonUnavailable = false,
+  browserOnly = false,
 }: {
   session: SessionView;
   history?: ExamHistoryItem[];
   comparisonUnavailable?: boolean;
+  browserOnly?: boolean;
 }) {
   const router = useRouter();
   const [review, setReview] = useState(false);
@@ -105,6 +107,17 @@ export function FullExamResults({
     setBusy(true);
     setError("");
     try {
+      if (browserOnly) {
+        const { browserFullExamAction } = await import("@/demo/browser-store");
+        const result = browserFullExamAction(
+          { action: "study_missed", sessionId: session.id },
+          session.revision,
+        );
+        if (!("id" in result))
+          throw new Error("Unable to create demonstration practice.");
+        router.push(`/practice/${result.id}`);
+        return;
+      }
       const response = await fetch("/api/exams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -135,7 +148,9 @@ export function FullExamResults({
           </h1>
           <p>
             {session.submissionReason === "expired"
-              ? "Time expired. The server finalized your saved answers at the examination deadline."
+              ? browserOnly
+                ? "Time expired. Your saved browser demonstration was finalized at its deadline."
+                : "Time expired. The server finalized your saved answers at the examination deadline."
               : "Your answers are final. Use this evidence to plan your next study session."}
           </p>
         </div>
@@ -146,8 +161,15 @@ export function FullExamResults({
       </div>
       {session.developmentFixture && (
         <div className="notice compact-notice">
-          <strong>Development-only results.</strong> These synthetic engineering
-          fixtures do not measure CHST knowledge or readiness.
+          <strong>
+            {browserOnly
+              ? "Demonstration results · saved in this browser."
+              : "Development-only results."}
+          </strong>{" "}
+          These synthetic engineering fixtures do not measure CHST knowledge or
+          readiness.{" "}
+          {browserOnly &&
+            "These scores are inspectable and editable; no account or server database is used."}
         </div>
       )}
       <div className="full-exam-results-summary">
@@ -184,8 +206,12 @@ export function FullExamResults({
           </div>
           <p className="fine-print">
             Score uses all 200 questions; unanswered items receive no credit.
-            Response time is browser-reported. Four hours is the CredBuilt
-            practice configuration.
+            Response time is browser-reported. Standard examination setting:
+            four hours.{" "}
+            {session.developmentFixture &&
+              session.durationSeconds !== undefined &&
+              session.durationSeconds !== 14400 &&
+              `This local QA attempt used ${session.durationSeconds} seconds.`}
           </p>
         </section>
       </div>
@@ -209,8 +235,9 @@ export function FullExamResults({
         </button>
       </div>
       <p className="fine-print">
-        Targeted practice uses missed concepts and prefers eligible alternatives
-        when available. It never fills a shortage with duplicate questions.
+        {browserOnly
+          ? "Demonstration practice reuses up to 25 distinct missed sample questions from this attempt. It remains unreviewed content."
+          : "Targeted practice uses missed concepts and prefers eligible alternatives when available. It never fills a shortage with duplicate questions."}
       </p>
       {error && (
         <p className="error" role="alert">

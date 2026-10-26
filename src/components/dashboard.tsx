@@ -95,13 +95,10 @@ export function Dashboard({
         <div>
           <div className="eyebrow">YOUR EXAM-DAY PREPARATION</div>
           <h2>CHST Full-Length Exam Simulation</h2>
-          <p>
-            200 unique questions · 240-minute practice configuration · Saved
-            server deadline
-          </p>
+          <p>200 unique questions · Standard four-hour examination setting</p>
           <small>
             {browserOnly
-              ? "Full exams stay locked in this browser demo; short rehearsals remain available."
+              ? "The complete 200-question demonstration is available now. Reviewed production examinations remain separate."
               : "Check approved question coverage, resume an attempt, or review your examination record."}
           </small>
         </div>

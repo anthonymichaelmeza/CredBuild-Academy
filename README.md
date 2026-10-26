@@ -14,12 +14,14 @@ Development branch: **`development/stable-learning-foundation`**. `main` and the
 production demo remain unchanged until the product owner approves a merge or
 promotion. A pushed development branch may trigger a Vercel **Preview**.
 
-The full-length exam milestone adds a dedicated 200-question reader, configured
-four-hour server deadline, autosave/resume, filtered review, results/history and
-administrator eligibility management. A real full exam remains locked because
-the shipped bank has **0 eligible approved/published questions**. Development-only
-arithmetic fixtures exercise the engine without promoting any CHST drafts.
-See [full-length exam setup and limits](docs/full-length-exam.md).
+The current activation milestone makes the complete **200-question demonstration
+exam** available in the existing credential-free browser mode. Its 200 distinct
+synthetic examples support the standard four-hour setting, saved answers/flags/
+position, results, review, missed-question practice and history. The reviewed
+production bank remains independent and locked at **0 eligible approved/published
+questions**. Administrators gain a dedicated Question Bank with CSV/JSON import
+validation and persistent external-ID duplicate protection. See the
+[current activation and setup guide](docs/exam-activation.md).
 
 ## Browser preview: no credentials required
 
@@ -33,7 +35,8 @@ Visit**. The generated URL must come from the dashboard; no new preview URL is
 assumed here. See [deployment instructions](DEPLOYMENT.md).
 
 Try **Learn → CHST5 study map → an objective**, **Practice → CHST5 curriculum
-drafts → 25 questions**, **Exam Simulator → short rehearsal**, **Performance**,
+drafts → 25 questions**, **Exam Simulator → Start 200-question demonstration
+exam**, **Performance**,
 **Reference Library**, and **Study Planner → save study preferences**. The
 original 12-question demo bank is preserved separately; choose the curriculum
 draft bank to explore the new 100 unreviewed examples. Filtering may reduce the
@@ -87,14 +90,16 @@ or generated artifacts. The safe template is
   are blocked. New sessions pin exact revisions; legacy records resolve v1.
 - Short exam rehearsals include countdowns, autosave and editable choices.
   Server deadlines are checked on requests; browser mode uses the visitor's
-  clock. The full 200-question CHST exam remains unavailable.
+  clock. The full browser demonstration is separate from reviewed production
+  examinations and does not provide protected scoring.
 - **CHST Full-Length Exam Simulation** is accessible from the dashboard and
   `/exam`; `/exam/history` stores owner-scoped full attempts. Connected full
   attempts pin 200 distinct revisions and use a fixed 240-minute CredBuilt
-  practice configuration, with canonical domain allocation 73/40/45/42.
-  `/studio/exams` reports actual approval/publication shortfalls to trusted
-  administrators. Latest official duration/version verification remains
-  unavailable; no official pass threshold is claimed.
+  standard setting, with canonical domain allocation 73/40/45/42. Browser mode
+  now completes a full synthetic demonstration using its local adapter; it has
+  no server or cross-device exam record. `/studio/exams` reports actual
+  approval/publication shortfalls separately from demonstration availability.
+  No official pass threshold is claimed.
 - Analytics derive accuracy, repeated misses, history and recommendations from
   saved activity. Client analytics receive metadata, not the server question
   bank or active-exam correctness.
@@ -111,7 +116,8 @@ or generated artifacts. The safe template is
 - Content Studio at `/studio` supports question/lesson drafts, structured editors,
   separate source verification and exact-revision technical reviews,
   changes/rejections, publication/retirement, JSON import
-  preview and append-only audit. Trusted database roles control every action;
+  preview and append-only audit. Administrator-only `/studio/questions` adds
+  CSV/JSON previews, row-level validation and persistent external-ID deduplication. Trusted database roles control every action;
   the public `/admin` inspector remains read-only. Studio requires a connected
   authorized account and is unavailable in the browser-only Vercel demo.
 - Protected curriculum coverage reads actual database records, with domain/
@@ -132,8 +138,8 @@ seeding. See [content-engine setup](docs/chst-content-engine.md).
 There are zero source-verified, technically approved or published questions
 supplied by this milestone. Exact attached blueprint transcription is distinct
 from human source verification or confirmation of the latest version. No
-official exam questions, passing thresholds,
-verified official duration, BCSP affiliation or passing prediction is claimed.
+official exam questions, passing thresholds, BCSP affiliation or passing
+prediction is claimed. The standard examination setting is four hours.
 
 Paid AI, billing, teams, video instruction and full flashcards/retention are not
 operational. Entitlement-based paid-bank access is not implemented. Unavailable
@@ -154,8 +160,10 @@ npm run test:e2e:exam
 ```
 
 Browser production tests require a browser-mode build first; modes are checked
-separately. See [TESTING.md](TESTING.md) for exact commands, executed evidence and
-provider exclusions.
+separately. The final activation run passed **260 automated tests and 60 unique
+browser cases**, both production builds, TypeScript and ESLint. See
+[TESTING.md](TESTING.md) for exact commands, executed evidence and provider
+exclusions.
 
 - [Audit](docs/implementation-audit.md)
 - [Architecture](ARCHITECTURE.md) and [database schema](DATABASE_SCHEMA.md)
@@ -164,7 +172,8 @@ provider exclusions.
 - [Content Studio operations](docs/editorial-workflow.md)
 - [CHST content-engine setup](docs/chst-content-engine.md) and
   [current curriculum release report](docs/chst-curriculum-release.md)
-- [Full-length exam engine, development verification and content gates](docs/full-length-exam.md)
+- [Current exam activation, launch steps, diagnosis and content gates](docs/exam-activation.md)
+- [Historical full-length exam engine checkpoint](docs/full-length-exam.md)
 - [Earlier v0.6A/B checkpoint](docs/v06-release-report.md)
 - [Deployment, migration and rollback](DEPLOYMENT.md)
 - [Testing](TESTING.md) and [security assumptions](SECURITY.md)

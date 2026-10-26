@@ -6,14 +6,16 @@ maps the application-used subset in `src/db/schema.ts`.
 
 ## Migrations
 
-| Migration                     | Additions                                                                                                                                             |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0001_foundation.sql`         | Users, certification/blueprint identity, question versions/source reviews/publication/audit, sessions and bookmarks                                   |
-| `0002_learning.sql`           | Immutable lesson revisions and owner/revision progress                                                                                                |
-| `0003_learner_profiles.sql`   | Owner-scoped goals/planner profile with optimistic revision                                                                                           |
-| `0004_content_studio.sql`     | Trusted editorial roles, immutable revisions/reviews/audit, guarded workflow/publication, JSON import previews and lesson publication                 |
-| `0005_curriculum_sources.sql` | Supplied-document/objective/publication catalog, separate source verification, canonical mapping guards, content reports/triage and editorial indexes |
-| `0006_full_length_exams.sql`  | Full-exam metadata/owner request-key uniqueness, domain/history/deadline indexes and immutable full-session validation                                |
+| Migration                      | Additions                                                                                                                                             |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0001_foundation.sql`          | Users, certification/blueprint identity, question versions/source reviews/publication/audit, sessions and bookmarks                                   |
+| `0002_learning.sql`            | Immutable lesson revisions and owner/revision progress                                                                                                |
+| `0003_learner_profiles.sql`    | Owner-scoped goals/planner profile with optimistic revision                                                                                           |
+| `0004_content_studio.sql`      | Trusted editorial roles, immutable revisions/reviews/audit, guarded workflow/publication, JSON import previews and lesson publication                 |
+| `0005_curriculum_sources.sql`  | Supplied-document/objective/publication catalog, separate source verification, canonical mapping guards, content reports/triage and editorial indexes |
+| `0006_full_length_exams.sql`   | Full-exam metadata/owner request-key uniqueness, domain/history/deadline indexes and immutable full-session validation                                |
+| `0007_exam_demo_timing.sql`    | Narrowly guarded shortened demonstration timing; reviewed production attempts retain the four-hour deadline invariant                                 |
+| `0008_question_import_ids.sql` | Immutable external question-import IDs per certification, linked to actual imported content for durable batch deduplication                           |
 
 `_credbuilt_migrations(id, sha256)` records applied source hashes. Never rewrite
 an applied file; add a numbered migration and register its literal path in
@@ -48,6 +50,7 @@ initialize/update automatically. See [DEPLOYMENT.md](DEPLOYMENT.md).
 | `studio_publications`         | Current logical content → exact revision pointer, publishing administrator and timestamp. Guards require matching reviewed canonical learner snapshot.                                                                                                                  |
 | `published_lessons`           | Lesson → immutable lesson-version pointer, publishing administrator and timestamp; guarded against bypassing Studio.                                                                                                                                                    |
 | `studio_import_batches`       | Owner-bound validated JSON payload/issues, expiry and consumed timestamp; confirmation is transactional and one-use.                                                                                                                                                    |
+| `studio_import_question_ids`  | Certification/external-ID unique identity mapped to imported content, importing actor and timestamp; immutable and used by transactional CSV/JSON confirmation.                                                                                                         |
 | `studio_blueprint_reviews`    | Canonical blueprint revision, reviewing administrator, source edition/section/notes, exact objective map and timestamp; append-only.                                                                                                                                    |
 | `curriculum_documents`        | Supplied blueprint/bibliography identity, printed version, filename, SHA-256, page count, provenance, latest-version-confirmed flag and structured metadata; immutable.                                                                                                 |
 | `curriculum_objectives`       | Certification/blueprint/document FKs, exact official statement, domain, knowledge/skill kind, printed number/page; unique blueprint/domain/kind/number and immutable.                                                                                                   |
@@ -73,11 +76,13 @@ Full attempts reuse session snapshots with `examKind='chst_full_length'`, saved
 current position, policy/duration and an optional development-fixture marker.
 Migration `0006` enforces 200 distinct IDs with explicit revision pins, a valid
 0–199 position, matching owner/status/mode, answers/flags belonging to that
-attempt and a 14,400-second deadline. Identity, pins, policy/deadline and submitted
+attempt and a 14,400-second deadline. Additive `0007` permits 5–14,400 seconds
+only for fully marked, unapproved demonstration fixtures; ordinary published
+attempts still require four hours. Identity, pins, policy/deadline and submitted
 snapshots cannot be edited. The dedicated service serializes owner-scoped
 updates and finalizes expired attempts on access using the fixed deadline;
 there is no independent background-expiry worker. See
-[full-exam lifecycle and setup](docs/full-length-exam.md).
+[current exam activation and lifecycle](docs/exam-activation.md).
 
 Question data contains choice rationales, answer key, explanation and reference;
 it stays server-side on server grading paths. `SessionView` and performance DTOs
@@ -99,7 +104,9 @@ application services. Runtime DB credentials are trusted and must be restricted;
 production roles, a secure editorial CMS and commercial content delivery still
 need operational hardening and provider validation. The editorial CMS now has
 trusted application roles and SQL guards; database credential holders remain
-trusted. Browser-only mode never connects to these tables.
+trusted. Browser-only mode never connects to these tables. Its full demonstration uses
+200 public fixtures and the existing local store; it cannot create editorial
+roles, verification records or publication pointers.
 
 Question/source details and sessions use JSONB for this small foundation. A
 fully normalized source/media catalog, session items, flashcard reviews,
@@ -160,3 +167,14 @@ numbers, avoiding timestamp ties. Source currency/link monitoring is not
 implemented; freshness remains unknown unless separately examined.
 
 Planner JSON also stores a seven-day assignment snapshot (date, lesson revision, activity kind and rationale). Refreshing the plan explicitly replaces assignments using current evidence; lesson completion does not silently reorder them. Old profiles without a snapshot are readable and gain one on the next saved action.
+
+## Imported question identifiers
+
+Administrator Question Bank CSV/JSON imports separate optional external stable
+IDs from system-generated logical content UUIDs. A preview validates canonical
+mapping, four choices/key, explanations, candidate citations and duplicate IDs.
+The immutable `studio_import_question_ids` mapping is unique per certification
+and external ID; confirmation persists it with the draft creation in one
+transaction. Duplicate existing IDs reject rather than overwriting an earlier
+question. Imported candidates remain drafts and must pass the existing separate
+source-verification, technical-review and administrator-publication gates.

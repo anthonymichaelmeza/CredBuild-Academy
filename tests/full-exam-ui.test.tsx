@@ -14,10 +14,17 @@ import { FullExamSession } from "@/components/full-exam-session";
 import { FullExamClock } from "@/components/full-exam-clock";
 import { FullExamHistory } from "@/components/full-exam-history";
 import { FullExamResults } from "@/components/full-exam-results";
+import { FullExamOverview } from "@/components/full-exam-overview";
+import {
+  createBrowserFullExam,
+  browserFullExamView,
+  browserFullExamHistory,
+} from "@/demo/browser-store";
 import type { SessionView } from "@/modules/practice/types";
 import type { ExamHistoryItem } from "@/modules/exams/types";
 
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+const navigation = vi.hoisted(() => ({ push: vi.fn() }));
+vi.mock("next/navigation", () => ({ useRouter: () => navigation }));
 
 function fixture(): SessionView {
   const questions: SessionView["questions"] = Array.from(
@@ -63,13 +70,18 @@ const response = (data: unknown, ok = true) =>
   ({ ok, json: async () => data }) as Response;
 
 beforeEach(() => {
+  navigation.push.mockClear();
   Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
     configurable: true,
-    value: vi.fn(),
+    value: vi.fn(function (this: HTMLDialogElement) {
+      this.setAttribute("open", "");
+    }),
   });
   Object.defineProperty(HTMLDialogElement.prototype, "close", {
     configurable: true,
-    value: vi.fn(),
+    value: vi.fn(function (this: HTMLDialogElement) {
+      this.removeAttribute("open");
+    }),
   });
 });
 afterEach(() => {
@@ -77,9 +89,80 @@ afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
+  window.localStorage.clear();
 });
 
 describe("full-length examination interfaces", () => {
+  it("starts the browser demonstration while keeping production readiness separate and never calling the server", async () => {
+    vi.stubEnv("NEXT_PUBLIC_BROWSER_DEMO", "true");
+    const request = vi.fn();
+    vi.stubGlobal("fetch", request);
+    render(<FullExamOverview browserOnly />);
+    expect(
+      screen.getByRole("heading", { name: "Production Exam: Not Ready" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", {
+        name: "Demonstration Exam Simulator: Available",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.queryByLabelText("Local QA duration (seconds)"),
+    ).not.toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Start 200-question demonstration exam",
+      }),
+    );
+    await waitFor(() => expect(navigation.push).toHaveBeenCalledOnce());
+    const id = String(navigation.push.mock.calls[0][0]).split("/").at(-1)!;
+    expect(browserFullExamView(id).questionIds).toHaveLength(200);
+    expect(request).not.toHaveBeenCalled();
+  });
+
+  it("uses actual browser storage for answer, flag, position, submission and full-exam history", async () => {
+    vi.stubEnv("NEXT_PUBLIC_BROWSER_DEMO", "true");
+    const request = vi.fn();
+    vi.stubGlobal("fetch", request);
+    const id = createBrowserFullExam();
+    const initial = browserFullExamView(id);
+    render(<FullExamSession initial={initial} browserOnly />);
+    fireEvent.click(screen.getAllByRole("radio")[0]);
+    await screen.findByText("All changes saved in this browser.");
+    await waitFor(() =>
+      expect(
+        browserFullExamView(id).answers[initial.questionIds[0]],
+      ).toBeDefined(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Mark for review" }));
+    await waitFor(() =>
+      expect(browserFullExamView(id).flags).toContain(initial.questionIds[0]),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Next question" }),
+      ).toBeEnabled(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Next question" }));
+    await screen.findByText("QUESTION 2 OF 200");
+    expect(browserFullExamView(id).currentQuestionIndex).toBe(1);
+    fireEvent.click(screen.getByRole("button", { name: "Submit Exam" }));
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Confirm submission",
+      }),
+    );
+    await screen.findByRole("heading", { name: "Your exam results." });
+    expect(
+      browserFullExamHistory().find((item) => item.id === id)?.status,
+    ).toBe("submitted");
+    expect(
+      screen.getByText("Demonstration results · saved in this browser."),
+    ).toBeVisible();
+    expect(request).not.toHaveBeenCalled();
+  });
+
   it("explicitly associates each question-review filter with its exact label", () => {
     render(
       <FullExamResults
@@ -319,11 +402,18 @@ describe("full-length examination interfaces", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Load older examinations" }),
     );
-    await waitFor(() =>
-      expect(
-        screen.queryByRole("button", { name: "Load older examinations" }),
-      ).not.toBeInTheDocument(),
+    // The button temporarily changes to "Loading…" before the response arrives.
+    // Await the loaded record, rather than treating that label change as completion.
+    await waitFor(
+      () =>
+        expect(
+          screen.getAllByRole("link", { name: /Resume examination/ }),
+        ).toHaveLength(51),
+      { timeout: 5000 },
     );
+    expect(
+      screen.queryByRole("button", { name: "Load older examinations" }),
+    ).not.toBeInTheDocument();
     expect(request.mock.calls[0][0]).toBe(
       "/api/exams?view=history&before=saved-49",
     );

@@ -27,13 +27,20 @@ export function FullExamHistory({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [nextCursor, setNextCursor] = useState<string | null>(() =>
-    initial.length === 50 ? initial.at(-1)!.id : null,
+    !browserOnly && initial.length === 50 ? initial.at(-1)!.id : null,
   );
-  const summary = summarizeExamHistory(attempts);
+  const displayed = browserOnly ? initial : attempts;
+  const summary = summarizeExamHistory(displayed);
   async function refresh(more = false) {
     setBusy(true);
     setError("");
     try {
+      if (browserOnly) {
+        const { browserFullExamHistory } = await import("@/demo/browser-store");
+        setAttempts(browserFullExamHistory());
+        setNextCursor(null);
+        return;
+      }
       const response = await fetch(
         `/api/exams?view=history${more && nextCursor ? `&before=${encodeURIComponent(nextCursor)}` : ""}`,
         { cache: "no-store" },
@@ -83,26 +90,24 @@ export function FullExamHistory({
           <ArrowRight size={17} />
         </Link>
       </div>
-      {browserOnly || !signedIn ? (
+      {browserOnly && (
+        <div className="notice compact-notice">
+          <strong>Browser demonstration history.</strong> These synthetic sample
+          exams are saved only on this website in this browser profile. There is
+          no account, protected scoring or cross-device sync. Clearing site data
+          or resetting the demo removes this history.
+        </div>
+      )}
+      {!browserOnly && !signedIn ? (
         <section className="card full-exam-empty">
           <History size={30} />
-          <h2>
-            {browserOnly
-              ? "Full-length exams require a connected account"
-              : "Sign in to view your examination record"}
-          </h2>
+          <h2>Sign in to view your examination record</h2>
           <p>
-            {browserOnly
-              ? "This browser demonstration has no server-backed examination records. Short rehearsal history remains in Performance. No full-length exam results have been generated."
-              : "Your full-length attempts belong to your authenticated account. Sign in to resume across devices or review completed attempts."}
+            Your full-length attempts belong to your authenticated account. Sign
+            in to resume across devices or review completed attempts.
           </p>
-          <Link
-            className="button secondary"
-            href={browserOnly ? "/performance" : "/settings"}
-          >
-            {browserOnly
-              ? "View browser practice history"
-              : "Open account settings"}
+          <Link className="button secondary" href="/settings">
+            Open account settings
           </Link>
         </section>
       ) : (
@@ -124,8 +129,9 @@ export function FullExamHistory({
               <span>In progress shown</span>
               <strong>
                 {
-                  attempts.filter((attempt) => attempt.status === "in_progress")
-                    .length
+                  displayed.filter(
+                    (attempt) => attempt.status === "in_progress",
+                  ).length
                 }
               </strong>
             </div>
@@ -143,7 +149,7 @@ export function FullExamHistory({
               </button>
             </div>
             <p className="fine-print">
-              Showing {attempts.length} saved attempts, newest first. Summaries
+              Showing {displayed.length} saved attempts, newest first. Summaries
               and comparisons on this page use the loaded records. Load older
               examinations below when available. Dates are shown in UTC.
             </p>
@@ -152,9 +158,9 @@ export function FullExamHistory({
                 {error}
               </p>
             )}
-            {attempts.length ? (
+            {displayed.length ? (
               <div>
-                {attempts.map((attempt) => (
+                {displayed.map((attempt) => (
                   <Link
                     className="full-exam-history-item"
                     key={attempt.id}
@@ -298,9 +304,9 @@ export function FullExamHistory({
         </>
       )}
       <p className="demo-disclosure">
-        Full-length history is separate from short rehearsals. Account records
-        require connected storage; the browser demonstration cannot supply
-        cross-device examination history.
+        {browserOnly
+          ? "Demonstration history is browser-local and separate from authenticated production examinations. Short rehearsals remain in Performance."
+          : "Full-length history is separate from short rehearsals. Account records require connected storage."}
       </p>
     </div>
   );

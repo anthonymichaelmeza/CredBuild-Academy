@@ -26,7 +26,13 @@ type Mutation =
   | { action: "navigate"; index: number }
   | { action: "submit" };
 
-export function FullExamSession({ initial }: { initial: SessionView }) {
+export function FullExamSession({
+  initial,
+  browserOnly = false,
+}: {
+  initial: SessionView;
+  browserOnly?: boolean;
+}) {
   const [session, setSession] = useState(initial);
   const [history, setHistory] = useState<ExamHistoryItem[]>([]);
   const [busy, setBusy] = useState(false);
@@ -79,6 +85,12 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
   const refresh = useCallback(async () => {
     if (locked.current) return;
     try {
+      if (browserOnly) {
+        const { browserFullExamView } = await import("@/demo/browser-store");
+        const data = browserFullExamView(initial.id);
+        if (!failed.current || data.status === "submitted") accept(data);
+        return;
+      }
       const response = await fetch(
         `/api/exams?id=${encodeURIComponent(initial.id)}`,
         { cache: "no-store" },
@@ -95,7 +107,7 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
           : "Unable to refresh your exam.",
       );
     }
-  }, [accept, initial.id]);
+  }, [accept, initial.id, browserOnly]);
 
   async function mutate(command: Mutation, retry = false) {
     if (
@@ -108,16 +120,29 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
     setBusy(true);
     setError("");
     try {
-      const response = await fetch("/api/exams", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...command, sessionId: initial.id }),
-      });
-      const data = await response.json();
-      if (!response.ok)
-        throw new Error(
-          data.error || "Your change was not saved. Please retry.",
+      let data: SessionView;
+      if (browserOnly) {
+        const { browserFullExamAction } = await import("@/demo/browser-store");
+        const result = browserFullExamAction(
+          { ...command, sessionId: initial.id },
+          latest.current.revision,
         );
+        if (!("questions" in result))
+          throw new Error("Unexpected demonstration response.");
+        data = result;
+      } else {
+        const response = await fetch("/api/exams", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...command, sessionId: initial.id }),
+        });
+        const result = await response.json();
+        if (!response.ok)
+          throw new Error(
+            result.error || "Your change was not saved. Please retry.",
+          );
+        data = result;
+      }
       accept(data);
       failed.current = null;
       setUnsaved(false);
@@ -159,13 +184,21 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
     document.addEventListener("visibilitychange", focus);
     window.addEventListener("online", focus);
     const interval = window.setInterval(() => void refresh(), 30_000);
+    let unsubscribe = () => {};
+    let disposed = false;
+    if (browserOnly)
+      void import("@/demo/browser-store").then(({ subscribeBrowserDemo }) => {
+        if (!disposed) unsubscribe = subscribeBrowserDemo(() => void refresh());
+      });
     return () => {
       window.removeEventListener("focus", focus);
       document.removeEventListener("visibilitychange", focus);
       window.removeEventListener("online", focus);
       window.clearInterval(interval);
+      disposed = true;
+      unsubscribe();
     };
-  }, [refresh]);
+  }, [refresh, browserOnly]);
 
   useEffect(() => {
     if (!busy && !unsaved) return;
@@ -182,6 +215,16 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
   useEffect(() => {
     if (session.status !== "submitted") return;
     const controller = new AbortController();
+    if (browserOnly) {
+      void import("@/demo/browser-store")
+        .then(({ browserFullExamHistory }) => {
+          if (!controller.signal.aborted) setHistory(browserFullExamHistory());
+        })
+        .catch(() => {
+          if (!controller.signal.aborted) setHistoryUnavailable(true);
+        });
+      return () => controller.abort();
+    }
     void fetch("/api/exams?view=history", {
       cache: "no-store",
       signal: controller.signal,
@@ -195,7 +238,7 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
         if (!controller.signal.aborted) setHistoryUnavailable(true);
       });
     return () => controller.abort();
-  }, [session.status]);
+  }, [session.status, browserOnly]);
 
   if (session.status === "submitted")
     return (
@@ -203,6 +246,7 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
         session={session}
         history={history}
         comparisonUnavailable={historyUnavailable}
+        browserOnly={browserOnly}
       />
     );
   const flagged = session.flags.includes(question.id);
@@ -233,7 +277,9 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
           />
         ) : (
           <p role="alert">
-            Server timer unavailable. Refresh to synchronize your deadline.
+            {browserOnly
+              ? "Browser timer unavailable. Refresh to recover your saved deadline."
+              : "Server timer unavailable. Refresh to synchronize your deadline."}
           </p>
         )}
       </header>
@@ -242,11 +288,26 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
           className="notice compact-notice full-exam-fixture-note"
           role="note"
         >
-          <strong>Development-only engineering fixtures.</strong> Synthetic
-          questions test this exam engine. They are not validated CHST questions
-          and these results do not measure readiness.
+          <strong>
+            {browserOnly
+              ? "Demonstration content · browser-only storage."
+              : "Development-only engineering fixtures."}
+          </strong>{" "}
+          Synthetic questions test this exam engine. They are not validated CHST
+          questions and these results do not measure readiness.{" "}
+          {browserOnly &&
+            "Your browser clock, answers and scores are inspectable and editable. Progress does not sync to accounts or other devices."}
         </div>
       )}
+      {session.developmentFixture &&
+        session.durationSeconds !== undefined &&
+        session.durationSeconds !== 14400 && (
+          <p className="notice compact-notice">
+            <strong>Local QA timer: {session.durationSeconds} seconds.</strong>{" "}
+            The standard examination setting remains four hours. Shortened
+            timers are disabled for production examinations.
+          </p>
+        )}
       <div className="full-exam-progress-line">
         <span>
           <strong>{answered}</strong> / 200 answered
@@ -345,7 +406,9 @@ export function FullExamSession({ initial }: { initial: SessionView }) {
                 ? "Changes could not be confirmed. Please retry before leaving."
                 : deadlineReached
                   ? "Time expired. Finalizing your exam…"
-                  : "All changes saved to your account."}
+                  : browserOnly
+                    ? "All changes saved in this browser."
+                    : "All changes saved to your account."}
           </div>
           {error && (
             <div className="full-exam-save-error" role="alert">

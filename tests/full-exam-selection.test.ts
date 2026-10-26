@@ -120,6 +120,6 @@ describe("server-authoritative full-length exam eligibility", () => {
         [],
         policy,
       ),
-    ).toThrow(/verified policy duration/);
+    ).toThrow(/configured policy duration/);
   });
 });

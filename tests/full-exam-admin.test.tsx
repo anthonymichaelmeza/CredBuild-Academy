@@ -94,6 +94,27 @@ const summary: ExamAdminSummary = {
 };
 
 describe("exam administration boundary", () => {
+  it("keeps development availability independent of production question shortages", async () => {
+    vi.stubEnv("NEXT_PUBLIC_BROWSER_DEMO", "false");
+    vi.mocked(actor).mockResolvedValue({ id: "admin", mode: "managed" });
+    vi.mocked(adminSummary).mockResolvedValue({
+      ...summary,
+      availability: {
+        ...summary.availability,
+        developmentSimulatorAvailable: true,
+        productionReady: false,
+      },
+    });
+    render(await ExamAdminPage());
+    const readiness = within(
+      screen.getByRole("region", { name: "Independent examination readiness" }),
+    );
+    expect(readiness.getByText("197 / 200")).toBeVisible();
+    expect(readiness.getByText("Not ready", { exact: true })).toBeVisible();
+    expect(
+      readiness.getByText("Available locally", { exact: true }),
+    ).toBeVisible();
+  });
   it("does not resolve identities or touch the database in browser-demo mode", async () => {
     vi.stubEnv("NEXT_PUBLIC_BROWSER_DEMO", "true");
     render(await ExamAdminPage());
@@ -157,7 +178,7 @@ describe("exam administration boundary", () => {
       screen.queryByText("fictional-stat-domain1 · v2"),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByText(/Four hours is the CredBuilt practice configuration/),
+      screen.getByText(/Standard examination setting: four hours/),
     ).toBeInTheDocument();
   });
 });

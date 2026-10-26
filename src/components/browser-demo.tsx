@@ -220,7 +220,10 @@ export function BrowserSettings() {
           </div>
           <div>
             <dt>Question bank</dt>
-            <dd>12 unverified AI-generated demo drafts</dd>
+            <dd>
+              12 original demo questions, 100 curriculum drafts, and 200
+              synthetic exam fixtures — all unreviewed
+            </dd>
           </div>
           <div>
             <dt>Scoring</dt>
@@ -237,11 +240,13 @@ export function BrowserSettings() {
         </div>
         <p>
           No official exam questions, approved instruction, protected exam
-          scoring, content publishing, or real accounts are provided. Lessons
-          and short exam rehearsals are demonstrations; the full 200-question
-          simulation and flashcards remain unavailable. The study planner uses
-          your saved goals; task check-offs are self-reported and do not award
-          certification credit.
+          scoring, content publishing, or real accounts are provided. Lessons,
+          short rehearsals and the 200-question examination are clearly labeled
+          demonstrations. The full examination uses synthetic fixtures and a
+          browser-local deadline; production examinations require a separate
+          approved question bank. Flashcards remain unavailable. The study
+          planner uses your saved goals; task check-offs are self-reported and
+          do not award certification credit.
         </p>
         {(error || resetError) && (
           <p className="error" role="alert">

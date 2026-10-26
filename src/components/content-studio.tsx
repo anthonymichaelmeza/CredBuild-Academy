@@ -12,6 +12,8 @@ import { studioStatuses } from "@/modules/studio/model";
 import { DraftEditor, newDraft } from "./studio/editor";
 import { ItemDetails, BlueprintReview } from "./studio/review";
 import { ImportQuestions } from "./studio/importer";
+import { QuestionBankImport } from "./studio/question-bank-import";
+import type { QuestionImportPreview } from "@/modules/studio/batch-import";
 import { Status, statusLabel, uid } from "./studio/fields";
 type Task = "library" | "editor" | "import" | "blueprint";
 type LibraryFilters = {
@@ -25,9 +27,11 @@ type LibraryFilters = {
 export function ContentStudio({
   initial,
   initialFilters = {},
+  questionBank = false,
 }: {
   initial: Snapshot;
   initialFilters?: LibraryFilters;
+  questionBank?: boolean;
 }) {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(initial);
   const [task, setTask] = useState<Task>("library");
@@ -43,8 +47,12 @@ export function ContentStudio({
     key: string;
   } | null>(null);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
+  const [questionPreview, setQuestionPreview] =
+    useState<QuestionImportPreview | null>(null);
   const [query, setQuery] = useState(initialFilters.search || "");
-  const [kind, setKind] = useState(initialFilters.kind || "all");
+  const [kind, setKind] = useState(
+    questionBank ? "question" : initialFilters.kind || "all",
+  );
   const [status, setStatus] = useState(initialFilters.status || "all");
   const [domain, setDomain] = useState(initialFilters.domain || "all");
   const [objective, setObjective] = useState(initialFilters.objective || "");
@@ -64,6 +72,7 @@ export function ContentStudio({
     setSnapshot(null);
     setEditor(null);
     setPreview(null);
+    setQuestionPreview(null);
     setSelected(null);
     setSelectedDetail(null);
   }, []);
@@ -152,7 +161,10 @@ export function ContentStudio({
       window.removeEventListener("focus", focus);
     };
   }, [reload]);
-  async function request(input: Record<string, unknown>) {
+  async function request(
+    input: Record<string, unknown>,
+    endpoint = "/api/studio",
+  ) {
     if (pending.current)
       throw new Error("Wait for the current Studio operation to finish.");
     pending.current = true;
@@ -162,7 +174,7 @@ export function ContentStudio({
     reads.current.epoch++;
     reads.current.controller?.abort();
     try {
-      const response = await fetch("/api/studio", {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
@@ -244,13 +256,21 @@ export function ContentStudio({
     <div className="page-wrap studio-page">
       <div className="studio-heading">
         <div>
-          <div className="eyebrow">CREDBUILT CONTENT STUDIO</div>
+          <div className="eyebrow">
+            {questionBank
+              ? "ADMINISTRATOR QUESTION BANK"
+              : "CREDBUILT CONTENT STUDIO"}
+          </div>
           <h1>
-            Build knowledge with a clear record<span className="orange">.</span>
+            {questionBank
+              ? "Question Bank"
+              : "Build knowledge with a clear record"}
+            <span className="orange">.</span>
           </h1>
           <p className="lead">
-            Create original material. Examine the evidence. Publish only
-            reviewed revisions.
+            {questionBank
+              ? "Create and import question drafts, examine sources, and publish only independently approved revisions."
+              : "Create original material. Examine the evidence. Publish only reviewed revisions."}
           </p>
         </div>
         <span className="outline-badge">
@@ -258,6 +278,25 @@ export function ContentStudio({
           {snapshot.access.roles.map(statusLabel).join(" · ")}
         </span>
       </div>
+      {questionBank && (
+        <section className="notice compact-notice">
+          <strong>
+            {snapshot.pagination?.total ?? snapshot.items.length} questions
+            match the current library filters.
+          </strong>
+          <p>
+            Counts come from saved records. Draft quantity does not unlock a
+            production exam.{" "}
+            <Link className="text-link" href="/studio/exams">
+              View approved eligibility and exact domain shortages
+            </Link>{" "}
+            ·{" "}
+            <Link className="text-link" href="/studio/coverage">
+              Inspect objective coverage
+            </Link>
+          </p>
+        </section>
+      )}
       {snapshot.access.localDevelopment && (
         <div className="notice compact-notice">
           <ShieldCheck size={18} />
@@ -306,6 +345,14 @@ export function ContentStudio({
             Examination management
           </Link>
         )}
+        {administrator && (
+          <Link
+            className="button secondary"
+            href={questionBank ? "/studio" : "/studio/questions"}
+          >
+            {questionBank ? "All Content Studio material" : "Question Bank"}
+          </Link>
+        )}
       </div>
       {error && (
         <p className="error" role="alert">
@@ -348,6 +395,30 @@ export function ContentStudio({
             setTask("library");
             setNotice(
               "Draft saved. Independent technical review is required before publication.",
+            );
+          }}
+        />
+      ) : task === "import" && questionBank && administrator ? (
+        <QuestionBankImport
+          busy={busy}
+          preview={questionPreview}
+          onPreview={async (format, text) => {
+            const result = await request(
+              { action: "preview", format, text },
+              "/api/studio/questions",
+            );
+            setQuestionPreview(result);
+            return result;
+          }}
+          onConfirm={async (previewId) => {
+            const result = await request(
+              { action: "confirm", previewId },
+              "/api/studio/questions",
+            );
+            setQuestionPreview(null);
+            await reload(result.imported?.[0]?.id);
+            setNotice(
+              `${result.imported?.length || 0} questions imported as drafts. No content was approved or published.`,
             );
           }}
         />
@@ -421,6 +492,7 @@ export function ContentStudio({
             <select
               id="studio-kind-filter"
               value={kind}
+              disabled={questionBank}
               onChange={(event) => setKind(event.target.value)}
             >
               <option value="all">All content types</option>
@@ -480,14 +552,16 @@ export function ContentStudio({
                   <Plus size={16} />
                   New question
                 </button>
-                <button
-                  className="button secondary"
-                  type="button"
-                  onClick={() => create("lesson")}
-                >
-                  <BookOpen size={16} />
-                  New lesson
-                </button>
+                {!questionBank && (
+                  <button
+                    className="button secondary"
+                    type="button"
+                    onClick={() => create("lesson")}
+                  >
+                    <BookOpen size={16} />
+                    New lesson
+                  </button>
+                )}
               </>
             )}
           </form>

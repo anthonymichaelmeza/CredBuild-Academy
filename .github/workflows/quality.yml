@@ -75,6 +75,7 @@ jobs:
       - run: npm run test:e2e
       - run: npm run test:e2e:studio
       - run: npm run test:e2e:exam
+      - run: npm run test:e2e:exam:short
       - name: Upload failure evidence
         if: failure()
         uses: actions/upload-artifact@v4

@@ -21,6 +21,8 @@ export type ExamSelectionPolicy = {
   blueprintVerified: boolean;
   durationSeconds: number | null;
   durationVerified: boolean;
+  /** Explicit standard configuration does not manufacture source-review evidence. */
+  durationConfigured?: boolean;
   domains: readonly { code: string; weight: number }[];
 };
 export const currentExamSelectionPolicy: ExamSelectionPolicy = {
@@ -29,6 +31,7 @@ export const currentExamSelectionPolicy: ExamSelectionPolicy = {
   blueprintVerified: blueprint.verified,
   durationSeconds: fullExamPolicy.durationSeconds,
   durationVerified: fullExamPolicy.sourceVerified,
+  durationConfigured: true,
   domains,
 };
 export function examPolicyBlockers(policy = currentExamSelectionPolicy) {
@@ -38,12 +41,14 @@ export function examPolicyBlockers(policy = currentExamSelectionPolicy) {
       "The applicable official blueprint has not been independently verified.",
     );
   if (
-    !policy.durationVerified ||
+    (!policy.durationVerified && !policy.durationConfigured) ||
     !policy.durationSeconds ||
     !Number.isInteger(policy.durationSeconds) ||
     policy.durationSeconds < 60
   )
-    blockers.push("The official examination duration has not been verified.");
+    blockers.push(
+      "Configure a valid examination duration policy before starting.",
+    );
   return blockers;
 }
 
@@ -72,7 +77,7 @@ export function selectFullLengthExam(
     );
   if (config.durationSeconds !== policy.durationSeconds)
     throw new Error(
-      "A full-length examination must use the verified policy duration.",
+      "A full-length examination must use the configured policy duration.",
     );
   const eligible = eligibleQuestions(
     pool.filter(

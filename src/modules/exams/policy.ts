@@ -27,9 +27,9 @@ export const chstPracticeExamPolicy = {
 } as const;
 export const fullExamPolicy = {
   certification: "chst",
-  version: "chst-demo-policy-0.4",
+  version: "chst-standard-240m-v1",
   count: 200,
-  durationSeconds: null,
+  durationSeconds: 14_400,
   sourceVerified: false,
   allocation: allocateDomains(
     200,
@@ -51,7 +51,9 @@ export function fullExamBlockers(
     !Number.isInteger(verifiedDuration) ||
     verifiedDuration < 60
   )
-    blockers.push("The official examination duration is not verified.");
+    blockers.push(
+      "Configure the full examination timing policy before starting.",
+    );
   fullExamPolicy.allocation.forEach((count, index) => {
     if ((approvedPerDomain[index] || 0) < count)
       blockers.push(

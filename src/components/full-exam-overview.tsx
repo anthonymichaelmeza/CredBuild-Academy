@@ -16,6 +16,7 @@ export function FullExamOverview({ browserOnly }: { browserOnly: boolean }) {
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [demoDuration, setDemoDuration] = useState(14400);
   const requestId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -43,11 +44,18 @@ export function FullExamOverview({ browserOnly }: { browserOnly: boolean }) {
   }, [browserOnly]);
 
   async function start() {
-    if (!availability?.canStart || busy) return;
+    if ((!browserOnly && !availability?.canStart) || busy) return;
     setBusy(true);
     setError("");
     requestId.current ??= crypto.randomUUID();
     try {
+      if (browserOnly) {
+        const { createBrowserFullExam } = await import("@/demo/browser-store");
+        router.push(
+          `/exam/${createBrowserFullExam({ durationSeconds: demoDuration })}`,
+        );
+        return;
+      }
       const response = await fetch("/api/exams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -67,6 +75,14 @@ export function FullExamOverview({ browserOnly }: { browserOnly: boolean }) {
     }
   }
 
+  const productionReady =
+    availability?.productionReady ??
+    Boolean(
+      availability?.bankConnected &&
+      !availability.developmentFixture &&
+      availability.canStart,
+    );
+
   return (
     <section
       className="card full-exam-gate full-exam-overview"
@@ -82,13 +98,16 @@ export function FullExamOverview({ browserOnly }: { browserOnly: boolean }) {
         domains
       </p>
       <p>
-        One question at a time. Your answers, review flags and position save to
-        your account. The server deadline continues when you leave.
+        {browserOnly
+          ? "Try the complete examination experience now. Answers, review flags, position and the fixed deadline save in this browser."
+          : "One question at a time. Your answers, review flags and position save to your account. The server deadline continues when you leave."}
       </p>
       <div className="full-exam-domain-plan">
         {chstDomains.map((domain, index) => {
           const actual = availability?.bankConnected
-            ? availability.domains.find((item) => item.code === domain.code)
+            ? (availability.productionDomains || availability.domains).find(
+                (item) => item.code === domain.code,
+              )
             : undefined;
           return (
             <div className="full-exam-domain-plan-row" key={domain.code}>
@@ -113,58 +132,102 @@ export function FullExamOverview({ browserOnly }: { browserOnly: boolean }) {
           );
         })}
       </div>
-      {browserOnly ? (
-        <div className="notice compact-notice">
+      <section
+        className="notice compact-notice"
+        aria-label="Production examination readiness"
+      >
+        <h3>
+          {browserOnly || !productionReady
+            ? "Production Exam: Not Ready"
+            : "Production Exam: Ready"}
+        </h3>
+        <p>
+          {browserOnly
+            ? "Supplied approved questions: 0 / 200. No editorial database is connected to this browser demonstration. Sample questions never become approved production content."
+            : availability?.bankConnected
+              ? `${availability.productionEligibleTotal ?? (availability.developmentFixture ? 0 : availability.eligibleTotal)} approved eligible questions / 200 required. Production exams require enough reviewed, published questions in every domain.`
+              : "Connect an authorized account to inspect the published question bank. Production readiness has not been queried."}
+        </p>
+        {!browserOnly && availability && !availability.canStart && (
           <h3>Not available yet</h3>
-          <p>
-            The supplied bank contains zero approved, published exam questions.
-            The browser demonstration has no account or editorial database and
-            cannot launch a full exam. Short rehearsals remain available.
-          </p>
-        </div>
-      ) : availability ? (
-        <div
-          className={`notice compact-notice ${availability.canStart ? "exam-ready-notice" : ""}`}
-        >
-          {availability.canStart ? (
-            <strong>
-              {availability.developmentFixture
-                ? "Development-only engine test"
-                : "Your exam is ready"}
-            </strong>
-          ) : (
-            <h3>Not available yet</h3>
-          )}
-          {availability.developmentFixture && (
-            <p>
-              Synthetic engineering fixtures only. This is not validated CHST
-              content and cannot establish study readiness.
-            </p>
-          )}
-          {!availability.developmentFixture && (
-            <p>
-              {availability.bankConnected
-                ? `${availability.eligibleTotal} approved, published questions currently meet exam eligibility.`
-                : "Sign in to check the connected question bank. Live content counts are unavailable in this view."}
-            </p>
-          )}
-          {!!availability.blockers.length && (
+        )}
+        {!browserOnly && !availability && error && <h3>Not available yet</h3>}
+        {!browserOnly &&
+          availability?.productionDomains?.some(
+            (domain) => domain.shortfall > 0,
+          ) && (
             <ul>
-              {availability.blockers.map((blocker) => (
-                <li key={blocker}>{blocker}</li>
-              ))}
+              {availability.productionDomains
+                .filter((domain) => domain.shortfall > 0)
+                .map((domain) => (
+                  <li key={domain.code}>
+                    Domain {domain.code}: {domain.eligible} approved eligible;{" "}
+                    {domain.shortfall} additional questions needed.
+                  </li>
+                ))}
             </ul>
           )}
-        </div>
-      ) : (
-        <div>
-          {error && <h3>Not available yet</h3>}
-          <p role="status">
-            {error
-              ? "Exam availability could not be confirmed."
-              : "Checking eligible question bank…"}
+      </section>
+      {(browserOnly || availability?.developmentFixture) && (
+        <section
+          className="notice compact-notice exam-ready-notice"
+          aria-label="Demonstration simulator availability"
+        >
+          <h3>
+            {browserOnly
+              ? "Demonstration Exam Simulator: Available"
+              : "Development Exam Simulator: Available"}
+          </h3>
+          <p>
+            200 distinct sample questions exercise timing, navigation, autosave,
+            scoring, results and question review. They are synthetic
+            demonstrations, not validated CHST questions or approved study
+            content.
           </p>
-        </div>
+          <p>
+            {browserOnly
+              ? "No account or database is needed. Progress stays on this browser and website address. The browser clock, answers and scores are inspectable and editable; there is no cross-device sync."
+              : "This isolated development workspace uses server-saved test records. These fixtures never enter the approved production bank."}
+          </p>
+          {!browserOnly &&
+            availability &&
+            availability.durationSeconds !== 14400 && (
+              <p>
+                <strong>
+                  Local QA timer: {availability.durationSeconds} seconds.
+                </strong>{" "}
+                The standard examination setting remains four hours.
+              </p>
+            )}
+        </section>
+      )}
+      {!browserOnly &&
+        availability &&
+        !availability.developmentFixture &&
+        availability.canStart && (
+          <p className="notice compact-notice">
+            Your reviewed production examination is ready.
+          </p>
+        )}
+      {!browserOnly && !availability && !error && (
+        <p role="status">Checking eligible question bank…</p>
+      )}
+      {browserOnly && process.env.NODE_ENV === "development" && (
+        <label className="field-label" htmlFor="browser-exam-qa-duration">
+          Local QA duration (seconds)
+          <input
+            id="browser-exam-qa-duration"
+            type="number"
+            min={5}
+            max={14400}
+            value={demoDuration}
+            onChange={(event) => setDemoDuration(Number(event.target.value))}
+          />
+          <small>
+            Development only. The standard setting is 14,400 seconds; shortened
+            timers are disabled in production builds.
+          </small>
+        </label>
       )}
       {error && (
         <p className="error" role="alert">
@@ -174,14 +237,22 @@ export function FullExamOverview({ browserOnly }: { browserOnly: boolean }) {
       <div className="full-exam-overview-actions">
         <button
           className="button primary"
-          disabled={browserOnly || !availability?.canStart || busy}
+          disabled={
+            (!browserOnly && !availability?.canStart) ||
+            busy ||
+            !Number.isInteger(demoDuration) ||
+            demoDuration < 5 ||
+            demoDuration > 14400
+          }
           onClick={() => void start()}
         >
           {busy
             ? "Preparing your exam…"
-            : availability?.developmentFixture
-              ? "Start development-only exam"
-              : "Start full-length exam"}
+            : browserOnly
+              ? "Start 200-question demonstration exam"
+              : availability?.developmentFixture
+                ? "Start development-only exam"
+                : "Start full-length exam"}
           <ArrowRight size={17} />
         </button>
         <Link className="button secondary" href="/exam/history">
@@ -195,9 +266,8 @@ export function FullExamOverview({ browserOnly }: { browserOnly: boolean }) {
       )}
       <p className="fine-print">
         Blueprint CHST5 V.2022.04.12 from the supplied document; latest official
-        version not confirmed. Four hours is the CredBuilt practice
-        configuration, not a verified official duration. No official passing
-        score is applied.
+        version confirmation is documented separately. Standard examination
+        setting: four hours. No official passing score is applied.
       </p>
     </section>
   );

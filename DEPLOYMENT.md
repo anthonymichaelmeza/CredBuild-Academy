@@ -19,13 +19,19 @@ owner approval. Native Git pushes to a development branch may trigger previews.
    objectives and visit a study outline. In Practice, choose the separate
    **CHST5 curriculum drafts** bank to try 25 questions from the new 100-item
    unreviewed batch. The original 12-item bank remains available. Try reference
-   panels, objective filters, refresh/resume, a short rehearsal, analytics and
-   saved preferences. Check mobile navigation and storage errors.
+   panels, objective filters, refresh/resume, analytics and saved preferences.
+   Open **Exam Simulator → Start 200-question demonstration exam** to complete
+   the full synthetic exam, then inspect results/review and Exam History. The
+   original short rehearsal remains available. Check mobile navigation and
+   storage errors.
 
 Do not add Clerk/database/local filesystem variables to make this preview work.
 The public flag is compiled into client code: rebuild after changing it. The
 preview's origin has its own localStorage; progress does not move between
-different preview URLs or devices. It is not a real account or protected exam.
+different preview URLs or devices. It is not a real account or protected exam. The complete demonstration runs
+locally in that browser and does not require the production bank to be ready.
+Its standard setting is four hours; production builds cannot select shortened
+development timing. See [exam activation](docs/exam-activation.md).
 
 This cloud workspace cannot supply a public localhost/port link. The generated
 preview URL must be read from Vercel. Read-only requests to the previous preview
@@ -34,18 +40,19 @@ evidence of a Vercel application 403 or a failed deployment.
 
 ## Environment bindings
 
-| Variable                            | Browser preview           | Managed account preview                                                  |
-| ----------------------------------- | ------------------------- | ------------------------------------------------------------------------ |
-| `NEXT_PUBLIC_BROWSER_DEMO`          | `true` before build       | `false` or unset before build                                            |
-| `DATABASE_URL`                      | Unused                    | Required, provider-managed PostgreSQL with verified TLS/pooling settings |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Unused                    | Required public key for the same Clerk environment                       |
-| `CLERK_SECRET_KEY`                  | Unused                    | Required server secret, entered securely in hosting settings             |
-| `APP_ORIGIN`                        | Unused for local progress | Exact canonical HTTPS origin used by same-origin mutation checks         |
-| `ALLOW_LOCAL_DEMO`                  | Unneeded                  | `false`/unset; local identity is disabled on Vercel                      |
-| `ALLOW_LOCAL_STUDIO`                | Unused                    | `false`/unset; local editorial test bypass is disabled on Vercel         |
-| `LOCAL_DATABASE_PATH`               | Unused                    | Do not use PGlite as serverless persistence                              |
-| `COOKIE_SECURE`                     | Unused                    | Only controls the local-demo cookie; Clerk controls its own cookies      |
-| `CREDBUILT_MIGRATE`                 | Unused                    | Explicit migration CLI sets it; do not enable runtime schema mutation    |
+| Variable                               | Browser preview                    | Managed account preview                                                                                                 |
+| -------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_BROWSER_DEMO`             | `true` before build                | `false` or unset before build                                                                                           |
+| `DATABASE_URL`                         | Unused                             | Required, provider-managed PostgreSQL with verified TLS/pooling settings                                                |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`    | Unused                             | Required public key for the same Clerk environment                                                                      |
+| `CLERK_SECRET_KEY`                     | Unused                             | Required server secret, entered securely in hosting settings                                                            |
+| `APP_ORIGIN`                           | Unused for local progress          | Exact canonical HTTPS origin used by same-origin mutation checks                                                        |
+| `ALLOW_LOCAL_DEMO`                     | Unneeded                           | `false`/unset; local identity is disabled on Vercel                                                                     |
+| `ALLOW_LOCAL_STUDIO`                   | Unused                             | `false`/unset; local editorial test bypass is disabled on Vercel                                                        |
+| `LOCAL_DATABASE_PATH`                  | Unused                             | Do not use PGlite as serverless persistence                                                                             |
+| `COOKIE_SECURE`                        | Unused                             | Only controls the local-demo cookie; Clerk controls its own cookies                                                     |
+| `CREDBUILT_MIGRATE`                    | Unused                             | Explicit migration CLI sets it; do not enable runtime schema mutation                                                   |
+| `CREDBUILT_EXAM_TEST_DURATION_SECONDS` | Unused; do not configure on Vercel | Local isolated development fixtures only, integer 5–14400; ignored outside that provider so production stays four hours |
 
 Never paste secrets into chat or commit them. Preview/development/production
 credentials must be distinct. Public Next variables are build inputs; secret
@@ -84,7 +91,7 @@ remain in `FEATURE_STATUS.md`.
 
 The no-credentials browser demo deliberately cannot author/review/publish. To
 review the protected Studio, first configure the isolated connected preview
-above, migrate it through `0005`, and sign in with distinct author, reviewer and
+above, migrate it through `0008`, and sign in with distinct author, reviewer and
 administrator accounts. A trusted operator then grants the corresponding
 database roles through `npm run studio:role`; there is no self-service role
 selector. See [editorial workflow](docs/editorial-workflow.md) for exact commands.
@@ -94,6 +101,10 @@ The isolated local Studio browser suite provides reproducible interface evidence
 while live providers are unavailable. Studio UI availability is separate from
 actual instructional publication: supplied/provisional blueprint records and
 demo/draft material must not acquire approval without actual independent review.
+An administrator opens `/studio/questions` for manual question editing and
+CSV/JSON import. Preview/confirmation, persistent external-ID deduplication and
+review/publication gates use that connected database. The public browser exam
+demonstration does not expose this administrative workspace.
 
 ## CHST curriculum seed and explicit draft ingestion
 
@@ -131,7 +142,10 @@ The CLI accepts injected environment variables and optionally reads `.env.local`
 `0004` adds trusted editorial roles, revision/review/audit workflow, import previews
 and guarded instructional publication. `0005` adds immutable supplied curriculum,
 reference records, separate source evidence, canonical mapping guards and
-append-only content reports/triage.
+append-only content reports/triage. `0006` adds immutable full-exam attempts;
+`0007` narrows shortened timing to marked demonstration records; `0008` adds
+persistent external question-import IDs. None backfills source verification,
+technical approval or publication.
 The checksummed ledger rejects edited applied files. Managed migrations run in
 a transaction with an advisory lock. Application startup only verifies them;
 it refuses a missing/pending migration rather than applying schema changes.
@@ -149,7 +163,7 @@ and restart. Never share one local directory across processes/instances.
 ## CI, production protection and failures
 
 `.github/workflows/quality.yml` defines checks plus separate browser-demo and
-server-learning browser jobs, including the isolated Studio suite. Observe its actual GitHub run before treating CI
+server-learning browser jobs, including isolated Studio and full-exam suites. Observe its actual GitHub run before treating CI
 as green. Configure repository branch protection/rulesets in GitHub to require
 review and checks on `main`; workflow YAML alone cannot enforce protection.
 Keep the Vercel production branch on `main`. Use pull requests or the compare

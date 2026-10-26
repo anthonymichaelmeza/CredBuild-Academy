@@ -20,6 +20,11 @@ import {
   type StudioStatus,
 } from "./model";
 import { requireStudioAccess, requireStudioRole } from "./roles";
+import {
+  parseQuestionBatch,
+  type QuestionImportRecord,
+  type QuestionImportPreview,
+} from "./batch-import";
 export { requireStudioAccess } from "./roles";
 
 type Row = Record<string, unknown>;
@@ -876,6 +881,189 @@ async function previewImport(
     duplicates: duplicates.length,
   });
   return preview;
+}
+
+async function duplicateQuestionImportIds(
+  query: DatabaseQuery,
+  records: QuestionImportRecord[],
+) {
+  const seen = new Set<string>(),
+    duplicates: string[] = [];
+  for (const record of records) {
+    if (!record.externalId) continue;
+    const key = `${record.content.certificationId}:${record.externalId}`;
+    if (seen.has(key))
+      duplicates.push(
+        `Row ${record.row}: external ID ${record.externalId} occurs more than once.`,
+      );
+    seen.add(key);
+    const [existing] = (
+      await query(
+        "SELECT content_id FROM studio_import_question_ids WHERE certification_id=$1 AND external_id=$2",
+        [record.content.certificationId, record.externalId],
+      )
+    ).rows;
+    if (existing)
+      duplicates.push(
+        `Row ${record.row}: external ID ${record.externalId} was already imported as ${String(existing.content_id)}.`,
+      );
+    const [logical] = (
+      await query(
+        "SELECT id FROM studio_content WHERE id=$1 AND certification_id=$2",
+        [record.externalId, record.content.certificationId],
+      )
+    ).rows;
+    if (logical)
+      duplicates.push(
+        `Row ${record.row}: external ID ${record.externalId} already identifies existing content.`,
+      );
+  }
+  return [...new Set(duplicates)];
+}
+
+/** Admin-only richer ingestion; existing author JSON import remains compatible. */
+export async function previewQuestionBatch(
+  who: Actor,
+  format: "csv" | "json",
+  text: string,
+): Promise<QuestionImportPreview> {
+  const initial = await requireStudioAccess(who);
+  requireStudioRole(initial, ["administrator"]);
+  await seedDemo();
+  const c = await connection();
+  return c.transaction(async (query) => {
+    const access = await requireStudioAccess(who, query);
+    requireStudioRole(access, ["administrator"]);
+    const parsed = parseQuestionBatch(format, text);
+    const contents = parsed.records.map((record) => record.content);
+    const duplicates = [
+      ...parsed.duplicates,
+      ...(await duplicateRecords(query, contents)),
+      ...(await duplicateQuestionImportIds(query, parsed.records)),
+    ];
+    const id = randomUUID(),
+      expiresAt = new Date(Date.now() + 15 * 60_000).toISOString();
+    await query(
+      "INSERT INTO studio_import_batches(id,owner_id,payload,errors,expires_at) VALUES($1,$2,$3::jsonb,$4::jsonb,$5)",
+      [
+        id,
+        who.id,
+        json(parsed.records),
+        json([
+          ...parsed.errors,
+          ...duplicates.map((message) => ({ index: -1, message })),
+        ]),
+        expiresAt,
+      ],
+    );
+    await audit(query, who.id, "question_bank_import_previewed", null, null, {
+      previewId: id,
+      format,
+      validRecords: contents.length,
+      errors: parsed.errors.length,
+      duplicates: duplicates.length,
+    });
+    return {
+      id,
+      expiresAt,
+      format,
+      records: contents,
+      errors: parsed.errors,
+      duplicates,
+      externalIds: parsed.records.map((record) => record.externalId),
+      sourceRows: parsed.records.map((record) => record.row),
+    };
+  });
+}
+
+export async function confirmQuestionBatch(who: Actor, previewId: string) {
+  const initial = await requireStudioAccess(who);
+  requireStudioRole(initial, ["administrator"]);
+  const c = await connection();
+  const ids = await c.transaction(async (query) => {
+    const access = await requireStudioAccess(who, query);
+    requireStudioRole(access, ["administrator"]);
+    // Shared lock order with the existing author importer prevents race duplicates.
+    await query("LOCK TABLE studio_content IN SHARE ROW EXCLUSIVE MODE");
+    const [batch] = (
+      await query(
+        "SELECT * FROM studio_import_batches WHERE id=$1 AND owner_id=$2 FOR UPDATE",
+        [previewId, who.id],
+      )
+    ).rows;
+    if (
+      !batch ||
+      batch.consumed_at ||
+      Date.parse(iso(batch.expires_at)) <= Date.now()
+    )
+      throw new AccessError(
+        "Import preview is missing, expired, or already consumed.",
+        409,
+      );
+    if (
+      (batch.errors as unknown[]).length ||
+      !Array.isArray(batch.payload) ||
+      !batch.payload.length
+    )
+      throw new AccessError(
+        "Resolve all import errors and duplicates before importing.",
+        422,
+      );
+    const records = batch.payload as QuestionImportRecord[];
+    // Revalidate server-owned payload before creating any records.
+    const checked = parseQuestionBatch(
+      "json",
+      json(
+        records.map((record) => ({
+          ...(record.externalId ? { id: record.externalId } : {}),
+          content: record.content,
+        })),
+      ),
+    );
+    if (
+      checked.errors.length ||
+      checked.duplicates.length ||
+      checked.records.length !== records.length
+    )
+      throw new AccessError(
+        "The preview payload no longer passes question validation.",
+        422,
+      );
+    const duplicates = [
+      ...(await duplicateRecords(
+        query,
+        checked.records.map((record) => record.content),
+      )),
+      ...(await duplicateQuestionImportIds(query, checked.records)),
+    ];
+    if (duplicates.length) throw new AccessError(duplicates.join(" "), 409);
+    const ids: string[] = [];
+    for (const record of checked.records) {
+      const id = await createDraft(query, access, record.content);
+      if (record.externalId)
+        await query(
+          "INSERT INTO studio_import_question_ids(certification_id,external_id,content_id,imported_by) VALUES($1,$2,$3,$4)",
+          [record.content.certificationId, record.externalId, id, who.id],
+        );
+      await audit(query, who.id, "import_ingested", id, `${id}:v1`, {
+        previewId,
+        externalId: record.externalId,
+        declaredOrigin: record.content.origin,
+        workflow: "admin_question_bank",
+      });
+      ids.push(id);
+    }
+    await query(
+      "UPDATE studio_import_batches SET consumed_at=now() WHERE id=$1",
+      [previewId],
+    );
+    await audit(query, who.id, "question_bank_import_confirmed", null, null, {
+      previewId,
+      contentIds: ids,
+    });
+    return ids;
+  });
+  return { imported: await Promise.all(ids.map((id) => readStudio(who, id))) };
 }
 export async function studioAction(
   who: Actor,

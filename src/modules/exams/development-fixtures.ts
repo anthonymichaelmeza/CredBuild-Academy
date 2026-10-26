@@ -16,6 +16,24 @@ export function developmentExamFixturesEnabled() {
   );
 }
 
+/** A shorter server deadline is a local engineering option, never an exam
+ * request parameter. Configuring this variable in production has no effect. */
+export function developmentExamDurationSeconds() {
+  if (!developmentExamFixturesEnabled()) return 14_400;
+  const configured = process.env.CREDBUILT_EXAM_TEST_DURATION_SECONDS;
+  if (configured === undefined || configured === "") return 14_400;
+  if (!/^\d+$/.test(configured))
+    throw new Error(
+      "Development exam duration must be an integer from 5 to 14400 seconds.",
+    );
+  const duration = Number(configured);
+  if (!Number.isSafeInteger(duration) || duration < 5 || duration > 14_400)
+    throw new Error(
+      "Development exam duration must be an integer from 5 to 14400 seconds.",
+    );
+  return duration;
+}
+
 /** Arithmetic fixtures exercise the engine, never claim CHST instructional validity. */
 export function developmentExamQuestions(): Question[] {
   if (!developmentExamFixturesEnabled())

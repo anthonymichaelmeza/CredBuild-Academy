@@ -215,7 +215,7 @@ verification remain unconfirmed. Live Clerk/hosted PostgreSQL tests remain
 [current release report](docs/chst-curriculum-release.md) and
 [source provenance](docs/chst-source-provenance.md).
 
-## Full-length exam engine verification
+## Historical full-length exam engine checkpoint (`b6890e2`)
 
 The preserved curriculum results above predate the dedicated full-exam changes.
 Run its isolated desktop/tablet/mobile suite after stopping other Next servers:
@@ -257,3 +257,58 @@ Completed full-exam milestone validation:
 Live-provider validation and actual technical source approval remain outside
 these local results. The CI quality workflow now includes `test:e2e:exam`;
 local success does not assert the status of a remote CI or Vercel deployment.
+
+## Exam activation validation
+
+The browser demonstration now has its own complete 200-question adapter; the
+reviewed connected bank still requires actual eligible publications. Follow
+[the current activation guide](docs/exam-activation.md) for the separate modes,
+local short-timer guards, Question Bank imports and launch steps.
+
+The preceding 229-test/52-browser checkpoint is not substituted for changed
+activation code. The final activation run passed **260/260 automated tests across
+52 files** and **60 unique browser cases**, plus both production builds. Do not
+run Next builds or browser servers concurrently in one checkout because
+generated `.next` files are shared.
+
+Current routine commands remain:
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run test:e2e:exam
+npm run test:e2e:exam:short
+npm run test:e2e:studio
+```
+
+The production browser-demo suite runs only after a browser-mode build and
+must exercise complete full-length demonstration starts, save/reload, grading,
+review/history and local isolation without provider credentials or a database.
+Short development timing is tested separately from standard four-hour exams;
+it must not be enabled by production exam requests.
+
+Completed activation validation:
+
+- **26/26 unique production-build browser-demo cases passed**, including complete
+  desktop/mobile 200-answer attempts and the expected fixture score of 50/200
+  (25%). Two expiry-selector cases were corrected and rerun separately.
+- **8/8 preserved server learner cases passed** (51 seconds).
+- **12/12 full connected-fixture exam cases passed** (51 seconds).
+- **2/2 actual ten-second local timer cases passed**, desktop/mobile (37 seconds).
+- **12/12 Studio/Question Bank browser cases passed** (1.5 minutes), including
+  administrator CSV/JSON imports, malformed/duplicate-ID reports and draft-only
+  persistence.
+- Together these are **60 unique browser cases passed**.
+- The final complete automated run passed **260/260 tests across 52 files**
+  (108.45 seconds). Focused reruns are not counted again.
+- Both final production builds passed without warnings: server mode with
+  `NEXT_PUBLIC_BROWSER_DEMO=false` and credential-free browser-demo mode with
+  `NEXT_PUBLIC_BROWSER_DEMO=true`. They include the latest import-preview fixes.
+- Whole-tree TypeScript and ESLint passed. Independent security review found no
+  release blocker; changed-file review found no credentials, databases or raw
+  source PDFs. Existing migrations `0001`–`0006` remain unchanged.
+
+The separate short-timer command is `npm run test:e2e:exam:short`; CI includes
+that step after the standard full-exam suite. Both fixture suites use explicitly
+isolated local development storage and never approve real CHST content.

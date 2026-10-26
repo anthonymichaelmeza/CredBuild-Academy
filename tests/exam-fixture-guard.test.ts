@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   developmentExamFixturesEnabled,
   developmentExamQuestions,
+  developmentExamDurationSeconds,
 } from "@/modules/exams/development-fixtures";
 import { examActionSchema } from "@/modules/exams/requests";
 function enabled() {
@@ -57,5 +58,34 @@ describe("isolated synthetic full-exam fixture boundary", () => {
         examActionSchema.safeParse({ action: "start", ...extra }).success,
       ).toBe(false);
     }
+  });
+  it("accepts a bounded local QA clock while keeping the standard timer outside the strict fixture environment", () => {
+    enabled();
+    expect(developmentExamDurationSeconds()).toBe(14400);
+    vi.stubEnv("CREDBUILT_EXAM_TEST_DURATION_SECONDS", "10");
+    expect(developmentExamDurationSeconds()).toBe(10);
+    vi.stubEnv("NODE_ENV", "production");
+    expect(developmentExamDurationSeconds()).toBe(14400);
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("VERCEL", "1");
+    expect(developmentExamDurationSeconds()).toBe(14400);
+    vi.stubEnv("VERCEL", "");
+    vi.stubEnv("DATABASE_URL", "configured-managed-database");
+    expect(developmentExamDurationSeconds()).toBe(14400);
+  });
+  it.each([
+    "0",
+    "4",
+    "14401",
+    "1.5",
+    "invalid",
+    "-10",
+    "999999999999999999999999",
+  ])("rejects an invalid isolated QA timer %s", (duration) => {
+    enabled();
+    vi.stubEnv("CREDBUILT_EXAM_TEST_DURATION_SECONDS", duration);
+    expect(() => developmentExamDurationSeconds()).toThrow(
+      "integer from 5 to 14400",
+    );
   });
 });

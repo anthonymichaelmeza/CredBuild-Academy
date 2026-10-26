@@ -84,7 +84,8 @@ export type SafeQuestion = Omit<
   | "solutionSteps"
 > & { choices: { id: string; text: string }[] };
 export type SessionView = Omit<Session, "ownerId" | "answers"> & {
-  /** Authoritative response time used to calibrate the examination countdown. */
+  /** Response clock used for the countdown: server time for connected attempts,
+   * browser time for explicitly inspectable browser demonstrations. */
   serverNow?: string;
   answers: Record<string, Omit<Answer, "correct"> & { correct?: boolean }>;
   questions: SafeQuestion[];

@@ -14,6 +14,7 @@ import * as practice from "@/modules/practice/service";
 import {
   developmentExamFixturesEnabled,
   developmentExamQuestions,
+  developmentExamDurationSeconds,
 } from "@/modules/exams/development-fixtures";
 import { grantStudioRole } from "@/modules/studio/roles";
 import { studioAction } from "@/modules/studio/service";
@@ -30,6 +31,7 @@ vi.mock("@/modules/exams/development-fixtures", async (importOriginal) => {
     ...original,
     developmentExamFixturesEnabled: vi.fn(() => false),
     developmentExamQuestions: vi.fn(),
+    developmentExamDurationSeconds: vi.fn(() => 14400),
   };
 });
 process.env.ALLOW_LOCAL_DEMO = "true";
@@ -54,6 +56,7 @@ beforeAll(async () => {
   process.env.LOCAL_DATABASE_PATH = ":memory:";
   vi.mocked(developmentExamQuestions).mockReturnValue(fixtures);
   vi.mocked(developmentExamFixturesEnabled).mockReturnValue(true);
+  vi.mocked(developmentExamDurationSeconds).mockReturnValue(14400);
   await exams.ensureDevelopmentFixtures();
   const query = (await connection()).query;
   for (const person of [admin, author, reviewer])
@@ -70,6 +73,7 @@ beforeAll(async () => {
 afterEach(() => {
   vi.restoreAllMocks();
   vi.mocked(developmentExamFixturesEnabled).mockReturnValue(true);
+  vi.mocked(developmentExamDurationSeconds).mockReturnValue(14400);
 });
 afterAll(async () => (await connection()).close());
 
@@ -153,6 +157,92 @@ describe("server-saved full-length examination lifecycle using explicit syntheti
     expect(repeated.revision).toBe(changed.revision);
     await exams.flag(id, learner.id, a, true);
     expect((await exams.view(id, learner.id)).flags).toEqual([a]);
+  });
+  it("supports a shortened synthetic engineering attempt without changing production readiness or the standard timer", async () => {
+    vi.mocked(developmentExamDurationSeconds).mockReturnValue(5);
+    const learner = who("short-timer");
+    const available = await exams.availability(learner);
+    expect(available).toMatchObject({
+      durationSeconds: 5,
+      standardDurationSeconds: 14400,
+      developmentSimulatorAvailable: true,
+      productionReady: false,
+      productionEligibleTotal: 0,
+    });
+    expect(
+      available.productionDomains?.map((domain) => domain.shortfall),
+    ).toEqual([73, 40, 45, 42]);
+    const id = await exams.start(learner);
+    const initial = await exams.view(id, learner.id);
+    expect(initial.durationSeconds).toBe(5);
+    expect(
+      Date.parse(initial.deadlineAt!) - Date.parse(initial.createdAt),
+    ).toBe(5000);
+    await exams.answer(id, learner.id, {
+      questionId: initial.questionIds[0],
+      choiceId: "a",
+      responseMs: 100,
+    });
+    vi.spyOn(Date, "now").mockReturnValue(Date.parse(initial.deadlineAt!) + 1);
+    const expired = await exams.answer(id, learner.id, {
+      questionId: initial.questionIds[1],
+      choiceId: "b",
+      responseMs: 100,
+    });
+    expect(expired.status).toBe("submitted");
+    expect(expired.submissionReason).toBe("expired");
+    expect(expired.submittedAt).toBe(initial.deadlineAt);
+    expect(Object.keys(expired.answers)).toEqual([initial.questionIds[0]]);
+    expect(Object.keys(expired.feedback)).toHaveLength(200);
+    vi.mocked(developmentExamFixturesEnabled).mockReturnValue(false);
+    const production = await exams.availability(who("short-timer-production"));
+    expect(production.durationSeconds).toBe(14400);
+    expect(production.developmentSimulatorAvailable).toBe(false);
+  });
+  it("rejects shortened SQL attempts when the fixture flag, bank or immutable question provenance is forged", async () => {
+    const learner = who("short-sql-guard");
+    const id = await exams.start(learner);
+    const query = (await connection()).query;
+    const [saved] = (
+      await query("SELECT data FROM learning_sessions WHERE id=$1", [id])
+    ).rows;
+    const original = saved.data as import("@/modules/practice/types").Session;
+    const insert = (data: typeof original) =>
+      query(
+        "INSERT INTO learning_sessions(id,owner_id,status,data) VALUES($1,$2,'in_progress',$3::jsonb)",
+        [data.id, learner.id, JSON.stringify(data)],
+      );
+    const shortened = {
+      ...original,
+      id: randomUUID(),
+      durationSeconds: 5,
+      deadlineAt: new Date(Date.parse(original.createdAt) + 5000).toISOString(),
+    };
+    await expect(
+      insert({ ...shortened, developmentFixture: false }),
+    ).rejects.toThrow("standard four-hour");
+    await expect(insert({ ...shortened, bank: "published" })).rejects.toThrow(
+      "standard four-hour",
+    );
+    const [nonFixture] = (
+      await query(
+        "SELECT question_id,version FROM question_versions WHERE content_kind='demonstration' AND author_id<>'development-only-engine-fixture' LIMIT 1",
+      )
+    ).rows;
+    const ids = [...original.questionIds];
+    const replaced = ids[0];
+    ids[0] = String(nonFixture.question_id);
+    const pins = { ...original.questionVersions };
+    delete pins[replaced];
+    pins[ids[0]] = Number(nonFixture.version);
+    await expect(
+      insert({
+        ...shortened,
+        id: randomUUID(),
+        questionIds: ids,
+        questionVersions: pins,
+      }),
+    ).rejects.toThrow("synthetic engineering fixtures");
   });
   it("rejects other users, unknown choices/questions and generic-practice bypasses", async () => {
     const learner = who("owner");

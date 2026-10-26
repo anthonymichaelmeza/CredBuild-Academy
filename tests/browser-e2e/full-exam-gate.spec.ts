@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("full-length examination stays locked in the credential-free browser demo", async ({
+test("demonstration availability is separate from the protected production exam bank", async ({
   page,
 }) => {
   await page.goto("/exam");
@@ -10,16 +10,24 @@ test("full-length examination stays locked in the credential-free browser demo",
   await expect(overview).toBeVisible();
   await expect(
     overview.getByRole("button", {
-      name: "Start full-length exam",
+      name: "Start 200-question demonstration exam",
       exact: true,
     }),
-  ).toBeDisabled();
+  ).toBeEnabled();
   await expect(
-    overview.getByText(/zero approved, published exam questions/),
+    overview.getByText(/Production.*Not Ready/i).first(),
   ).toBeVisible();
   await expect(
-    overview.getByText(/not a verified official duration/),
+    overview.getByText(/Demonstration.*Available/i).first(),
   ).toBeVisible();
+  await expect(
+    overview.getByText(
+      /unverified.*duration|duration.*unverified|not a verified official duration/i,
+    ),
+  ).toHaveCount(0);
+  await expect(overview.getByLabel("Local QA duration (seconds)")).toHaveCount(
+    0,
+  );
   const get = await page.request.get("/api/exams?view=availability");
   expect(get.status()).toBe(403);
   expect(get.headers()["cache-control"]).toContain("no-store");

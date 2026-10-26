@@ -8,7 +8,13 @@ export type ExamDomainAvailability = {
 };
 export type ExamAvailability = {
   count: 200;
-  durationSeconds: 14400;
+  durationSeconds: number;
+  /** These fields are optional only for legacy UI fixtures; services include them. */
+  standardDurationSeconds?: 14400;
+  developmentSimulatorAvailable?: boolean;
+  productionReady?: boolean;
+  productionEligibleTotal?: number;
+  productionDomains?: ExamDomainAvailability[];
   blueprintVersion: string;
   latestOfficialVersionConfirmed: boolean;
   durationBasis: "credbuilt_practice_configuration";
